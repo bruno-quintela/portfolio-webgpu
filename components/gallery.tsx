@@ -1,0 +1,1713 @@
+"use client";
+
+import { useEffect, useRef, useState, useMemo, useCallback } from "react";
+import normalizeWheel from "normalize-wheel";
+import * as THREE from "three";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import {
+  useCursor,
+  Image,
+  MeshReflectorMaterial,
+  Environment,
+} from "@react-three/drei";
+import { Perf } from "r3f-perf";
+
+
+const GRID_GAP = 0.15;
+const TILE_SIZE = 2.5; // Base size (used for height)
+const TILE_WIDTH_RATIO = 1.4; // Width ratio for all tiles (e.g., 16:10 aspect ratio)
+const TILE_WIDTH = TILE_SIZE * TILE_WIDTH_RATIO; // Actual width
+const TILE_HEIGHT = TILE_SIZE; // Actual height
+
+// Grid size configuration
+const GRID_SIZE_X = 7; // Number of tiles in a row
+const GRID_SIZE_Y = 3; // Number of tiles in a column
+const IMAGE_RES = 512;
+
+// Use different spacing for horizontal and vertical to prevent overlap
+const TILE_SPACE_X = TILE_WIDTH + GRID_GAP; // Horizontal spacing based on width
+const TILE_SPACE_Y = TILE_HEIGHT + GRID_GAP; // Vertical spacing based on height
+
+// Calculate total grid dimensions
+const TOTAL_GRID_SIZE_X = TILE_SPACE_X * GRID_SIZE_X;
+const TOTAL_GRID_SIZE_Y = TILE_SPACE_Y * GRID_SIZE_Y;
+
+// Add configurable tile width ratio
+const SELECTED_TILE_WIDTH_RATIO = 2; // 16:10 aspect ratio when selected
+
+// Calculate actual dimensions based on ratios
+const SELECTED_TILE_WIDTH = TILE_WIDTH * SELECTED_TILE_WIDTH_RATIO; // Wider when selected
+
+const BASE_ZOOM = 7;
+const DRAG_ZOOM = 8;
+const SUBGRID_BASE_ZOOM = 7; // Closer zoom for subgrid view
+const SUBGRID_DRAG_ZOOM = 8; // Less extreme zoom out for subgrid dragging
+
+// Add this to the top of the file with other constants
+const TOP_BOTTOM_ROW_SCROLL_DELAY = 0.05;
+
+// Modify the shader to reduce saturation
+const PostprocessingShader = {
+  uniforms: {
+    tDiffuse: { value: null },
+    tNormal: { value: null },
+    amount: { value: 0.0015 },
+    angle: { value: 0 },
+  },
+  vertexShader: `
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      vec3 pos = position;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.);
+    }
+  `,
+  fragmentShader: `
+    varying vec2 vUv;
+    uniform sampler2D tDiffuse;
+    uniform vec2 uStrength;
+    uniform vec2 uScreenRes;
+    uniform float uReducedMotion;
+    float smoothcircle(vec2 st, float r){
+      float dist = distance(st, vec2(0.5));
+      return 1.0 - smoothstep(0., r, dist);
+    }
+    void main() {
+      vec2 uv = vUv;
+
+      // zoom distortion - reduce strength to fix oversaturation
+      float prox = smoothcircle(uv, 1.);
+      float zoomStrength = (uStrength.x+uStrength.y)*5.0; // Reduced from 10 to 5
+      float maxZoomStrength = uReducedMotion > 0.5 ? 0.1 : 0.25; // Reduced from 0.2/0.5 to 0.1/0.25
+      zoomStrength = clamp(zoomStrength, 0., maxZoomStrength);
+      vec2 zoomedUv = mix(uv, vec2(0.5), prox*zoomStrength);
+      vec4 tex = texture2D(tDiffuse, zoomedUv);
+
+      // rgb shift - reduce strength
+      if (uReducedMotion < 0.5) {
+        float rgbShiftStrength = (uStrength.x+uStrength.y) * 0.3;
+        tex.r = texture2D(tDiffuse, zoomedUv + rgbShiftStrength).r;
+        tex.b = texture2D(tDiffuse, zoomedUv - rgbShiftStrength).b;
+      }
+
+      gl_FragColor = tex;
+    }
+  `,
+};
+
+// Function to generate grid tiles
+const generateGridTiles = () => {
+  const tiles = [];
+  const halfSizeX = Math.floor(GRID_SIZE_X / 2);
+  const halfSizeY = Math.floor(GRID_SIZE_Y / 2);
+
+  for (let row = 0; row < GRID_SIZE_Y; row++) {
+    for (let col = 0; col < GRID_SIZE_X; col++) {
+      tiles.push({
+        row,
+        col,
+        pos: [
+          (col - halfSizeX) * TILE_SPACE_X,
+          (halfSizeY - row) * TILE_SPACE_Y,
+          0,
+        ],
+        image: `https://picsum.photos/${IMAGE_RES}?random=${
+          row * GRID_SIZE_X + col + 1
+        }`,
+      });
+    }
+  }
+
+  return tiles;
+};
+
+// Function to generate grid tile groups
+const generateGridTileGroups = () => {
+  const groups = [];
+
+  // Generate positions for a 3x3 grid of groups
+  for (let row = -1; row <= 1; row++) {
+    for (let col = -1; col <= 1; col++) {
+      groups.push({
+        pos: [TOTAL_GRID_SIZE_X * col, TOTAL_GRID_SIZE_Y * row, 0],
+      });
+    }
+  }
+
+  return groups;
+};
+
+// Generate the grid tiles and groups
+const GRID_TILES = generateGridTiles();
+const GRID_TILE_GROUPS = generateGridTileGroups();
+
+// Update the SUBGRID_TILE_GROUPS to use the horizontal spacing
+const SUBGRID_SIZE = 7; // Number of tiles in the subgrid
+const TOTAL_SUBGRID_SIZE = SUBGRID_SIZE * TILE_SPACE_X;
+
+const SUBGRID_TILE_GROUPS = [
+  {
+    pos: [TOTAL_SUBGRID_SIZE * -1, 0, 0],
+  },
+  {
+    pos: [0, 0, 0],
+  },
+  {
+    pos: [TOTAL_SUBGRID_SIZE, 0, 0],
+  },
+];
+
+// Generate subgrid tile groups with proper spacing
+// const SUBGRID_TILE_GROUPS = Array.from({ length: 1 }, () => ({
+//   // Only one group needed for subgrid
+//   pos: [0, 0, 0],
+// }));
+
+// const SUBGRID_TILE_GROUPS = [
+//     {
+//       pos: [TOTAL_SUBGRID_SIZE * -1, 0, 0],
+//     },
+//     {
+//       pos: [0, 0, 0],
+//     },
+//     {
+//       pos: [TOTAL_SUBGRID_SIZE, 0, 0],
+//     }
+// ];
+
+const reducedMotionMediaQuery = false; //window.matchMedia('(prefers-reduced-motion: reduce)');
+
+// full screen postprocessing shader
+const distortionShader = {
+  uniforms: {
+    tDiffuse: { value: null },
+    uStrength: { value: new THREE.Vector2() },
+    uScreenRes: { value: new THREE.Vector2() },
+    uReducedMotion: { value: reducedMotionMediaQuery ? 1.0 : 0.0 },
+  },
+  vertexShader: PostprocessingShader.vertexShader,
+  fragmentShader: PostprocessingShader.fragmentShader,
+};
+
+// Add these interfaces near the top of the file
+interface ExtendedMesh extends THREE.Mesh {
+  targetScale?: { x: number; y: number; z: number };
+  groupIndex?: number;
+  targetRotation?: number;
+  animationDelay?: number; // Add delay property for staggered animation
+  animationStartTime?: number; // Track when animation should start
+}
+
+function lerp(start: number, end: number, amount: number) {
+  return start * (1 - amount) + end * amount;
+}
+
+
+// Update the GridTiles component to handle subgrid properly
+function GridTiles({
+  tiles,
+  groups,
+  isSubgrid = false,
+  gridRefs,
+  subgridRefs,
+}) {
+  return groups.map((group, groupIndex) => (
+    <group
+      key={`${isSubgrid ? "subgrid" : "grid"}-group-${groupIndex}`}
+      ref={(el) => {
+        if (el) {
+          if (isSubgrid) {
+            subgridRefs.current[groupIndex].ref = el;
+          } else {
+            gridRefs.current[groupIndex].ref = el;
+          }
+        }
+      }}
+      position={new THREE.Vector3(...group.pos)}
+    >
+      {isSubgrid
+        ? // For subgrid, use GRID_TILES but position them horizontally
+          GRID_TILES.map((tile, tileIndex) => {
+            // Only use a subset of tiles for the subgrid (up to SUBGRID_SIZE)
+            if (tileIndex >= SUBGRID_SIZE) return null;
+
+            // Calculate horizontal position
+            const position = new THREE.Vector3(
+              (tileIndex - Math.floor(SUBGRID_SIZE / 2)) * TILE_SPACE_X,
+              0,
+              0
+            );
+
+            return (
+              <Image
+                key={`subgrid-tile-${groupIndex}-${tileIndex}`}
+                position={position}
+                userData={{
+                  row: 0, // All subgrid tiles are in a single row
+                  col: tileIndex,
+                  isHovered: false,
+                  isSelected: false,
+                }}
+                rotation={[0, 0, 0]}
+                url={tile.image} // Use the image from GRID_TILES
+                transparent
+                scale={[TILE_WIDTH, TILE_HEIGHT, 1]}
+                grayscale={1.0}
+                zoom={1.0}
+                radius={0.05}
+              />
+            );
+          })
+        : // For main grid, use the tiles as provided
+          tiles.map((tile, tileIndex) => {
+            // Check if this tile is in the top or bottom row
+            const isTopOrBottomRow = tile.row === 0 || tile.row === 2;
+
+            return (
+              <Image
+                key={`grid-tile-${groupIndex}-${tileIndex}`}
+                position={new THREE.Vector3(...tile.pos)}
+                userData={{
+                  row: tile.row,
+                  col: tile.col,
+                  isHovered: false,
+                  isSelected: false,
+                  isTopOrBottomRow: isTopOrBottomRow, // Add flag for top/bottom row
+                }}
+                rotation={[0, 0, 0]}
+                url={tile.image}
+                transparent
+                scale={[TILE_WIDTH, TILE_HEIGHT, 1]}
+                grayscale={isTopOrBottomRow ? 1.0 : 0.17} // Always grey for top/bottom rows
+                zoom={isTopOrBottomRow ? 1.0 : 0.7}
+                radius={isTopOrBottomRow ? 0.05 : 0.7}
+                color={isTopOrBottomRow ? "#333" : "#777"} // Darker color for top/bottom rows
+              />
+            );
+          })}
+    </group>
+  ));
+}
+
+// Move checkHover outside of the Scene component
+const checkHover = (
+  pointer: THREE.Vector2,
+  camera: THREE.PerspectiveCamera,
+  scene: THREE.Scene,
+  clickedMeshRef: React.RefObject<ExtendedMesh>,
+  mainGridSelectionRef: React.RefObject<ExtendedMesh>,
+  gridGroupRefs: any,
+  subgridGroupRefs: any
+) => {
+  // No need to calculate mouse position, use the pointer directly
+  const raycaster = new THREE.Raycaster();
+  raycaster.setFromCamera(pointer, camera);
+
+  // Find all meshes in the scene
+  const meshes: ExtendedMesh[] = [];
+
+  // Collect meshes from grid and subgrid groups instead of traversing the entire scene
+  gridGroupRefs.current.forEach(({ ref }) => {
+    ref.traverse((object) => {
+      if (object instanceof THREE.Mesh) {
+        meshes.push(object as ExtendedMesh);
+      }
+    });
+  });
+
+  subgridGroupRefs.current.forEach(({ ref }) => {
+    ref.traverse((object) => {
+      if (object instanceof THREE.Mesh) {
+        meshes.push(object as ExtendedMesh);
+      }
+    });
+  });
+
+  // Reset hover state for all meshes
+  meshes.forEach((mesh) => {
+    if (mesh.userData.isHovered) {
+      mesh.userData.isHovered = false;
+      mesh.userData.needsUpdate = true;
+    }
+  });
+
+  // Check for intersections
+  const intersects = raycaster.intersectObjects(meshes, false);
+
+  // Set hover state for the first intersected mesh
+  if (intersects.length > 0) {
+    const hoveredMesh = intersects[0].object as ExtendedMesh;
+    hoveredMesh.userData.isHovered = true;
+    hoveredMesh.userData.needsUpdate = true;
+  }
+
+  // Update all mesh materials every frame, not just those that changed
+  meshes.forEach((mesh) => {
+    updateMesh(mesh, clickedMeshRef, mainGridSelectionRef, subgridGroupRefs);
+  });
+};
+
+// Scene component that contains all the 3D elements
+function Scene() {
+  const { camera, viewport, size, scene } = useThree();
+  const scrollRef = useRef({
+    ease: 0.05,
+    scale: 0.02,
+    current: { x: 0, y: 0 },
+    target: { x: 0, y: 0 },
+    last: { x: 0, y: 0 },
+    position: { x: 0, y: 0 },
+  });
+
+  const isDownRef = useRef(false);
+  const startPosRef = useRef({ x: 0, y: 0 });
+  const screenRef = useRef({ width: 0, height: 0 });
+  const viewportRef = useRef({ width: 0, height: 0 });
+  const directionRef = useRef({ x: 1, y: 1 });
+  const raycasterRef = useRef(new THREE.Raycaster());
+  const mouseRef = useRef(new THREE.Vector2());
+  const hoveredMeshRef = useRef<ExtendedMesh | null>(null);
+  const clickedMeshRef = useRef<ExtendedMesh | null>(null);
+  const isCenteringRef = useRef(false);
+  const targetCenterRef = useRef({ x: 0, y: 0 });
+  const isZoomingRef = useRef(false);
+  const dragStartPosRef = useRef({ x: 0, y: 0 });
+  const isDraggingRef = useRef(false);
+  const targetZoomRef = useRef(BASE_ZOOM);
+  const [hovered, setHovered] = useState(false);
+  const [dragging, setDragging] = useState(false);
+
+  // Add a new ref to track the main grid tile that opened the subgrid
+  const mainGridSelectionRef = useRef<ExtendedMesh | null>(null);
+
+  // Use the drei useCursor hook to change cursor based on state
+  useCursor(hovered && !dragging, "pointer", "auto");
+  useCursor(dragging, "grabbing", "auto");
+
+  // Initialize groups with refs
+  const gridGroupRefs = useRef(
+    GRID_TILE_GROUPS.map(() => ({
+      ref: new THREE.Group(),
+      offset: { x: 0, y: 0 },
+    }))
+  );
+
+  const subgridGroupRefs = useRef(
+    SUBGRID_TILE_GROUPS.map(() => ({
+      ref: new THREE.Group(),
+      offset: { x: 0, y: 0 },
+    }))
+  );
+
+  // Ref to store the current strength values for the shader
+  const strengthRef = useRef({ x: 0, y: 0 });
+
+  // Add a ref to track which tiles are in viewport
+  const tilesInViewportRef = useRef<Set<ExtendedMesh>>(new Set());
+
+  // Add a function to check if a mesh is in viewport
+  const isInViewport = useCallback(
+    (mesh: ExtendedMesh) => {
+      if (!mesh.parent) return false;
+
+      // Get mesh world position
+      const meshWorldPos = new THREE.Vector3();
+      mesh.getWorldPosition(meshWorldPos);
+
+      // Project to screen space
+      meshWorldPos.project(camera);
+
+      //bounds offset
+      const BOUNDS_OFFSET_X = 2;
+      const BOUNDS_OFFSET_Y = 1;
+      // Check if within screen bounds (-1 to 1 for both x and y)
+      return (
+        meshWorldPos.x >= -BOUNDS_OFFSET_X &&
+        meshWorldPos.x <= BOUNDS_OFFSET_X &&
+        meshWorldPos.y >= -BOUNDS_OFFSET_Y &&
+        meshWorldPos.y <= BOUNDS_OFFSET_Y
+      );
+    },
+    [camera]
+  );
+
+  // Update viewport size on resize
+  useEffect(() => {
+    screenRef.current = {
+      width: size.width,
+      height: size.height,
+    };
+
+    // Update screen res uniform
+    distortionShader.uniforms.uScreenRes.value.set(size.width, size.height);
+
+    // Adjust camera and scroll settings based on screen size
+    if (size.width < 768) {
+      targetZoomRef.current = 20;
+      scrollRef.current.scale = 0.08;
+    } else {
+      targetZoomRef.current = BASE_ZOOM;
+      scrollRef.current.scale = 0.02;
+    }
+
+    // Calculate viewport size in world units
+    const fov = camera.fov * (Math.PI / 180);
+    const height = 2 * Math.tan(fov / 2) * camera.position.z;
+    const width = height * camera.aspect;
+    viewportRef.current = { height, width };
+  }, [size, camera, distortionShader]);
+
+  // Add this helper function to check if a mesh is part of the subgrid
+  const isSubgridMesh = (mesh: THREE.Object3D) => {
+    return subgridGroupRefs.current.some(({ ref }) => {
+      return mesh.parent === ref;
+    });
+  };
+
+  // Add this helper function to check if we're interacting with subgrid
+  const isInteractingWithSubgrid = () => {
+    // Check if we have a main grid selection (which shows subgrid)
+    return mainGridSelectionRef.current !== null;
+  };
+
+  // Add this helper function to check if a subgrid tile is selected
+  const isSubgridTileSelected = () => {
+    return clickedMeshRef.current && isSubgridMesh(clickedMeshRef.current);
+  };
+
+  // In the Scene component, add these refs:
+  const topBottomScrollRef = useRef({
+    current: { x: 0, y: 0 },
+    target: { x: 0, y: 0 },
+  });
+
+  // Event handlers
+  useEffect(() => {
+    const onTouchDown = (e: TouchEvent | MouseEvent) => {
+      // Prevent scroll start if a subgrid tile is selected
+      if (isSubgridTileSelected()) return;
+
+      if (isCenteringRef.current) return;
+      isDownRef.current = true;
+      isDraggingRef.current = false;
+
+      scrollRef.current.position = {
+        x: scrollRef.current.current.x,
+        y: scrollRef.current.current.y,
+      };
+
+      const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+      const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
+
+      startPosRef.current.x = clientX;
+      startPosRef.current.y = clientY;
+      dragStartPosRef.current = { x: clientX, y: clientY };
+
+      // Set dragging state and update zoom when mouse is down
+      //setDragging(true);
+
+      // Don't reset subgrid positions if a subgrid tile is selected
+      if (!clickedMeshRef.current || !isSubgridMesh(clickedMeshRef.current)) {
+        const isViewingSubgrid =
+          clickedMeshRef.current && !isSubgridMesh(clickedMeshRef.current);
+        targetZoomRef.current = isViewingSubgrid
+          ? SUBGRID_DRAG_ZOOM
+          : DRAG_ZOOM;
+      }
+      return;
+    };
+
+    const onTouchMove = (e: TouchEvent | MouseEvent) => {
+      // Prevent scroll movement if a subgrid tile is selected
+      if (isSubgridTileSelected()) return;
+
+      if (!isDownRef.current) return;
+
+      const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+      const clientY = "touches" in e ? e.touches[0].clientY : e.clientY;
+
+      // Check if dragging (movement > 5 pixels)
+      const dragDistance = Math.hypot(
+        clientX - dragStartPosRef.current.x,
+        clientY - dragStartPosRef.current.y
+      );
+      if (dragDistance > 5) {
+        isDraggingRef.current = true;
+      }
+
+      const distanceX =
+        (startPosRef.current.x - clientX) * scrollRef.current.scale;
+      const distanceY =
+        (startPosRef.current.y - clientY) * scrollRef.current.scale;
+
+      // Only update Y position if not interacting with subgrid
+      scrollRef.current.target = {
+        x: scrollRef.current.position.x - distanceX,
+        y: scrollRef.current.current.y,
+      };
+    };
+
+    const onTouchUp = () => {
+      isDownRef.current = false;
+      // Reset dragging state and zoom
+      setDragging(false);
+      if (!isZoomingRef.current) {
+        // Check if we're currently viewing subgrid
+        const isViewingSubgrid =
+          clickedMeshRef.current && !isSubgridMesh(clickedMeshRef.current);
+        if (isViewingSubgrid) {
+          targetZoomRef.current = SUBGRID_BASE_ZOOM;
+        } else {
+          targetZoomRef.current =
+            screenRef.current.width < 768 ? 20 : BASE_ZOOM;
+        }
+      }
+
+      setTimeout(() => {
+        isDraggingRef.current = false;
+      }, 0);
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      // Prevent wheel scrolling if a subgrid tile is selected
+      if (isSubgridTileSelected()) return;
+
+      if (isCenteringRef.current) return;
+      const normalized = normalizeWheel(e);
+      scrollRef.current.target.x -= normalized.pixelX * scrollRef.current.scale;
+      // Only update Y position if not interacting with subgrid
+      //   if (!isInteractingWithSubgrid()) {
+      //     scrollRef.current.target.y += normalized.pixelY * scrollRef.current.scale;
+      //   }
+      e.preventDefault();
+    };
+
+    const onMouseMove = (event: MouseEvent) => {
+      // Calculate mouse position in normalized device coordinates
+      mouseRef.current.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouseRef.current.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    };
+
+    const onClick = (event: MouseEvent) => {
+      if (isDraggingRef.current) return;
+
+      mouseRef.current.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouseRef.current.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      raycasterRef.current.setFromCamera(mouseRef.current, camera);
+
+      // Collect all meshes from grid and subgrid groups
+      const meshes: THREE.Object3D[] = [];
+      gridGroupRefs.current.forEach(({ ref }) => {
+        ref.traverse((object) => {
+          if (object instanceof THREE.Mesh) {
+            meshes.push(object);
+          }
+        });
+      });
+
+      subgridGroupRefs.current.forEach(({ ref }) => {
+        ref.traverse((object) => {
+          if (object instanceof THREE.Mesh) {
+            meshes.push(object);
+          }
+        });
+      });
+
+      const intersects = raycasterRef.current.intersectObjects(meshes);
+
+      // Skip if clicked on top/bottom row tile
+      if (intersects.length > 0) {
+        const clickedMesh = intersects[0].object as ExtendedMesh;
+        if (clickedMesh.userData.isTopOrBottomRow) {
+          return; // Skip handling for top/bottom row tiles
+        }
+      }
+
+      // Get all meshes for animation
+      const allMeshes: ExtendedMesh[] = [];
+      gridGroupRefs.current.forEach(({ ref }) => {
+        ref.traverse((object) => {
+          if (object instanceof THREE.Mesh) {
+            allMeshes.push(object as ExtendedMesh);
+          }
+        });
+      });
+
+      subgridGroupRefs.current.forEach(({ ref }) => {
+        ref.traverse((object) => {
+          if (object instanceof THREE.Mesh) {
+            allMeshes.push(object as ExtendedMesh);
+          }
+        });
+      });
+
+      // If we have a selected tile but clicked outside any tile
+      if (intersects.length === 0) {
+        if (clickedMeshRef.current && isSubgridMesh(clickedMeshRef.current)) {
+          // Only a subgrid tile is selected, just unselect it
+          clickedMeshRef.current.targetScale = { x: 1, y: 1, z: 1 };
+          clickedMeshRef.current.animationStartTime = performance.now();
+          clickedMeshRef.current = null;
+        } else {
+          // We have a main grid selection, so close everything
+          const currentTime = performance.now();
+          allMeshes.forEach((mesh) => {
+            mesh.animationStartTime = currentTime;
+            mesh.targetScale = { x: 1, y: 1, z: 1 };
+
+            // Set instant flip (delay=0) for ALL tiles when exiting subgrid view
+            mesh.animationDelay = 100;
+          });
+
+          // Reset all selection states
+          clickedMeshRef.current = null;
+          mainGridSelectionRef.current = null;
+          isZoomingRef.current = false;
+          targetZoomRef.current =
+            screenRef.current.width < 768 ? 20 : BASE_ZOOM;
+        }
+        return;
+      }
+
+      if (intersects.length > 0) {
+        const clickedMesh = intersects[0].object as ExtendedMesh;
+        const isSubgrid = isSubgridMesh(clickedMesh);
+
+        // Update previous clicked mesh material if different
+        if (clickedMeshRef.current && clickedMeshRef.current !== clickedMesh) {
+          clickedMeshRef.current.userData.isSelected = false;
+        }
+
+        // Update new clicked mesh material
+        clickedMesh.userData.isSelected = true;
+
+        if (clickedMeshRef.current === clickedMesh) {
+          if (isSubgrid) {
+            // For subgrid tiles, just unselect this specific tile
+            clickedMesh.targetScale = { x: 1, y: 1.3, z: 1 };
+            clickedMesh.animationStartTime = performance.now();
+            clickedMeshRef.current = null;
+          } else {
+            // For main grid tiles, close everything
+            const currentTime = performance.now();
+            allMeshes.forEach((mesh) => {
+              mesh.animationStartTime = currentTime;
+              mesh.targetScale = { x: 1, y: 1, z: 1 };
+
+              // Calculate animation delay based on distance
+              const clickedPos = new THREE.Vector3().copy(clickedMesh.position);
+              const groupIndex = clickedMesh.groupIndex || 0;
+              clickedPos.add(gridGroupRefs.current[groupIndex].ref.position);
+
+              // Find mesh group
+              let meshGroupIndex = 0;
+              let isSubgrid = false;
+
+              gridGroupRefs.current.forEach(({ ref }, idx) => {
+                if (mesh.parent === ref) {
+                  meshGroupIndex = idx;
+                  isSubgrid = false;
+                }
+              });
+
+              subgridGroupRefs.current.forEach(({ ref }, idx) => {
+                if (mesh.parent === ref) {
+                  meshGroupIndex = idx;
+                  isSubgrid = true;
+                }
+              });
+
+              // Get mesh world position
+              const meshPos = new THREE.Vector3().copy(mesh.position);
+              if (isSubgrid) {
+                meshPos.add(
+                  subgridGroupRefs.current[meshGroupIndex].ref.position
+                );
+              } else {
+                meshPos.add(gridGroupRefs.current[meshGroupIndex].ref.position);
+              }
+
+              const distance = meshPos.distanceTo(clickedPos);
+              mesh.animationDelay = distance * 300;
+            });
+
+            // Reset all selection states
+            clickedMeshRef.current = null;
+            mainGridSelectionRef.current = null;
+            isZoomingRef.current = false;
+            targetZoomRef.current =
+              screenRef.current.width < 768 ? 20 : BASE_ZOOM;
+          }
+        } else {
+          // Clicking a different tile
+          // Find which tile group this mesh belongs to
+          let groupIndex = -1;
+
+          // Check if it's a main grid tile
+          gridGroupRefs.current.forEach(({ ref }, index) => {
+            if (clickedMesh.parent === ref) {
+              groupIndex = index;
+            }
+          });
+
+          // Check if it's a subgrid tile
+          let subgridGroupIndex = -1;
+          subgridGroupRefs.current.forEach(({ ref }, index) => {
+            if (clickedMesh.parent === ref) {
+              subgridGroupIndex = index;
+            }
+          });
+
+          // Always reset animation start time for all meshes
+          const currentTime = performance.now();
+
+          // Get the world position of the clicked mesh for ripple effect
+          const clickedPos = new THREE.Vector3().copy(clickedMesh.position);
+
+          if (groupIndex !== -1) {
+            clickedPos.add(gridGroupRefs.current[groupIndex].ref.position);
+          } else if (subgridGroupIndex !== -1) {
+            clickedPos.add(
+              subgridGroupRefs.current[subgridGroupIndex].ref.position
+            );
+          }
+
+          // Set animation delays for all meshes based on distance
+          allMeshes.forEach((mesh) => {
+            // Reset animation start time to trigger a new animation
+            mesh.animationStartTime = currentTime;
+
+            // Find the group this mesh belongs to
+            let meshGroupIndex = 0;
+            let isSubgrid = false;
+
+            gridGroupRefs.current.forEach(({ ref }, idx) => {
+              if (mesh.parent === ref) {
+                meshGroupIndex = idx;
+                isSubgrid = false;
+              }
+            });
+
+            subgridGroupRefs.current.forEach(({ ref }, idx) => {
+              if (mesh.parent === ref) {
+                meshGroupIndex = idx;
+                isSubgrid = true;
+              }
+            });
+
+            // Get mesh world position
+            const meshPos = new THREE.Vector3().copy(mesh.position);
+            if (isSubgrid) {
+              meshPos.add(
+                subgridGroupRefs.current[meshGroupIndex].ref.position
+              );
+            } else {
+              meshPos.add(gridGroupRefs.current[meshGroupIndex].ref.position);
+            }
+
+            // Calculate distance from clicked tile and set animation delay
+            const distance = meshPos.distanceTo(clickedPos);
+            mesh.animationDelay = distance * 100;
+          });
+
+          // Set clicked mesh
+          clickedMeshRef.current = clickedMesh;
+
+          if (groupIndex !== -1) {
+            // Main grid tile was clicked
+            clickedMeshRef.current.groupIndex = groupIndex;
+
+            // Store this as the main grid selection that opened the subgrid
+            mainGridSelectionRef.current = clickedMeshRef.current;
+
+            // Set the scale to expand horizontally when opening
+            clickedMeshRef.current.targetScale = {
+              x: SELECTED_TILE_WIDTH_RATIO,
+              y: 1,
+              z: 1,
+            }; // When opening
+
+            // Calculate the indices within the 3x3 grid based on local position
+            const localX = clickedMesh.position.x;
+            const localY = clickedMesh.position.y;
+
+            // Convert position to grid indices (0,1,2) within the tile group
+            const i = Math.round((localX + TILE_SPACE_X) / TILE_SPACE_X); // Column index
+            const j = Math.round((-localY + TILE_SPACE_X) / TILE_SPACE_X); // Row index (negative because Y is inverted)
+
+            // Convert group indices to -1, 0, 1 range
+            const groupCol = (groupIndex % 3) - 1; // -1=left, 0=middle, 1=right
+            const groupRow = -(Math.floor(groupIndex / 3) - 1); // -1=top, 0=middle, 1=bottom
+
+            // Get the group's current offset
+            const groupOffset = gridGroupRefs.current[groupIndex].offset;
+
+            // Calculate the target scroll position to center this grid cell
+            targetCenterRef.current = {
+              x:
+                -(i * TILE_SPACE_X - TILE_SPACE_X) -
+                groupCol * TOTAL_GRID_SIZE_X -
+                groupOffset.x,
+              y:
+                j * TILE_SPACE_Y -
+                TILE_SPACE_Y -
+                groupRow * TOTAL_GRID_SIZE_Y -
+                groupOffset.y,
+            };
+
+            // Start centering animation
+            isCenteringRef.current = true;
+          } else if (subgridGroupIndex !== -1) {
+            // Subgrid tile was clicked - store the subgrid group index
+            clickedMeshRef.current.groupIndex = subgridGroupIndex;
+
+            // Make sure we set the correct scale for subgrid tiles when opening
+            clickedMeshRef.current.targetScale = {
+              x: SELECTED_TILE_WIDTH_RATIO,
+              y: 0.9,
+              z: 1,
+            }; // When opening
+
+            // Calculate the indices within the subgrid based on local position
+            const localX = clickedMesh.position.x;
+            const localY = clickedMesh.position.y;
+
+            // Convert position to grid indices within the tile group
+            const i = Math.round((localX + TILE_SPACE_X) / TILE_SPACE_X); // Column index
+            //const j = Math.round((-localY + TILE_SPACE_X) / TILE_SPACE_X); // Row index (negative because Y is inverted)
+
+            // Convert group indices to relative position
+            const groupOffset =
+              subgridGroupRefs.current[subgridGroupIndex].offset;
+
+            // Calculate the target scroll position to center this subgrid cell
+            // Only adjust X position since subgrid is horizontal
+            targetCenterRef.current = {
+              x:
+                -(i * TILE_SPACE_X - TILE_SPACE_X) -
+                SUBGRID_TILE_GROUPS[subgridGroupIndex].pos[0] -
+                groupOffset.x,
+              y: scrollRef.current.current.y, // Keep current Y position
+            };
+
+            // Start centering animation
+            isCenteringRef.current = true;
+          }
+        }
+      }
+    };
+
+    window.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("mousewheel", onWheel, { passive: false });
+
+    window.addEventListener("mousedown", onTouchDown);
+    window.addEventListener("mousemove", onTouchMove);
+    window.addEventListener("mouseup", onTouchUp);
+
+    window.addEventListener("touchstart", onTouchDown);
+    window.addEventListener("touchmove", onTouchMove);
+    window.addEventListener("touchend", onTouchUp);
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("click", onClick);
+
+    return () => {
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("mousewheel", onWheel);
+      window.removeEventListener("mousedown", onTouchDown);
+      window.removeEventListener("mousemove", onTouchMove);
+      window.removeEventListener("mouseup", onTouchUp);
+      window.removeEventListener("touchstart", onTouchDown);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onTouchUp);
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("click", onClick);
+    };
+  }, [camera]);
+
+  // Check for clicked meshes and update scales
+  const checkClicked = () => {
+    const currentTime = performance.now();
+    const meshes: ExtendedMesh[] = [];
+
+    gridGroupRefs.current.forEach(({ ref }) => {
+      ref.traverse((object) => {
+        if (object instanceof THREE.Mesh) {
+          meshes.push(object as ExtendedMesh);
+        }
+      });
+    });
+
+    subgridGroupRefs.current.forEach(({ ref }) => {
+      ref.traverse((object) => {
+        if (object instanceof THREE.Mesh) {
+          meshes.push(object as ExtendedMesh);
+        }
+      });
+    });
+
+    // Separate main grid and subgrid meshes
+    const subgridMeshes = meshes.filter((mesh) =>
+      subgridGroupRefs.current.some((group) => mesh.parent === group.ref)
+    );
+    const mainGridMeshes = meshes.filter((mesh) =>
+      gridGroupRefs.current.some((group) => mesh.parent === group.ref)
+    );
+
+    // Initialize subgrid meshes
+    subgridMeshes.forEach((mesh) => {
+      if (typeof mesh.targetRotation === "undefined") {
+        mesh.targetRotation = -Math.PI;
+        mesh.rotation.y = -Math.PI; // Set initial rotation directly
+      }
+    });
+
+    // Initialize main grid meshes - start flipped down
+    mainGridMeshes.forEach((mesh) => {
+      if (typeof mesh.targetRotation === "undefined") {
+        mesh.targetRotation = 0; // Start flipped down
+        mesh.rotation.y = Math.PI; // Set initial rotation directly
+      }
+    });
+
+    // Check if we have a main grid selection (showing subgrid)
+    if (mainGridSelectionRef.current) {
+      // When a main grid tile is selected, show subgrid
+      mainGridMeshes.forEach((mesh) => {
+        const shouldAnimate =
+          mesh === mainGridSelectionRef.current ||
+          (mesh.animationStartTime !== undefined &&
+            currentTime >=
+              mesh.animationStartTime + (mesh.animationDelay || 0));
+
+        if (shouldAnimate) {
+          mesh.targetScale = { x: 1, y: 1, z: 1 };
+          mesh.targetRotation = Math.PI;
+        }
+      });
+
+      // Only animate subgrid tiles if they have an animation start time
+      // AND add a fixed delay to ensure main grid starts flipping first
+      const SUBGRID_ANIMATION_DELAY = 300; // 300ms delay before subgrid starts appearing
+
+      subgridMeshes.forEach((mesh) => {
+        // Add the fixed delay to ensure subgrid waits for main grid to start flipping
+        const shouldAnimate =
+          mesh.animationStartTime !== undefined &&
+          currentTime >=
+            mesh.animationStartTime +
+              (mesh.animationDelay || 0) +
+              SUBGRID_ANIMATION_DELAY;
+
+        if (shouldAnimate) {
+          // If this is the selected subgrid tile, scale it up
+          if (mesh === clickedMeshRef.current) {
+            // Store the original scale if not already stored
+            if (mesh.userData.originalScale === undefined) {
+              mesh.userData.originalScale = {
+                x: SELECTED_TILE_WIDTH_RATIO,
+                y: 1,
+                z: 1,
+              };
+            }
+            // Use the selected tile width ratio - expand horizontally when opening
+            mesh.targetScale = { x: SELECTED_TILE_WIDTH_RATIO, y: 1.3, z: 1 }; // When opening
+          } else {
+            mesh.targetScale = { x: 1, y: 1, z: 1 };
+          }
+          mesh.targetRotation = 0;
+        }
+      });
+    } else {
+      // No main grid selection, normal state
+      meshes.forEach((mesh) => {
+        const shouldAnimate =
+          mesh.animationStartTime !== undefined &&
+          currentTime >= mesh.animationStartTime + (mesh.animationDelay || 0);
+
+        if (shouldAnimate) {
+          if (gridGroupRefs.current.some(({ ref }) => mesh.parent === ref)) {
+            // For main grid tiles, respect the viewport status
+            if (tilesInViewportRef.current.has(mesh)) {
+              mesh.targetScale = { x: 1, y: 1, z: 1 };
+              mesh.targetRotation = 0; // Face up if in viewport
+            } else {
+              //    mesh.targetScale = { x: 1, y: 1, z: 1 };
+              mesh.targetRotation = Math.PI; // Face down if not in viewport
+            }
+          } else {
+            // For subgrid tiles, ensure they scale back to original size when unselected
+            //mesh.targetScale = { x: 1, y: 1, z: 1 };
+            mesh.targetRotation = -Math.PI;
+          }
+        }
+      });
+    }
+
+    // Add ripple effect when subgrid tile is selected
+    if (clickedMeshRef.current && isSubgridMesh(clickedMeshRef.current)) {
+      const selectedTile = clickedMeshRef.current;
+
+      // Get all subgrid tiles across all groups
+      const allSubgridTiles = subgridMeshes;
+
+      // Get the world position of the selected tile
+      const selectedWorldPos = new THREE.Vector3();
+      selectedTile.getWorldPosition(selectedWorldPos);
+
+      allSubgridTiles.forEach((mesh) => {
+        if (mesh !== selectedTile) {
+          // Get world position of this tile
+          const meshWorldPos = new THREE.Vector3();
+          mesh.getWorldPosition(meshWorldPos);
+
+          // Calculate direction (left or right)
+          const direction = meshWorldPos.x < selectedWorldPos.x ? -1 : 1;
+
+          // Calculate distance between the tiles
+          const distance = Math.abs(meshWorldPos.x - selectedWorldPos.x);
+
+          // Calculate offset based on distance with exponential falloff
+          const maxOffset = TILE_SPACE_X * 0.75;
+          const falloff = 0.95; //Math.exp(-distance * 0.5);
+
+          // Only update positions if not dragging
+          if (!isDraggingRef.current) {
+            // Remove the animation delay check - apply immediately
+            // Store the target position if not already set
+            if (mesh.userData.targetX === undefined) {
+              const originalX =
+                (mesh.userData.col - Math.floor(SUBGRID_SIZE / 2)) *
+                TILE_SPACE_X;
+              const offset = direction * maxOffset * falloff;
+              mesh.userData.targetX = originalX + offset;
+              mesh.userData.originalX = originalX;
+            }
+
+            // Lerp to the stored target position with smoother transition
+            mesh.position.x = lerp(
+              mesh.position.x,
+              mesh.userData.targetX,
+              isDraggingRef.current ? 0.02 : 0.05
+            );
+
+            // Scale down non-selected subgrid tiles to a smaller width
+            mesh.targetScale = { x: 1, y: 0.75, z: 1 };
+          }
+        }
+      });
+    } else {
+      // Reset positions when no subgrid tile is selected
+      subgridMeshes.forEach((mesh) => {
+        // Only reset if not dragging
+        if (!isDraggingRef.current) {
+          // Return to original position if we have it stored
+          if (mesh.userData.originalX !== undefined) {
+            mesh.position.x = lerp(
+              mesh.position.x,
+              mesh.userData.originalX,
+              0.05
+            );
+          } else {
+            // Fallback to calculated position
+            const originalX =
+              (mesh.userData.col - Math.floor(SUBGRID_SIZE / 2)) * TILE_SPACE_X;
+            mesh.position.x = lerp(mesh.position.x, originalX, 0.05);
+          }
+
+          // Clear the stored target position
+          mesh.userData.targetX = undefined;
+        }
+      });
+    }
+
+    // Check which tiles are in viewport and which ones have left
+    gridGroupRefs.current.forEach(({ ref }) => {
+      ref.traverse((object) => {
+        if (object instanceof THREE.Mesh) {
+          const mesh = object as ExtendedMesh;
+          const inViewport = isInViewport(mesh);
+
+          // Initialize target rotation if not set
+          if (typeof mesh.targetRotation === "undefined") {
+            // mesh.targetRotation = Math.PI; // Start flipped down
+            //mesh.rotation.y = Math.PI; // Set initial rotation directly
+          }
+
+          // Track tiles in viewport for other purposes (if needed)
+          if (inViewport && !tilesInViewportRef.current.has(mesh)) {
+            tilesInViewportRef.current.add(mesh);
+          } else if (
+            !inViewport &&
+            tilesInViewportRef.current.has(mesh) &&
+            mesh !== mainGridSelectionRef.current
+          ) {
+            tilesInViewportRef.current.delete(mesh);
+          }
+        }
+      });
+    });
+
+    // Apply animations and update materials
+    meshes.forEach((mesh) => {
+      if (mesh.animationStartTime === undefined) return;
+      // Update material properties based on state
+      mesh.userData.isSelected =
+        mesh === clickedMeshRef.current ||
+        mesh === mainGridSelectionRef.current;
+    });
+  };
+
+  // Set positions of grid groups based on scroll
+  const setPositions = () => {
+    let scrollX = scrollRef.current.current.x;
+    let scrollY = scrollRef.current.current.y;
+
+    // Update the delayed scroll position for top/bottom rows
+    topBottomScrollRef.current.target = {
+      x: scrollX,
+      y: scrollY,
+    };
+
+    // Lerp the delayed scroll for smoother transition
+    topBottomScrollRef.current.current = {
+      x: lerp(
+        topBottomScrollRef.current.current.x,
+        topBottomScrollRef.current.target.x,
+        TOP_BOTTOM_ROW_SCROLL_DELAY
+      ),
+      y: lerp(
+        topBottomScrollRef.current.current.y,
+        topBottomScrollRef.current.target.y,
+        TOP_BOTTOM_ROW_SCROLL_DELAY
+      ),
+    };
+
+    // Only update grid positions if no tile is selected
+    if (!isZoomingRef.current) {
+      const dir = directionRef.current;
+      const groupOff = TOTAL_GRID_SIZE_X;
+      const viewportOff = {
+        x: viewportRef.current.width / 2,
+        y: viewportRef.current.height / 2,
+      };
+
+      gridGroupRefs.current.forEach(({ ref, offset }, i) => {
+        const pos = GRID_TILE_GROUPS[i].pos;
+
+        // Position all groups normally first
+        let posX = pos[0] + scrollX + offset.x;
+        let posY = pos[1] + scrollY + offset.y;
+
+        ref.position.set(posX, posY, pos[2]);
+
+        // Track which groups have changed position for tile-specific updates
+        ref.userData = ref.userData || {};
+        ref.userData.hasWrapped = false;
+
+        // If a group is off screen move it to the opposite side of the entire grid
+        // Horizontal
+        if (dir.x < 0 && posX - groupOff > viewportOff.x) {
+          gridGroupRefs.current[i].offset.x -= TOTAL_GRID_SIZE_X * 3;
+          ref.userData.hasWrapped = true;
+        } else if (dir.x > 0 && posX + groupOff < -viewportOff.x) {
+          gridGroupRefs.current[i].offset.x += TOTAL_GRID_SIZE_X * 3;
+          ref.userData.hasWrapped = true;
+        }
+        // Vertical
+        if (dir.y < 0 && posY - groupOff > viewportOff.y) {
+          gridGroupRefs.current[i].offset.y -= TOTAL_GRID_SIZE_Y * 3;
+          ref.userData.hasWrapped = true;
+        } else if (dir.y > 0 && posY + groupOff < -viewportOff.y) {
+          gridGroupRefs.current[i].offset.y += TOTAL_GRID_SIZE_Y * 3;
+          ref.userData.hasWrapped = true;
+        }
+
+        // Now update individual tiles within each group based on row
+        ref.traverse((child) => {
+          if (child instanceof THREE.Mesh && child.userData) {
+            const row = child.userData.row;
+            // Check if this is a top or bottom row
+            if (row === 0 || row === GRID_SIZE_Y - 1) {
+              // Store original position when first encountered
+              if (child.userData.originalX === undefined) {
+                child.userData.originalX = child.position.x;
+              }
+
+              // Calculate how far the delayed scroll is behind the current scroll
+              const delayedScrollX = topBottomScrollRef.current.current.x;
+              const currentScrollX = scrollX;
+
+              // Calculate the lag (difference between current and delayed scroll)
+              const scrollLag = currentScrollX - delayedScrollX;
+
+              // Apply different lag amounts based on row
+              // Top row (row 0) gets a bigger lag effect than bottom row
+              const lagMultiplier = row === 0 ? 0.7 : 0.3;
+
+              // Apply the lag as a position offset to create delayed movement
+              if (!ref.userData.hasWrapped) {
+                // Use original position as the base, then apply the adjusted lag offset
+                child.position.x =
+                  child.userData.originalX - scrollLag * lagMultiplier;
+              } else {
+                // When wrapping happens, reset the original position reference
+                child.userData.originalX = child.position.x;
+              }
+            }
+          }
+        });
+      });
+    }
+
+    // For the subgrid section, also add the dir variable declaration
+    subgridGroupRefs.current.forEach(({ ref, offset }, i) => {
+      const pos = SUBGRID_TILE_GROUPS[i].pos;
+      let dir = directionRef.current; // Add this line here too
+      let posX = pos[0] + scrollX + offset.x;
+      let posY = 0; // Default Y position
+
+      // If a main grid tile is selected, position the subgrid at its Y position
+      if (clickedMeshRef.current && !isSubgridMesh(clickedMeshRef.current)) {
+        const groupIndex = clickedMeshRef.current.groupIndex || 0;
+        const tileY = clickedMeshRef.current.position.y;
+        const groupY = gridGroupRefs.current[groupIndex].ref.position.y;
+        posY = tileY + groupY;
+      }
+
+      ref.position.set(posX, posY, pos[2]);
+
+      // Calculate the total width of the subgrid including gaps
+      const totalWidth =
+        TILE_SIZE * SUBGRID_SIZE + (SUBGRID_SIZE - 1) * GRID_GAP;
+
+      // Calculate screen bounds in world space
+      const screenBoundLeft =
+        -camera.position.z *
+        Math.tan((camera.fov * Math.PI) / 360) *
+        camera.aspect;
+      const screenBoundRight = -screenBoundLeft;
+
+      // Check if the group is completely off screen and wrap it
+      if (dir.x < 0 && posX - totalWidth / 2 - TILE_SIZE > screenBoundRight) {
+        // Group is off the right edge, move it to the left
+        subgridGroupRefs.current[i].offset.x -= TOTAL_SUBGRID_SIZE * 3;
+      } else if (
+        dir.x > 0 &&
+        posX + totalWidth / 2 + TILE_SIZE < screenBoundLeft
+      ) {
+        // Group is off the left edge, move it to the right
+        subgridGroupRefs.current[i].offset.x += TOTAL_SUBGRID_SIZE * 3;
+      }
+    });
+  };
+
+  // Animation loop
+  useFrame((state) => {
+    // Pass the necessary refs to checkHover
+    checkHover(
+      state.pointer,
+      camera,
+      state.scene,
+      clickedMeshRef,
+      mainGridSelectionRef,
+      gridGroupRefs,
+      subgridGroupRefs
+    );
+
+    checkClicked();
+
+    // Handle camera zoom
+    if (camera) {
+      camera.position.z = lerp(camera.position.z, targetZoomRef.current, 0.05);
+    }
+
+    // Handle centering animation
+    if (isCenteringRef.current) {
+      const distanceX = targetCenterRef.current.x - scrollRef.current.current.x;
+      const distanceY = targetCenterRef.current.y - scrollRef.current.current.y;
+
+      // If we're close enough to the target, stop centering
+      if (Math.abs(distanceX) < 0.01 && Math.abs(distanceY) < 0.01) {
+        isCenteringRef.current = false;
+      } else {
+        // Set new target position with easing
+        scrollRef.current.target = {
+          x: lerp(scrollRef.current.current.x, targetCenterRef.current.x, 0.5),
+          y: lerp(scrollRef.current.current.y, targetCenterRef.current.y, 0.5),
+        };
+      }
+    }
+
+    // Update scroll position with easing
+    scrollRef.current.current = {
+      x: lerp(
+        scrollRef.current.current.x,
+        scrollRef.current.target.x,
+        scrollRef.current.ease
+      ),
+      y: lerp(
+        scrollRef.current.current.y,
+        scrollRef.current.target.y,
+        scrollRef.current.ease
+      ),
+    };
+
+    // Determine scroll direction
+    // Vertical
+    if (scrollRef.current.current.y > scrollRef.current.last.y) {
+      directionRef.current.y = -1;
+    } else if (scrollRef.current.current.y < scrollRef.current.last.y) {
+      directionRef.current.y = 1;
+    }
+    // Horizontal
+    if (scrollRef.current.current.x > scrollRef.current.last.x) {
+      directionRef.current.x = -1;
+    } else if (scrollRef.current.current.x < scrollRef.current.last.x) {
+      directionRef.current.x = 1;
+    }
+
+    // Calculate new strength values
+    const strengthX = Math.abs(
+      ((scrollRef.current.current.x - scrollRef.current.last.x) /
+        screenRef.current.width) *
+        5 // Reduced from 10 to 5
+    );
+    const strengthY = Math.abs(
+      ((scrollRef.current.current.y - scrollRef.current.last.y) /
+        screenRef.current.width) *
+        5 // Reduced from 10 to 5
+    );
+
+    // Store the strength values in the ref
+    strengthRef.current = { x: strengthX, y: strengthY };
+
+    setPositions();
+
+    scrollRef.current.last = {
+      x: scrollRef.current.current.x,
+      y: scrollRef.current.current.y,
+    };
+  });
+
+  return (
+    <>
+      {/* Add Environment for realistic lighting and reflections */}
+      <Environment preset="city" />
+
+      <GridTiles
+        tiles={GRID_TILES}
+        groups={GRID_TILE_GROUPS}
+        gridRefs={gridGroupRefs}
+        subgridRefs={subgridGroupRefs}
+      />
+      <GridTiles
+        tiles={SUBGRID_TILE_GROUPS}
+        groups={SUBGRID_TILE_GROUPS}
+        isSubgrid={true}
+        gridRefs={gridGroupRefs}
+        subgridRefs={subgridGroupRefs}
+      />
+
+      {/* Reflective floor that appears only in subgrid mode */}
+      <ReflectiveFloor
+        clickedMeshRef={clickedMeshRef}
+        subgridGroupRefs={subgridGroupRefs}
+        mainGridSelectionRef={mainGridSelectionRef}
+      />
+
+      {/* Post-processing effects */}
+    </>
+  );
+}
+
+// Add a new component for the reflective floor
+function ReflectiveFloor({
+  clickedMeshRef,
+  subgridGroupRefs,
+  mainGridSelectionRef,
+}) {
+  const [visible, setVisible] = useState(false);
+  const meshRef = useRef();
+  const materialRef = useRef();
+  const subgridModeStartTimeRef = useRef(null);
+  const DELAY_MS = 1000; // 1 second delay
+
+  // Helper function to check if a mesh is part of the subgrid
+  const isSubgridMesh = useCallback(
+    (mesh) => {
+      if (!mesh || !mesh.parent) return false;
+      return subgridGroupRefs.current.some(({ ref }) => mesh.parent === ref);
+    },
+    [subgridGroupRefs]
+  );
+
+  // Animate the floor opacity based on subgrid mode
+  useFrame(() => {
+    if (!meshRef.current || !materialRef.current) return;
+
+    // We need to check if mainGridSelectionRef is not null, which indicates
+    // that the subgrid is open, regardless of whether a subgrid tile is selected
+    const isSubgridMode = mainGridSelectionRef.current !== null;
+
+    // Track when we enter subgrid mode
+    if (isSubgridMode && subgridModeStartTimeRef.current === null) {
+      subgridModeStartTimeRef.current = performance.now();
+    } else if (!isSubgridMode) {
+      subgridModeStartTimeRef.current = null;
+    }
+
+    // Check if we've been in subgrid mode for at least DELAY_MS
+    const hasDelayPassed =
+      subgridModeStartTimeRef.current !== null &&
+      performance.now() - subgridModeStartTimeRef.current >= DELAY_MS;
+
+    // Target opacity is higher when in subgrid mode AND delay has passed
+    const targetOpacity = isSubgridMode && hasDelayPassed ? 1.0 : 0;
+
+    // Adjust floor position based on whether a subgrid tile is selected
+    const isSubgridTileSelected =
+      clickedMeshRef.current !== null && isSubgridMesh(clickedMeshRef.current);
+    const targetY = isSubgridTileSelected ? -1.85 : -1.45;
+
+    // Smoothly animate the opacity
+    materialRef.current.opacity = lerp(
+      materialRef.current.opacity,
+      targetOpacity,
+      0.015
+    );
+    meshRef.current.position.y = lerp(
+      meshRef.current.position.y,
+      targetY,
+      0.025
+    );
+
+    // Update visibility for optimization - only show when opacity is noticeable
+    //const hideThreshold = isSubgridMode ? 0.99 : 0.05;
+    if (materialRef.current.opacity < (isSubgridMode ? 0.25 : 0.75)) {
+      meshRef.current.visible = false;
+    } else {
+      meshRef.current.visible = true;
+    }
+  });
+
+  return (
+    <mesh
+      ref={meshRef}
+      rotation={[-Math.PI / 2, 0, 0]}
+      position={[0, -1.25, -20]} // Fixed position below the scene
+      visible={false} // Start hidden
+    >
+      <planeGeometry args={[50, 50]} />
+      <MeshReflectorMaterial
+        ref={materialRef}
+        blur={[300, 300]}
+        resolution={1024}
+        mixBlur={1}
+        mixStrength={15}
+        roughness={1}
+        depthScale={1.2}
+        minDepthThreshold={0.3}
+        maxDepthThreshold={1}
+        color="#101010"
+        metalness={1}
+        transparent={true}
+        opacity={0}
+      />
+    </mesh>
+  );
+}
+
+// Helper function to lerp between colors
+const lerpColor = (
+  startColor: THREE.Color,
+  endColor: THREE.Color,
+  alpha: number
+): THREE.Color => {
+  const result = new THREE.Color();
+  result.r = startColor.r + (endColor.r - startColor.r) * alpha;
+  result.g = startColor.g + (endColor.g - startColor.g) * alpha;
+  result.b = startColor.b + (endColor.b - startColor.b) * alpha;
+  return result;
+};
+
+// Update the updateMesh function to include the sine wave animation
+const updateMesh = (
+  mesh: ExtendedMesh,
+  clickedMeshRef: React.RefObject<ExtendedMesh>,
+  mainGridSelectionRef: React.RefObject<ExtendedMesh>,
+  subgridGroupRefs: any
+) => {
+  if (mesh.targetScale) {
+    // Apply the scale with lerp for each dimension
+    // Use the base width and height for all tiles
+    const newScaleX = lerp(
+      mesh.scale.x,
+      mesh.targetScale.x * TILE_WIDTH,
+      0.075
+    );
+    const newScaleY = lerp(
+      mesh.scale.y,
+      mesh.targetScale.y * TILE_HEIGHT,
+      0.075
+    );
+    const newScaleZ = lerp(mesh.scale.z, mesh.targetScale.z, 0.075);
+    mesh.scale.set(newScaleX, newScaleY, newScaleZ);
+    //keeps image from stretching on scaling
+    mesh.material.scale.set(newScaleX, newScaleY);
+  }
+
+  if (typeof mesh.targetRotation !== "undefined") {
+    const currentRotation = mesh.rotation.y;
+    const ROTATION_SPEED = 0.02;
+    const newRotation = lerp(
+      currentRotation,
+      mesh.targetRotation,
+      ROTATION_SPEED
+    );
+    mesh.rotation.y = newRotation;
+  }
+  if (!mesh.material || !(mesh.material instanceof THREE.ShaderMaterial))
+    return;
+
+  const isHovered = mesh.userData.isHovered || false;
+  const isSelected = mesh === clickedMeshRef.current;
+  const isMainGridSelected = mesh === mainGridSelectionRef.current;
+  const isTopOrBottomRow = mesh.userData.isTopOrBottomRow || false;
+
+  // Check if this is a subgrid mesh
+  const isSubgridMesh = (mesh: THREE.Object3D) => {
+    return (
+      mesh.parent &&
+      subgridGroupRefs?.current?.some(({ ref }) => mesh.parent === ref)
+    );
+  };
+
+  // Check if any subgrid tile is selected
+  const isAnySubgridTileSelected =
+    clickedMeshRef.current && isSubgridMesh(clickedMeshRef.current);
+
+  // Check if this is a non-selected subgrid tile when another subgrid tile is selected
+  const isNonSelectedSubgridTile =
+    isSubgridMesh(mesh) && isAnySubgridTileSelected && !isSelected;
+
+  // Initialize target values if they don't exist
+  if (mesh.userData.targetMaterial === undefined) {
+    mesh.userData.targetMaterial = {
+      grayscale: 0.7,
+      zoom: 1.0,
+      radius: 0.05,
+      color: new THREE.Color("#777"),
+    };
+  }
+
+  // Get current time for sine wave calculation
+  const time = performance.now() * 0.001; // Convert to seconds
+  const sineWave = Math.sin(time * 1) * 0.075 + 1.1; // Same formula as in Gallery.tsx
+
+  // Set target material properties based on state
+  if (isTopOrBottomRow) {
+    // Always grey for top/bottom rows
+    mesh.userData.targetMaterial.grayscale = 1.0;
+    mesh.userData.targetMaterial.zoom = 1.0;
+    mesh.userData.targetMaterial.radius = 0.05;
+    mesh.userData.targetMaterial.color = new THREE.Color("#555"); // Darker grey color
+  } else if (isSelected || isMainGridSelected) {
+    // Selected state
+    mesh.userData.targetMaterial.grayscale = 0.0; // Full color
+    mesh.userData.targetMaterial.radius = 0.025;
+    mesh.userData.targetMaterial.zoom = 1 * sineWave; // Apply sine wave to zoom
+    mesh.userData.targetMaterial.color = new THREE.Color("#fff"); // White
+  } else if (isNonSelectedSubgridTile) {
+    // Non-selected subgrid tile when another is selected - make darker
+    mesh.userData.targetMaterial.grayscale = 0.9; // More grayscale
+    mesh.userData.targetMaterial.zoom = 1.0; // No zoom
+    mesh.userData.targetMaterial.radius = 0.05;
+    mesh.userData.targetMaterial.color = new THREE.Color("#333"); // Darker gray
+  } else if (isHovered) {
+    // Hovered state
+    mesh.userData.targetMaterial.radius = 0.05;
+    mesh.userData.targetMaterial.grayscale = 0.05; // Slight grayscale
+    mesh.userData.targetMaterial.zoom = 1.5 * sineWave; // Apply sine wave to zoom
+    mesh.userData.targetMaterial.color = new THREE.Color("#fff"); // Light gray
+    if (isSubgridMesh(mesh)) mesh.targetScale = { x: 1, y: 1.25, z: 1 };
+  } else {
+    // Default state - ensure we're setting fixed values here, not animated ones
+    mesh.userData.targetMaterial.grayscale = 0.5; // More grayscale
+    mesh.userData.targetMaterial.zoom = 1.0; // No zoom animation for default state
+    mesh.userData.targetMaterial.radius = 0.05; // Default corners
+    mesh.userData.targetMaterial.color = new THREE.Color("#fff"); // Gray
+  }
+
+  // Lerp current values toward target values
+  const lerpFactor =
+    isHovered || isSelected || isMainGridSelected ? 0.02 : 0.02; // Faster transition to active states, slower to default
+
+  // Lerp material uniforms
+  mesh.material.uniforms.grayscale.value = lerp(
+    mesh.material.uniforms.grayscale.value,
+    mesh.userData.targetMaterial.grayscale,
+    lerpFactor
+  );
+
+  mesh.material.uniforms.zoom.value = lerp(
+    mesh.material.uniforms.zoom.value,
+    mesh.userData.targetMaterial.zoom,
+    lerpFactor
+  );
+
+  mesh.material.uniforms.radius.value = lerp(
+    mesh.material.uniforms.radius.value,
+    mesh.userData.targetMaterial.radius,
+    lerpFactor
+  );
+
+  // Lerp color
+  const currentColor = mesh.material.uniforms.color.value;
+  const targetColor = mesh.userData.targetMaterial.color;
+
+  mesh.material.uniforms.color.value = lerpColor(
+    currentColor,
+    targetColor,
+    lerpFactor
+  );
+};
+
+export const Gallery2 = () => {
+  return (
+    <div
+      id="galleryContainer"
+      style={{
+        position: "absolute",
+        top: 150,
+        bottom: 0,
+        left: 0,
+        margin: "auto",
+        width: "100%",
+        height: "100%",
+      }}
+    >
+      <Canvas
+        camera={{
+          position: [0, 0, 10],
+          fov: 45,
+          near: 1,
+          far: 1000,
+        }}
+        gl={{
+          antialias: true,
+          alpha: false,
+          preserveDrawingBuffer: true,
+          powerPreference: "high-performance",
+          stencil: false,
+          depth: true,
+        }}
+        dpr={[1, 1.5]}
+        onCreated={({ gl }) => gl.setClearColor(0x000000, 1)}
+      >
+        <Scene />
+        {process.env.NODE_ENV !== "development" && <Perf position="top-left"/>}
+      </Canvas>
+    </div>
+  );
+};

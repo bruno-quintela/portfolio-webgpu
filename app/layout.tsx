@@ -21,7 +21,7 @@ export default function RootLayout({
           strategy="beforeInteractive"
         />
       </head>
-      <body className="text-white">
+      <body className="p-0 m-0 bg-white overflow-hidden">
         <Layout />
         {children}
         <Script

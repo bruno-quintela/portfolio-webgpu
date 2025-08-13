@@ -14,7 +14,11 @@
     "@react-three/fiber": "^9.1.0",
     "@types/three": "^0.174.0",
     "gsap": "^3.12.7",
+    "liquid-glass-react": "^1.1.1",
+    "lucide-react": "^0.509.0",
     "next": "15.2.3",
+    "normalize-wheel": "^1.0.1",
+    "r3f-perf": "^7.2.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "three": "^0.174.0"
