@@ -1,10 +1,9 @@
-import Script from 'next/script';
 import type { Metadata } from 'next';
 import './globals.css';
 import { Layout } from '@/components/layout';
 
 export const metadata: Metadata = {
-  title: 'Scanning effect with depth map | Codrops',
+  title: '11Scanning effect with depth map | Codrops',
   description: 'Scanning effect with depth map',
 };
 
@@ -15,19 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <Script
-          src="//tympanus.net/codrops/adpacks/analytics.js"
-          strategy="beforeInteractive"
-        />
-      </head>
       <body className="p-0 m-0 bg-white overflow-hidden">
         <Layout />
         {children}
-        <Script
-          src="https://tympanus.net/codrops/adpacks/cda_sponsor.js"
-          strategy="afterInteractive"
-        />
       </body>
     </html>
   );
