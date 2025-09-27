@@ -6,7 +6,7 @@ import NewGallery from "@/components/newGallery";
 
 export default function Page() {
   return (
-    <div className="flex mt-0 text-black-400 bg-black flex-col w-full h-svh align-center justify-center items-center overflow-hidden">
+    <div className="flex py-0 text-black-400 bg-black flex-col w-full h-svh align-center justify-center items-center overflow-hidden">
       {/* <GalleryInfinite3 /> */}
       <NewGallery />
       {/* <GalleryOverlay /> */}

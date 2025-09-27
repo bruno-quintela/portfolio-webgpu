@@ -25,9 +25,7 @@
   font-display: swap;
 }
 
-* {
-  margin: 0;
-  padding: 0;
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
@@ -87,33 +85,34 @@ body {
 }
 
 .corner-text-top-left {
-  top: 2rem;
+  top: 6rem;
   left: 2rem;
+  display: none;
 }
 
 .corner-text-top-right {
-  top: 2rem;
+  top: 6rem;
   right: 2rem;
   text-align: right;
 }
 
 .corner-text-bottom-left {
-  bottom: 2rem;
+  bottom: 4rem;
   left: 2rem;
 }
 
 .corner-text-bottom-right {
-  bottom: 2rem;
+  bottom: 4rem;
   right: 2rem;
   text-align: right;
 }
 
 .corner-text-shortcuts {
   top: 50%;
-  left: 2rem;
+  right: 2rem;
   transform: translateY(-50%);
   font-size: 10px;
-  text-align: left;
+  text-align: right;
 }
 
 .corner-text-center {
@@ -149,9 +148,9 @@ body {
 
 .slide-text {
   position: absolute;
-  top: 10%;
-  left: 30%;
-  transform: translate(-50%, -50%);
+  top: 6rem;
+  left: 2rem;
+  /* transform: translate(-50%, -50%); */
   color: var(--color-text);
   z-index: var(--content-z);
 }
@@ -233,12 +232,12 @@ body {
 
 .slide-paragraph {
   position: absolute;
-  bottom: 10%;
-  right: 30%;
-  transform: translate(50%, -50%);
+  top: 16rem;
+  left: 2rem;
+  /* transform: translate(50%, -50%); */
   color: var(--color-text);
   z-index: var(--content-z);
-  width: 460px;
+  width: 33%;
   overflow: hidden;
 }
 
@@ -260,8 +259,8 @@ body {
   left: 0;
   color: var(--color-text);
   font-family: var(--font-sans);
-  font-size: 1.25em;
-  font-weight: 500;
+  font-size: 1em;
+  font-weight: 400;
   line-height: 1.4;
   transform: translateY(0px);
   will-change: transform;

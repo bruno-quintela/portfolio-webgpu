@@ -19,8 +19,8 @@ const NewGallery = () => {
   </aside>
 
   <aside className="corner-text corner-text-top-right" aria-hidden="true">
-    <div>MADNESS</div>
-    <div>RISES</div>
+    <div>Audio</div>
+    <div>Settings</div>
   </aside>
 
   <aside className="corner-text corner-text-bottom-left" aria-hidden="true">
@@ -32,8 +32,8 @@ const NewGallery = () => {
   </aside>
 
   <aside className="corner-text corner-text-bottom-right" aria-hidden="true">
-    <div>ELDRITCH</div>
-    <div>AWAKENS</div>
+    <div>NEXT</div>
+    <div>PREVIOUS</div>
   </aside>
 
   <nav className="corner-text corner-text-shortcuts" aria-label="Keyboard shortcuts">
@@ -52,8 +52,8 @@ const NewGallery = () => {
 
   <aside className="corner-text corner-text-center" aria-hidden="true">
     <div>R&rsquo;LYEH</div>
-    <div></div>
     <div>FHTAGN</div>
+    <div></div>
     <div></div>
     <div></div>
     <div></div>
@@ -71,14 +71,14 @@ const NewGallery = () => {
   </section>
 
   <header className="slide-text" data-slide-text>
-    <div className="slide-number" data-slide-number>
-      <span>∅1</span>
-    </div>
     <div className="slide-title" data-slide-title>
       <h1>Awakening Abyss</h1>
     </div>
     <div className="slide-description" data-slide-description>
       <p>Eldritch Emergence</p>
+    </div>
+    <div className="slide-number" data-slide-number>
+      <span>∅1</span>
     </div>
   </header>
 

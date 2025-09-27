@@ -44,7 +44,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="fixed top-0 w-full h-auto z-50">
-      <div className=" grid grid-cols-4 items-center gap-8 px-8 py-4 pb-5 bg-black border-b border-black">
+      <div className=" grid grid-cols-4 items-center gap-8 px-8 py-4 pb-5 backdrop-blur-sm hover:bg-black/100 z-50 transition-all duration-300">
         {/* Left Side */}
         <h1 className="flex items-center text-lg h-auto font-medium text-zinc-400">
           <Image
@@ -99,8 +99,8 @@ const Header: React.FC = () => {
       </div>
       {/* NAVIGATION Content */}
       
-      <div className=" grid grid-cols-4 gap-8 px-8 py-4 pb-8 items-start  hover:bg-black/10 z-50 transition-all duration-300">
-        {/* Right Side */}
+      {/* <div className=" grid grid-cols-4 gap-8 px-8 py-8 pb-8 items-start  hover:bg-black/100 z-50 transition-all duration-300">
+
 
         <div className=" w-full col-span-2 grid grid-cols-2 gap-4 ">
           <span className="text-base font-thin text-zinc-100">
@@ -114,7 +114,7 @@ const Header: React.FC = () => {
             className="mb-0 opacity-70 hover:opacity-100 flex-1 flex-col text-sm font-medium text-zinc-400 gap-2"
           >
             <div className="text-sm text-zinc-100 uppercase mb-1.5">01 Currently playing</div>
-            {/* <div className="text-sm font-normal text-zinc-400">Female Figures IV</div> */}
+
             <div className="text-xs font-normal text-zinc-500">A navigation buttons in your header will now visually indicate which page is currently selected, based on the current pathname.</div>
           </div>
         </div>
@@ -134,7 +134,7 @@ const Header: React.FC = () => {
             </button>
           </div>
         </div>
-      </div>
+      </div> */}
     </header>
   );
 };
