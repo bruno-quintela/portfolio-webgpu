@@ -46,51 +46,59 @@ const Header: React.FC = () => {
     <header className="fixed top-0 w-full h-auto z-50">
       <div className=" grid grid-cols-4 items-center gap-8 px-8 py-4 pb-5 backdrop-blur-sm hover:bg-black/100 z-50 transition-all duration-300">
         {/* Left Side */}
-        <h1 className="flex items-center text-lg h-auto font-medium text-zinc-400">
-          <Image
+        <h1 className="flex items-center">
+          {/* <Image
             className="mr-4 rounded w-auto cursor-pointer"
             src="/logo5.png"
             alt="Logo"
             width={17}
             height={17}
-          />
-          <span className="mr-2">BRUNO QUINTELA</span>
+          /> */}
+          <span className="mr-2 font-mono text-xs h-auto text-zinc-400">#BRUN02TELA001292</span>
+          <Link
+            href="/about" className="mr-2 font-mono text-xs h-auto text-zinc-400 uppercase">/ About
+          </Link>
+          <Link
+            href="/about" className="mr-2 font-mono text-xs h-auto text-white uppercase">Gallery
+          </Link>
         </h1>
         <div className="flex items-center justify-end gap-4">
-          <Link
+          {/* <Link
             href="/about"
             className={`text-sm font-medium cursor-pointer transition-all duration-200 ${isSelected("/about") ? "text-white font-bold" : "text-zinc-400 hover:text-zinc-300"}`}
           >
             ABOUT
-          </Link>
+          </Link> */}
         </div>
         <h1 className="flex items-center text-lg h-4 font-medium text-zinc-400">
           <div className=" w-full grid grid-cols-2 gap-4">
             <div className="flex items-center gap-4">
-              <Link
+              {/* <Link
                 href="/gallery"
                 className={`text-sm font-medium cursor-pointer ${isSelected("/gallery") ? "text-white font-bold" : "text-zinc-400"} hover:text-zinc-300`}
               >
                 GALLERY
-                {/* <span className="text-sm text-zinc-400">[6]</span> */}
-              </Link>
+               
+              </Link> */}
             </div>
           </div>
         </h1>
         <div className="flex items-center justify-end gap-4">
           
           {/* <div className="text-sm text-zinc-400">Since 2012</div> */}
-          <div className="flex items-center gap-2 text-sm text-zinc-400">
+          <div className="flex items-center gap-0 text-sm text-zinc-400">
             
             {/* <button className="bg-white/10 rounded-2xl w-full px-1 py-1 text-xs border border-zinc-700 hover:border-zinc-400 text-zinc-400 hover:text-white transition-all ease-in-out duration-200 cursor-pointer">
               <Info size={16} color="#bbb" className="" />
             </button> */}
-            <button className="bg-white/10 rounded-2xl px-1 py-1 text-xs border border-zinc-700 hover:border-zinc-400 text-zinc-400 hover:text-white transition-all ease-in-out duration-200 cursor-pointer">
+            {/* <button className="bg-white/10 rounded-2xl px-1 py-1 text-xs border border-zinc-700 hover:border-zinc-400 text-zinc-400 hover:text-white transition-all ease-in-out duration-200 cursor-pointer">
               <VolumeOff size={16} className="" />
             </button>
             <button className="bg-white/10 rounded-2xl px-1 py-1 text-xs border border-zinc-700 hover:border-zinc-400 text-zinc-400 hover:text-white transition-all ease-in-out duration-200 cursor-pointer">
               <Settings size={16} className="" />
-            </button>
+            </button> */}
+            <span className="mr-0 font-mono text-xs h-auto text-zinc-200">AUDIO</span>
+            <span className="ml-1 font-mono text-xs h-auto text-zinc-400">ON</span>
           </div>
         </div>
         {/* <span className="absolute right-8 text-lg font-thin text-neutral-900 float-end">

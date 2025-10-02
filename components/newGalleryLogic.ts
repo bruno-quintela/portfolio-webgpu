@@ -24,6 +24,58 @@ export function startNewGallery() {
 `;
   document.head.appendChild(preloaderStyle);
 
+
+
+  function setupGeometricBackground() {
+    const gridLinesGroup = document.getElementById("grid-lines");
+    if (!gridLinesGroup) return;
+  
+    const gridSpacing: number = 100;
+    for (let i = 0; i <= 40; i++) {
+      const vLine = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "line"
+      );
+      vLine.setAttribute("class", "grid-line");
+      vLine.setAttribute("x1", i * gridSpacing);
+      vLine.setAttribute("y1", 0);
+      vLine.setAttribute("x2", i * gridSpacing);
+      vLine.setAttribute("y2", 1080);
+      gridLinesGroup.appendChild(vLine);
+      if (i <= 22) {
+        const hLine = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "line"
+        );
+        hLine.setAttribute("class", "grid-line");
+        hLine.setAttribute("x1", 0);
+        hLine.setAttribute("y1", i * gridSpacing);
+        hLine.setAttribute("x2", 1920);
+        hLine.setAttribute("y2", i * gridSpacing);
+        gridLinesGroup.appendChild(hLine);
+      }
+    }
+
+    const handleMouseMove = (event: MouseEvent) => {
+      const x = event.clientX;
+      const y = event.clientY;
+  
+      // Update debug text elements with mouse position
+      const debugLine1 = document.getElementById('debugLine1');
+      const debugLine2 = document.getElementById('debugLine2');
+      const debugLine3 = document.getElementById('debugLine3');
+      const debugLine4 = document.getElementById('debugLine4');
+  
+      if (debugLine1) debugLine1.textContent = `AWARENESS: ASCENDING [${x}]`;
+      if (debugLine2) debugLine2.textContent = `STATE: DISSOLVING .${y}`;
+      if (debugLine3) debugLine3.textContent = `ENERGY: RADIATING ${((x / window.innerWidth).toFixed(3))}`;
+      if (debugLine4) debugLine4.textContent = `PRESENCE: EXPANDING ${((y / window.innerHeight).toFixed(3))}`;
+    }
+  
+    window.addEventListener('mousemove', handleMouseMove);
+
+  }
+
   // Lightweight scramble text helper (replacement for ScrambleTextPlugin)
   function scrambleText(
     element: Element | null,
@@ -279,8 +331,8 @@ export function startNewGallery() {
       const slideData = [
         {
           title: "Awakening Abyss",
-          description: "Eldritch Emergence",
-          number: "∅1",
+          description: "#Eldritch #Emergence",
+          number: "13:04:2025",
           paragraphLines: [
             "Archived VHS documentary footage captures the moment",
             "an ancient cosmic entity ruptures frozen silence."
@@ -291,8 +343,8 @@ export function startNewGallery() {
         },
         {
           title: "Fractured Signal",
-          description: "Glitch Documentary",
-          number: "∅2",
+          description: "#Glitch #Documentary",
+          number: "04:04:2025",
           paragraphLines: [
             "The broadcast distorts as forbidden knowledge leaks",
             "through corrupted frames and spectral interference."
@@ -303,8 +355,8 @@ export function startNewGallery() {
         },
         {
           title: "Echoes of the Deep",
-          description: "Haunted Vision",
-          number: "∅3",
+          description: "#Haunted #Vision",
+          number: "03:04:2025",
           paragraphLines: [
             "Submerged memories resurface in spectral echoes,",
             "reminding viewers that the abyss remembers."
@@ -315,8 +367,8 @@ export function startNewGallery() {
         },
         {
           title: "Glitching Sanctum",
-          description: "Digital Cultifacts",
-          number: "∅4",
+          description: "#Digital #Cultifacts",
+          number: "05:04:2025",
           paragraphLines: [
             "A sacred data temple collapses into noise,",
             "its ritual code leaking forbidden patterns."
@@ -327,8 +379,8 @@ export function startNewGallery() {
         },
         {
           title: "Frozen Leviathan",
-          description: "Apocalyptic Witness",
-          number: "∅5",
+          description: "#Apocalyptic #Witness",
+          number: "09:04:2025",
           paragraphLines: [
             "The last frame holds the frozen titan—half-buried,",
             "its silence a prophecy of an unraveling world."
@@ -1774,6 +1826,7 @@ export function startNewGallery() {
 
       setupPane();
       initializeRenderer();
+      setupGeometricBackground();
       initEventListeners();
     });
   }

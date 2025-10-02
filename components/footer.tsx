@@ -20,7 +20,7 @@ const Footer: React.FC = () => {
             className="text-sm text-zinc-400 hover:text-black transition-colors"
           >
             <div className="flex items-center gap-2 text-sm text-zinc-400">
-              {/* <button className="bg-black/90 rounded-2xl px-1 py-1 text-xs border border-zinc-600 hover:border-zinc-400 text-zinc-400 hover:text-neutral-700 transition-all ease-in-out duration-200 cursor-pointer">
+              <button className="bg-black/90 rounded-2xl px-1 py-1 text-xs border border-zinc-600 hover:border-zinc-400 text-zinc-400 hover:text-neutral-700 transition-all ease-in-out duration-200 cursor-pointer">
                 <Info size={16} color="#777" className=""/>
               </button>
               <button className="bg-black/90 rounded-2xl px-1 py-1 text-xs border border-zinc-600 hover:border-zinc-400 text-zinc-400 hover:text-neutral-700 transition-all ease-in-out duration-200 cursor-pointer">
@@ -28,7 +28,7 @@ const Footer: React.FC = () => {
               </button>
               <button className="bg-black/90 rounded-2xl px-1 py-1 text-xs border border-zinc-600 hover:border-zinc-400 text-zinc-400 hover:text-neutral-700 transition-all ease-in-out duration-200 cursor-pointer">
                 <Settings size={16} color="#777" className=""/>
-              </button> */}
+              </button>
               
             </div>
           </a>
@@ -51,9 +51,9 @@ const Footer: React.FC = () => {
         </div>
         <div className=" w-full gap-4 text-right">
           <div
-            className="justify-end text-sm font-medium text-zinc-600 flex gap-2"
+            className="justify-end font-mono text-xs text-zinc-400 uppercase flex gap-2"
           >
-            [ scroll & drag to navigate | mouse wheel to zoom]
+            [ scroll & drag to navigate ]
             {/* <span className="font-normal text-zinc-400">Female Figures IV</span> */}
           </div>
         </div>

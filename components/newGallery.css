@@ -1,42 +1,3 @@
-:root {
-  --font-mono: "PP Supply Mono", monospace;
-  --font-sans: "PP Neue Montreal", sans-serif;
-  --color-text: #fff;
-  --content-z: 2;
-  --desktop-width: 500px;
-  --mobile-width: 300px;
-}
-
-@font-face {
-  font-family: "PP Neue Montreal";
-  src: url("https://assets.codepen.io/7558/PPNeueMontreal-Variable.woff2")
-    format("woff2");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "PP Supply Mono";
-  src: url("https://assets.codepen.io/7558/PPSupplyMono-Variable.woff2")
-    format("woff2");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-*, *::before, *::after {
-  box-sizing: border-box;
-}
-
-html,
-body {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  font-family: var(--font-sans);
-  background: black;
-}
 
 .featured-image-wrapper img {
   width: 100%;
@@ -67,6 +28,37 @@ body {
   z-index: 1;
 }
 
+.geometric-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.geometric-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.grid-line {
+  stroke: rgba(255, 255, 255, .25);
+  stroke-width: 1;
+  stroke-opacity: 0.3;
+  shape-rendering: crispEdges;
+}
+
+.geometric-text {
+  /* font-family: var(--font-primary); */
+  font-size: 12px;
+  fill: rgba(245, 245, 245, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: opacity 0.3s ease;
+}
+
 /* Corner Text Styles */
 .corner-text {
   position: fixed;
@@ -87,7 +79,7 @@ body {
 .corner-text-top-left {
   top: 6rem;
   left: 2rem;
-  display: none;
+  display: block;
 }
 
 .corner-text-top-right {
@@ -108,9 +100,8 @@ body {
 }
 
 .corner-text-shortcuts {
-  top: 50%;
-  right: 2rem;
-  transform: translateY(-50%);
+  bottom: 6rem;
+  left: 2rem;  /* transform: translateY(-50%); */
   font-size: 10px;
   text-align: right;
 }
@@ -148,7 +139,7 @@ body {
 
 .slide-text {
   position: absolute;
-  top: 6rem;
+  top: 4rem;
   left: 2rem;
   /* transform: translate(-50%, -50%); */
   color: var(--color-text);
@@ -159,7 +150,7 @@ body {
   position: relative;
   width: var(--desktop-width);
   height: 20px;
-  margin-bottom: 0.5em;
+  margin-top: 0.25em;
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
   overflow: hidden;
 }
@@ -168,7 +159,7 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  color: var(--color-text);
+  /* color: var(--color-text); */
   font-family: var(--font-mono);
   font-size: 12px;
   font-weight: 400;
@@ -232,12 +223,13 @@ body {
 
 .slide-paragraph {
   position: absolute;
-  top: 16rem;
-  left: 2rem;
+  bottom: 6rem;
+  right: 2rem;
   /* transform: translate(50%, -50%); */
   color: var(--color-text);
   z-index: var(--content-z);
-  width: 33%;
+  width: 100%;
+  text-align: right;
   overflow: hidden;
 }
 
@@ -256,10 +248,10 @@ body {
 .slide-paragraph-line span {
   position: absolute;
   top: 2px;
-  left: 0;
+  right: 0;
   color: var(--color-text);
   font-family: var(--font-sans);
-  font-size: 1em;
+  font-size: 1.25em;
   font-weight: 400;
   line-height: 1.4;
   transform: translateY(0px);
