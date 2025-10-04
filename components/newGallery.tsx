@@ -155,6 +155,7 @@ const NewGallery = () => {
           <span>an ancient cosmic entity ruptures frozen silence.</span>
         </div>
       </div>
+        
     </main>
   );
 };

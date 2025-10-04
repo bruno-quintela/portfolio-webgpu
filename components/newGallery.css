@@ -1,3 +1,49 @@
+/*TODO: move this to header.css*/
+.logo-circles {
+  position: relative;
+  width: 32px;
+  height: 32px;
+}
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  transition: transform 0.5s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+  width: .5rem;
+  height: .5rem;
+  background-color: #ffffff;
+  top: 50%;
+}
+
+.circle-1 {
+  left: 0;
+  transform: translate(0, -50%);
+}
+
+.circle-2 {
+  left: 1rem;
+  transform: translate(0, -50%);
+  mix-blend-mode: exclusion;
+}
+
+.logo-container:hover .circle-1 {
+  transform: translate(-0.5rem, -50%);
+}
+
+.logo-container:hover .circle-2 {
+  transform: translate(0.5rem, -50%);
+}
+.nav-hover-square {
+  position: absolute;
+  bottom: -40%;
+  left: 0;
+  width: 20%;
+  height: 2px;
+  background: #ffffff;
+  transform: translateY(-50%) scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+}
 
 .featured-image-wrapper img {
   width: 100%;
@@ -150,7 +196,7 @@
   position: relative;
   width: var(--desktop-width);
   height: 20px;
-  margin-top: 0.25em;
+  margin-top: 0;
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
   overflow: hidden;
 }
@@ -160,8 +206,8 @@
   top: 0;
   left: 0;
   /* color: var(--color-text); */
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-sans);
+  font-size: 10px;
   font-weight: 400;
   line-height: 1.5;
   transform: translateY(0px);

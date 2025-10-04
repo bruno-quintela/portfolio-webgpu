@@ -24,8 +24,6 @@ export function startNewGallery() {
 `;
   document.head.appendChild(preloaderStyle);
 
-
-
   function setupGeometricBackground() {
     const gridLinesGroup = document.getElementById("grid-lines");
     if (!gridLinesGroup) return;
