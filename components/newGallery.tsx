@@ -21,13 +21,6 @@ const NewGallery = () => {
       <div className="geometric-background">
         <svg className="geometric-svg" viewBox="0 0 1920 1080">
           <g id="grid-lines"></g>
-          <g id="circles-outline"></g>
-          <g id="circles-filled">
-            <clipPath id="right-half">
-              <rect x="960" y="0" width="960" height="1080" />
-            </clipPath>
-            <g clipPath="url(#right-half)"></g>
-          </g>
 
           <text className="geometric-text" x="550" y="250">
             THE CREATIVE
@@ -43,17 +36,11 @@ const NewGallery = () => {
             OF SOUND
           </text>
 
-          <text className="geometric-text" x="550" y="850" id="debugLine1">
+          <text className="geometric-text" x="550" y="850">
             AWARENESS: SILENCE
           </text>
-          <text className="geometric-text" x="550" y="865" id="debugLine2">
+          <text className="geometric-text" x="550" y="865">
             STATE: VOID
-          </text>
-          <text className="geometric-text" x="550" y="880" id="debugLine3">
-            ENERGY: DORMANT
-          </text>
-          <text className="geometric-text" x="550" y="895" id="debugLine4">
-            PRESENCE: SOLID
           </text>
 
           <text className="geometric-text" x="1250" y="850">
@@ -78,16 +65,39 @@ const NewGallery = () => {
     <div>Settings</div>
   </aside> */}
 
-      {/* <aside className="corner-text corner-text-bottom-left" aria-hidden="true">
-    <div>TENTACLES</div>
-    <div>EMERGE</div>
-    <div>ANCIENT</div>
-    <div>ONES</div>
-    <div>COSMIC</div>
-    <div>HORROR</div>
-    <div>FROM</div>
-    <div>DEPTHS</div>
-  </aside> */}
+      <aside className="corner-text corner-text-bottom-left" aria-hidden="true">
+        {/* <div className="" id="debugLine5">
+          STATE: VOID
+        </div>
+        <div className="" id="debugLine6">
+          ENERGY: DORMANT
+        </div> */}
+
+        <div id="debugLine1">FPS: 120</div>
+        <div id="debugLine2">Draw calls: 4/sec</div>
+        <div id="debugLine3">Polygons: 98200</div>
+        <div className="" id="debugLine7">
+          PERFORMANCE:GOOD
+        </div>
+      </aside>
+
+
+        <aside className="corner-text corner-text-top-right slide-counter">
+          <div className="counter-container counter-date">
+            <div className="counter-strip" data-slide-counter>
+              <span>01:12:1232</span>
+            </div>
+          </div>
+          <div className="counter-separator"></div>
+          <div className="counter-container counter-number">
+            <div className="counter-strip" data-slide-number>
+              <span>02</span>
+            </div>
+          </div>
+         
+          <div className="counter-total ml-1">&nbsp;/&nbsp;05</div>
+
+      </aside>
 
       {/* <aside className="corner-text corner-text-bottom-right" aria-hidden="true">
     <div>NEXT</div>
@@ -142,9 +152,9 @@ const NewGallery = () => {
         <div className="slide-description" data-slide-description>
           <p>Eldritch Emergence</p>
         </div>
-        <div className="slide-number text-zinc-400" data-slide-number>
+        {/* <div className="slide-number text-zinc-400" data-slide-number>
           <span>02:04:2025</span>
-        </div>
+        </div> */}
       </header>
 
       <div className="slide-paragraph" data-slide-paragraph>
@@ -155,7 +165,6 @@ const NewGallery = () => {
           <span>an ancient cosmic entity ruptures frozen silence.</span>
         </div>
       </div>
-        
     </main>
   );
 };

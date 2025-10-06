@@ -63,11 +63,15 @@ export function startNewGallery() {
       const debugLine2 = document.getElementById('debugLine2');
       const debugLine3 = document.getElementById('debugLine3');
       const debugLine4 = document.getElementById('debugLine4');
+      // const debugLine5 = document.getElementById('debugLine5');
+      // const debugLine6 = document.getElementById('debugLine6');
   
-      if (debugLine1) debugLine1.textContent = `AWARENESS: ASCENDING [${x}]`;
-      if (debugLine2) debugLine2.textContent = `STATE: DISSOLVING .${y}`;
-      if (debugLine3) debugLine3.textContent = `ENERGY: RADIATING ${((x / window.innerWidth).toFixed(3))}`;
-      if (debugLine4) debugLine4.textContent = `PRESENCE: EXPANDING ${((y / window.innerHeight).toFixed(3))}`;
+      if (debugLine1) debugLine1.textContent = `FPS: [${x}]`;
+      if (debugLine2) debugLine2.textContent = `Drawcalls: [${y}]`;
+      //if (debugLine3) debugLine3.textContent = `Polygons: ${((x / window.innerWidth).toFixed(3))}`;
+      //if (debugLine4) debugLine4.textContent = `PRESENCE: EXPANDING ${((y / window.innerHeight).toFixed(3))}`;
+      // if (debugLine5) debugLine5.textContent = `AWARENESS: INTERMITTENT ${((x / window.innerHeight).toFixed(3))}`;
+      // if (debugLine6) debugLine6.textContent = `VISON: ALTERNATING ${((x / window.innerHeight).toFixed(3))}`;
     }
   
     window.addEventListener('mousemove', handleMouseMove);
@@ -1503,8 +1507,12 @@ export function startNewGallery() {
 
       function createTextElements(slideIndex: number, transitionDirection: "up" | "down") {
         const newNumber = document.createElement("span");
-        newNumber.textContent = slideData[slideIndex].number;
+        newNumber.textContent = '0' + slideIndex;
         gsap.set(newNumber, { y: transitionDirection === "down" ? 20 : -20 });
+
+        const newCounter = document.createElement("span");
+        newCounter.textContent = slideData[slideIndex].number;
+        gsap.set(newCounter, { y: transitionDirection === "down" ? 20 : -20 });
 
         const newTitle = document.createElement("h1");
         newTitle.textContent = slideData[slideIndex].title;
@@ -1521,7 +1529,7 @@ export function startNewGallery() {
           return lineSpan;
         });
 
-        return { newNumber, newTitle, newDescription, newParagraphLines };
+        return { newNumber, newCounter, newTitle, newDescription, newParagraphLines };
       }
 
       function getNextImageIndex(direction: "up" | "down") {
@@ -1547,22 +1555,25 @@ export function startNewGallery() {
         const currentFeaturedWrapper = featuredImageContainer.querySelector("[data-featured-wrapper]") as HTMLElement;
 
         const numberContainer = (slider as HTMLElement).querySelector("[data-slide-number]") as HTMLElement;
+        const counterContainer = (slider as HTMLElement).querySelector("[data-slide-counter]") as HTMLElement;
         const titleContainer = (slider as HTMLElement).querySelector("[data-slide-title]") as HTMLElement;
         const descriptionContainer = (slider as HTMLElement).querySelector("[data-slide-description]") as HTMLElement;
         const paragraphLine1Container = (slider as HTMLElement).querySelector("[data-paragraph-line-1]") as HTMLElement;
         const paragraphLine2Container = (slider as HTMLElement).querySelector("[data-paragraph-line-2]") as HTMLElement;
 
         const currentNumber = numberContainer.querySelector("span");
+        const currentCounter = counterContainer.querySelector("span");
         const currentTitle = titleContainer.querySelector("h1");
         const currentDescription = descriptionContainer.querySelector("p");
         const currentParagraphLine1 = paragraphLine1Container.querySelector("span");
         const currentParagraphLine2 = paragraphLine2Container.querySelector("span");
 
         const newFeaturedWrapper = createFeaturedImageWrapper(nextIndex, transitionDirection);
-        const { newNumber, newTitle, newDescription, newParagraphLines } = createTextElements(nextIndex, transitionDirection);
+        const { newNumber, newCounter, newTitle, newDescription, newParagraphLines } = createTextElements(nextIndex, transitionDirection);
 
         featuredImageContainer.appendChild(newFeaturedWrapper);
         numberContainer.appendChild(newNumber);
+        counterContainer.appendChild(newCounter);
         titleContainer.appendChild(newTitle);
         descriptionContainer.appendChild(newDescription);
         paragraphLine1Container.appendChild(newParagraphLines[0]);
@@ -1579,7 +1590,7 @@ export function startNewGallery() {
 
         const transitionTimeline = gsap.timeline({
           onComplete: () => {
-            [currentFeaturedWrapper, currentNumber, currentTitle, currentDescription, currentParagraphLine1, currentParagraphLine2].forEach((element: any) => {
+            [currentFeaturedWrapper, currentNumber, currentCounter, currentTitle, currentDescription, currentParagraphLine1, currentParagraphLine2].forEach((element: any) => {
               if (element && element.parentNode) element.parentNode.removeChild(element);
             });
             state.shaderMaterial.uniforms.uProgress.value = 0;
@@ -1601,8 +1612,12 @@ export function startNewGallery() {
 
         transitionTimeline.to(currentNumber, { y: transitionDirection === "down" ? -20 : 20, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0);
         transitionTimeline.to(newNumber, { y: 0, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0);
-        transitionTimeline.to({}, { duration: 0.8, onStart: () => scrambleText(newNumber, slideData[nextIndex].number, 0.8, { chars: "∅øΩ§∆◊¶†‡0123456789", revealDelay: 0.3, speed: 0.4 }) }, 0.2);
+        transitionTimeline.to({}, { duration: 0.8, onStart: () => scrambleText(newNumber, '0' + (nextIndex+1).toString(), 0.8, { chars: "∅øΩ§∆◊¶†‡0123456789", revealDelay: 0.3, speed: 0.4 }) }, 0.2);
 
+        transitionTimeline.to(currentCounter, { y: transitionDirection === "down" ? -20 : 20, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0);
+        transitionTimeline.to(newCounter, { y: 0, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0);
+        transitionTimeline.to({}, { duration: 0.8, onStart: () => scrambleText(newCounter, slideData[nextIndex].number, 0.8, { chars: "∅øΩ§∆◊¶†‡0123456789", revealDelay: 0.3, speed: 0.4 }) }, 0.2);
+        
         transitionTimeline.to(currentTitle, { y: transitionDirection === "down" ? -60 : 60, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0.02);
         transitionTimeline.to(newTitle, { y: 0, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0.02);
         transitionTimeline.to({}, { duration: 1.2, onStart: () => scrambleText(newTitle, slideData[nextIndex].title, 1.2, { chars: "!<>-_\\/[]{}—=+*^?#ABCDEFGHIJKLMNOPQRSTUVWXYZ", revealDelay: 0.4, speed: 0.3 }) }, 0.3);

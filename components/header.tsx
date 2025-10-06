@@ -189,7 +189,7 @@ const Header: React.FC = () => {
             width={17}
             height={17}
           /> */}
-          <div className="mr-2 font-mono text-xs h-auto text-zinc-400">#BRUN02TELA001292 /</div>
+          <div className="mr-2 font-mono text-xs h-auto text-zinc-400"># BRUOU012TELA2 / </div>
           <Link
             href="/about" className="relative mr-2 font-mono text-xs h-auto text-zinc-300 hover:text-white uppercase"><div className="nav-hover-square"></div>About
           </Link>
