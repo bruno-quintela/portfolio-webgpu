@@ -6,7 +6,7 @@ import { gsap } from "gsap";
 
 //gsap.registerPlugin(ScrambleTextPlugin);
 
-export function startNewGallery() {
+export function startNewGallery(slideData: any) {
   if (typeof window === "undefined") return () => {};
 
   const preloaderStyle = document.createElement("style");
@@ -27,7 +27,7 @@ export function startNewGallery() {
   function setupGeometricBackground() {
     const gridLinesGroup = document.getElementById("grid-lines");
     if (!gridLinesGroup) return;
-  
+
     const gridSpacing: number = 100;
     for (let i = 0; i <= 40; i++) {
       const vLine = document.createElementNS(
@@ -57,25 +57,24 @@ export function startNewGallery() {
     const handleMouseMove = (event: MouseEvent) => {
       const x = event.clientX;
       const y = event.clientY;
-  
+
       // Update debug text elements with mouse position
-      const debugLine1 = document.getElementById('debugLine1');
-      const debugLine2 = document.getElementById('debugLine2');
-      const debugLine3 = document.getElementById('debugLine3');
-      const debugLine4 = document.getElementById('debugLine4');
+      const debugLine1 = document.getElementById("debugLine1");
+      const debugLine2 = document.getElementById("debugLine2");
+      const debugLine3 = document.getElementById("debugLine3");
+      const debugLine4 = document.getElementById("debugLine4");
       // const debugLine5 = document.getElementById('debugLine5');
       // const debugLine6 = document.getElementById('debugLine6');
-  
+
       if (debugLine1) debugLine1.textContent = `FPS: [${x}]`;
       if (debugLine2) debugLine2.textContent = `Drawcalls: [${y}]`;
       //if (debugLine3) debugLine3.textContent = `Polygons: ${((x / window.innerWidth).toFixed(3))}`;
       //if (debugLine4) debugLine4.textContent = `PRESENCE: EXPANDING ${((y / window.innerHeight).toFixed(3))}`;
       // if (debugLine5) debugLine5.textContent = `AWARENESS: INTERMITTENT ${((x / window.innerHeight).toFixed(3))}`;
       // if (debugLine6) debugLine6.textContent = `VISON: ALTERNATING ${((x / window.innerHeight).toFixed(3))}`;
-    }
-  
-    window.addEventListener('mousemove', handleMouseMove);
+    };
 
+    window.addEventListener("mousemove", handleMouseMove);
   }
 
   // Lightweight scramble text helper (replacement for ScrambleTextPlugin)
@@ -87,7 +86,10 @@ export function startNewGallery() {
   ) {
     if (!element) return;
     const el = element as HTMLElement;
-    const chars = (options.chars || "!<>-_/\\[]{}—=+*^?#0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz").split("");
+    const chars = (
+      options.chars ||
+      "!<>-_/\\[]{}—=+*^?#0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+    ).split("");
     const total = finalText.length;
     const revealDelay = Math.max(0, (options.revealDelay ?? 0) * duration);
     const startTime = performance.now();
@@ -96,7 +98,10 @@ export function startNewGallery() {
     function update(now: number) {
       const t = Math.min(1, (now - startTime) / (duration * 1000));
       // reveal progress after delay
-      const revealT = Math.max(0, (t * duration - revealDelay) / Math.max(0.0001, duration - revealDelay));
+      const revealT = Math.max(
+        0,
+        (t * duration - revealDelay) / Math.max(0.0001, duration - revealDelay)
+      );
       const revealedCount = Math.floor(revealT * total);
       let out = "";
       for (let i = 0; i < total; i++) {
@@ -138,7 +143,7 @@ export function startNewGallery() {
       return [
         Number.parseInt(hex.slice(1, 3), 16),
         Number.parseInt(hex.slice(3, 5), 16),
-        Number.parseInt(hex.slice(5, 7), 16)
+        Number.parseInt(hex.slice(5, 7), 16),
       ];
     }
     const match = hex.match(/\d+/g);
@@ -146,7 +151,7 @@ export function startNewGallery() {
       ? [
           Number.parseInt(match[0]),
           Number.parseInt(match[1]),
-          Number.parseInt(match[2])
+          Number.parseInt(match[2]),
         ]
       : [255, 255, 255];
   }
@@ -208,13 +213,13 @@ export function startNewGallery() {
         { radius: 35, count: 12 },
         { radius: 50, count: 16 },
         { radius: 65, count: 20 },
-        { radius: 80, count: 24 }
+        { radius: 80, count: 24 },
       ];
 
       // Red color scheme
       const colors = {
         primary: "#ff0000",
-        accent: "#ff6666"
+        accent: "#ff6666",
       };
 
       const animate = (timestamp: number) => {
@@ -245,7 +250,8 @@ export function startNewGallery() {
 
             const opacityWave =
               0.4 + Math.sin(time * 2 - ringIndex * 0.4 + i * 0.2) * 0.6;
-            const isActive = Math.sin(time * 2 - ringIndex * 0.4 + i * 0.2) > 0.6;
+            const isActive =
+              Math.sin(time * 2 - ringIndex * 0.4 + i * 0.2) > 0.6;
 
             // Draw line from center to point
             this.ctx!.beginPath();
@@ -255,10 +261,14 @@ export function startNewGallery() {
 
             if (isActive) {
               const accentRgb = hexToRgb(colors.accent);
-              this.ctx!.strokeStyle = `rgba(${accentRgb[0]}, ${accentRgb[1]}, ${accentRgb[2]}, ${opacityWave * 0.7})`;
+              this.ctx!.strokeStyle = `rgba(${accentRgb[0]}, ${accentRgb[1]}, ${
+                accentRgb[2]
+              }, ${opacityWave * 0.7})`;
             } else {
               const primaryRgb = hexToRgb(colors.primary);
-              this.ctx!.strokeStyle = `rgba(${primaryRgb[0]}, ${primaryRgb[1]}, ${primaryRgb[2]}, ${opacityWave * 0.5})`;
+              this.ctx!.strokeStyle = `rgba(${primaryRgb[0]}, ${
+                primaryRgb[1]
+              }, ${primaryRgb[2]}, ${opacityWave * 0.5})`;
             }
             this.ctx!.stroke();
 
@@ -303,7 +313,9 @@ export function startNewGallery() {
 
           // Fade in slider content after it's ready
           setTimeout(() => {
-            const sliders = document.querySelectorAll("[data-image-slider-init]");
+            const sliders = document.querySelectorAll(
+              "[data-image-slider-init]"
+            );
             sliders.forEach((slider) => {
               (slider as HTMLElement).classList.add("loaded");
             });
@@ -327,71 +339,10 @@ export function startNewGallery() {
         "https://assets.codepen.io/7558/horror-02.jpg",
         "https://assets.codepen.io/7558/horror-03.jpg",
         "https://assets.codepen.io/7558/horror-04.jpg",
-        "https://assets.codepen.io/7558/horror-05.jpg"
+        "https://assets.codepen.io/7558/horror-05.jpg",
       ];
 
-      const slideData = [
-        {
-          title: "Awakening Abyss",
-          description: "#Eldritch #Emergence",
-          number: "13:04:2025",
-          paragraphLines: [
-            "Archived VHS documentary footage captures the moment",
-            "an ancient cosmic entity ruptures frozen silence."
-          ],
-          prompt:
-            "Extreme footage of icy Cthulhu-like horror rising out of a shattering ice sinkhole. VHS dystopian documentary style, eerie retro science fiction, dark future photography fused with 3D Zdzislaw Beksinski surrealism. Downward vertigo angle, madness, haunted atmosphere, static, glitches, and digital noise. Saturated, vibrant colors with cold blue highlights and fractured light.",
-          caption: "Eldritch emergence in cracked ice"
-        },
-        {
-          title: "Fractured Signal",
-          description: "#Glitch #Documentary",
-          number: "04:04:2025",
-          paragraphLines: [
-            "The broadcast distorts as forbidden knowledge leaks",
-            "through corrupted frames and spectral interference."
-          ],
-          prompt:
-            "Glitch-heavy VHS transmission of a forbidden signal, blending cosmic horror iconography with retro-futuristic decay. Strange symbols bleeding through static, warped depths suggesting an otherworldly intelligence. Heavy digital noise, color aberrations, and surreal background shapes borrowing from Beksinski's dreamlike textures. Sense of paranoia and collapsing reality.",
-          caption: "Corrupted broadcast of the unknown"
-        },
-        {
-          title: "Echoes of the Deep",
-          description: "#Haunted #Vision",
-          number: "03:04:2025",
-          paragraphLines: [
-            "Submerged memories resurface in spectral echoes,",
-            "reminding viewers that the abyss remembers."
-          ],
-          prompt:
-            "Eerie underwater surrealism showing the slow emergence of a drowned cosmic entity, lit by dying neon and flickering VHS artifacts. Documentary-style overlay with timestamps, phantom reflections, and faint, impossible geometry. Atmospheric fog, subtle demonic undertones, and a sense that the depths are watching back.",
-          caption: "Submerged cosmic remembrance"
-        },
-        {
-          title: "Glitching Sanctum",
-          description: "#Digital #Cultifacts",
-          number: "05:04:2025",
-          paragraphLines: [
-            "A sacred data temple collapses into noise,",
-            "its ritual code leaking forbidden patterns."
-          ],
-          prompt:
-            "Dark future interior of a collapsing digital shrine, where eldritch runes are rendered as corrupted code. Mixed media: 3D Beksinski-inspired architecture dissolving into pixel shards, VHS tracking errors tearing the scene, and occult imagery flickering in neon. Vertigo-inducing perspective, heavy contrast between shadow and glitch-lit form.",
-          caption: "Ritual code corruption"
-        },
-        {
-          title: "Frozen Leviathan",
-          description: "#Apocalyptic #Witness",
-          number: "09:04:2025",
-          paragraphLines: [
-            "The last frame holds the frozen titan—half-buried,",
-            "its silence a prophecy of an unraveling world."
-          ],
-          prompt:
-            "Dystopian aftermath shot of a gigantic eldritch leviathan encased in fractured ice, seen through a damaged documentary lens. Grainy VHS overlay, color bleeding, and subtle animation glitches hinting at latent motion. Sky warped with surreal auroras; the scene balances frozen stillness with impending doom.",
-          caption: "Stilled titanic omen"
-        }
-      ];
+      
 
       // Enhanced configuration with all settings including Analog Decay
       const config: any = {
@@ -441,7 +392,7 @@ export function startNewGallery() {
         analogScanlines: 1.0,
         analogVignette: 1.0,
         analogJitter: 1.0,
-        analogChroma: 1.0
+        analogChroma: 1.0,
       };
 
       // Effect presets including Analog Decay
@@ -452,29 +403,29 @@ export function startNewGallery() {
             datamoshCorruptionFreq: 0.6,
             datamoshQuantization: 0.4,
             datamoshDisplacement: 0.3,
-            datamoshTemporal: 0.8
+            datamoshTemporal: 0.8,
           },
           Default: {
             datamoshBlockSize: 1.0,
             datamoshCorruptionFreq: 1.0,
             datamoshQuantization: 1.0,
             datamoshDisplacement: 1.0,
-            datamoshTemporal: 1.0
+            datamoshTemporal: 1.0,
           },
           Intense: {
             datamoshBlockSize: 0.5,
             datamoshCorruptionFreq: 1.8,
             datamoshQuantization: 1.6,
             datamoshDisplacement: 2.0,
-            datamoshTemporal: 1.4
+            datamoshTemporal: 1.4,
           },
           Minimal: {
             datamoshBlockSize: 2.0,
             datamoshCorruptionFreq: 0.3,
             datamoshQuantization: 0.2,
             datamoshDisplacement: 0.1,
-            datamoshTemporal: 0.5
-          }
+            datamoshTemporal: 0.5,
+          },
         },
         pixelSort: {
           Gentle: {
@@ -482,29 +433,29 @@ export function startNewGallery() {
             pixelSortThreshold: 0.6,
             pixelSortBandWidth: 1.4,
             pixelSortSeparation: 0.5,
-            pixelSortSensitivity: 0.7
+            pixelSortSensitivity: 0.7,
           },
           Default: {
             pixelSortDirection: 0.5,
             pixelSortThreshold: 1.0,
             pixelSortBandWidth: 1.0,
             pixelSortSeparation: 1.0,
-            pixelSortSensitivity: 1.0
+            pixelSortSensitivity: 1.0,
           },
           Chaos: {
             pixelSortDirection: 0.8,
             pixelSortThreshold: 1.5,
             pixelSortBandWidth: 0.6,
             pixelSortSeparation: 1.8,
-            pixelSortSensitivity: 1.4
+            pixelSortSensitivity: 1.4,
           },
           Ordered: {
             pixelSortDirection: 0.0,
             pixelSortThreshold: 0.8,
             pixelSortBandWidth: 1.8,
             pixelSortSeparation: 0.3,
-            pixelSortSensitivity: 0.9
-          }
+            pixelSortSensitivity: 0.9,
+          },
         },
         digitalStatic: {
           Soft: {
@@ -512,29 +463,29 @@ export function startNewGallery() {
             staticWaveSpeed: 0.7,
             staticAnalogNoise: 0.5,
             staticChannelShift: 0.4,
-            staticFlicker: 0.3
+            staticFlicker: 0.3,
           },
           Default: {
             staticDensity: 1.0,
             staticWaveSpeed: 1.0,
             staticAnalogNoise: 1.0,
             staticChannelShift: 1.0,
-            staticFlicker: 1.0
+            staticFlicker: 1.0,
           },
           Storm: {
             staticDensity: 1.7,
             staticWaveSpeed: 2.0,
             staticAnalogNoise: 1.6,
             staticChannelShift: 1.8,
-            staticFlicker: 1.5
+            staticFlicker: 1.5,
           },
           Vintage: {
             staticDensity: 0.8,
             staticWaveSpeed: 0.4,
             staticAnalogNoise: 1.3,
             staticChannelShift: 0.2,
-            staticFlicker: 0.8
-          }
+            staticFlicker: 0.8,
+          },
         },
         staticSweep: {
           Clean: {
@@ -542,29 +493,29 @@ export function startNewGallery() {
             sweepLayers: 0.7,
             sweepChromaticAberration: 0.6,
             sweepEdgeGlow: 1.1,
-            sweepFadeTiming: 0.8
+            sweepFadeTiming: 0.8,
           },
           Default: {
             sweepWidth: 1.0,
             sweepLayers: 1.0,
             sweepChromaticAberration: 1.0,
             sweepEdgeGlow: 1.0,
-            sweepFadeTiming: 1.0
+            sweepFadeTiming: 1.0,
           },
           Brutal: {
             sweepWidth: 0.7,
             sweepLayers: 1.8,
             sweepChromaticAberration: 1.7,
             sweepEdgeGlow: 0.9,
-            sweepFadeTiming: 1.5
+            sweepFadeTiming: 1.5,
           },
           Smooth: {
             sweepWidth: 1.5,
             sweepLayers: 0.5,
             sweepChromaticAberration: 0.4,
             sweepEdgeGlow: 1.3,
-            sweepFadeTiming: 0.6
-          }
+            sweepFadeTiming: 0.6,
+          },
         },
         glitchWipe: {
           Smooth: {
@@ -572,29 +523,29 @@ export function startNewGallery() {
             wipeAberrationStrength: 0.6,
             wipeEdgeWidth: 1.3,
             wipeColorBleeding: 0.5,
-            wipeTransitionCurve: 0.8
+            wipeTransitionCurve: 0.8,
           },
           Default: {
             wipeAngle: 0.0,
             wipeAberrationStrength: 1.0,
             wipeEdgeWidth: 1.0,
             wipeColorBleeding: 1.0,
-            wipeTransitionCurve: 1.0
+            wipeTransitionCurve: 1.0,
           },
           Aggressive: {
             wipeAngle: -25.0,
             wipeAberrationStrength: 1.8,
             wipeEdgeWidth: 0.7,
             wipeColorBleeding: 1.6,
-            wipeTransitionCurve: 1.4
+            wipeTransitionCurve: 1.4,
           },
           Diagonal: {
             wipeAngle: 35.0,
             wipeAberrationStrength: 1.2,
             wipeEdgeWidth: 0.9,
             wipeColorBleeding: 1.1,
-            wipeTransitionCurve: 1.1
-          }
+            wipeTransitionCurve: 1.1,
+          },
         },
         analogDecay: {
           Vintage: {
@@ -604,7 +555,7 @@ export function startNewGallery() {
             analogScanlines: 0.8,
             analogVignette: 1.2,
             analogJitter: 0.4,
-            analogChroma: 0.6
+            analogChroma: 0.6,
           },
           Default: {
             analogGrain: 1.0,
@@ -613,7 +564,7 @@ export function startNewGallery() {
             analogScanlines: 1.0,
             analogVignette: 1.0,
             analogJitter: 1.0,
-            analogChroma: 1.0
+            analogChroma: 1.0,
           },
           Corrupted: {
             analogGrain: 1.8,
@@ -622,7 +573,7 @@ export function startNewGallery() {
             analogScanlines: 1.4,
             analogVignette: 0.8,
             analogJitter: 1.8,
-            analogChroma: 1.5
+            analogChroma: 1.5,
           },
           Minimal: {
             analogGrain: 0.3,
@@ -631,9 +582,9 @@ export function startNewGallery() {
             analogScanlines: 0.5,
             analogVignette: 1.5,
             analogJitter: 0.2,
-            analogChroma: 0.3
-          }
-        }
+            analogChroma: 0.3,
+          },
+        },
       };
 
       let state: any = {
@@ -650,7 +601,7 @@ export function startNewGallery() {
         shaderMaterial: null,
         slideTextures: [] as any[],
         texturesLoaded: false,
-        startTime: Date.now()
+        startTime: Date.now(),
       };
 
       // Tweakpane state
@@ -1258,7 +1209,7 @@ export function startNewGallery() {
           digitalStatic: 2,
           staticSweep: 3,
           glitchWipe: 4,
-          analogDecay: 5
+          analogDecay: 5,
         };
         return effectMap[effectName] || 0;
       }
@@ -1266,19 +1217,49 @@ export function startNewGallery() {
       // Setup Tweakpane
       function setupPane() {
         pane = new Pane({
-          title: "Glitch Slider Controls"
+          title: "Glitch Slider Controls",
         });
 
         // General Settings
         const generalFolder = pane.addFolder({ title: "General Settings" });
-        generalFolder.addBinding(config, "globalIntensity", { label: "Global Intensity", min: 0.1, max: 2.0, step: 0.1 });
-        generalFolder.addBinding(config, "speedMultiplier", { label: "Speed Multiplier", min: 0.1, max: 3.0, step: 0.1 });
-        generalFolder.addBinding(config, "colorShiftAmount", { label: "Color Shift", min: 0.0, max: 2.0, step: 0.1 });
-        generalFolder.addBinding(config, "distortionStrength", { label: "Distortion", min: 0.1, max: 3.0, step: 0.1 });
-        generalFolder.addBinding(config, "noiseLevel", { label: "Noise Level", min: 0.0, max: 2.0, step: 0.1 });
+        generalFolder.addBinding(config, "globalIntensity", {
+          label: "Global Intensity",
+          min: 0.1,
+          max: 2.0,
+          step: 0.1,
+        });
+        generalFolder.addBinding(config, "speedMultiplier", {
+          label: "Speed Multiplier",
+          min: 0.1,
+          max: 3.0,
+          step: 0.1,
+        });
+        generalFolder.addBinding(config, "colorShiftAmount", {
+          label: "Color Shift",
+          min: 0.0,
+          max: 2.0,
+          step: 0.1,
+        });
+        generalFolder.addBinding(config, "distortionStrength", {
+          label: "Distortion",
+          min: 0.1,
+          max: 3.0,
+          step: 0.1,
+        });
+        generalFolder.addBinding(config, "noiseLevel", {
+          label: "Noise Level",
+          min: 0.0,
+          max: 2.0,
+          step: 0.1,
+        });
 
         const timingFolder = pane.addFolder({ title: "Timing" });
-        timingFolder.addBinding(config, "transitionDuration", { label: "Transition Duration", min: 0.5, max: 5.0, step: 0.1 });
+        timingFolder.addBinding(config, "transitionDuration", {
+          label: "Transition Duration",
+          min: 0.5,
+          max: 5.0,
+          step: 0.1,
+        });
 
         const effectFolder = pane.addFolder({ title: "Effect Selection" });
         effectFolder.addBinding(config, "currentEffect", {
@@ -1289,12 +1270,15 @@ export function startNewGallery() {
             "Digital Static": "digitalStatic",
             "Static Sweep": "staticSweep",
             "Glitch Wipe": "glitchWipe",
-            "Analog Decay": "analogDecay"
-          }
+            "Analog Decay": "analogDecay",
+          },
         });
 
         const presetsFolder = pane.addFolder({ title: "Effect Presets" });
-        presetsFolder.addBinding(config, "currentEffectPreset", { label: "Preset", options: getPresetOptions(config.currentEffect) });
+        presetsFolder.addBinding(config, "currentEffectPreset", {
+          label: "Preset",
+          options: getPresetOptions(config.currentEffect),
+        });
 
         setupEffectFolders();
         updateEffectFolderVisibility(config.currentEffect);
@@ -1307,7 +1291,12 @@ export function startNewGallery() {
           } else if (event.target.key === "currentEffectPreset") {
             applyEffectPreset(config.currentEffect, config.currentEffectPreset);
           } else {
-            if (!isApplyingPreset && !event.target.key.includes("currentEffect") && !event.target.key.includes("global") && !event.target.key.includes("Duration")) {
+            if (
+              !isApplyingPreset &&
+              !event.target.key.includes("currentEffect") &&
+              !event.target.key.includes("global") &&
+              !event.target.key.includes("Duration")
+            ) {
               config.currentEffectPreset = "Custom";
               pane.refresh();
             }
@@ -1316,7 +1305,9 @@ export function startNewGallery() {
         });
 
         setTimeout(() => {
-          const paneElement = document.querySelector(".tp-dfwv") as HTMLElement | null;
+          const paneElement = document.querySelector(
+            ".tp-dfwv"
+          ) as HTMLElement | null;
           if (paneElement) {
             paneElement.style.position = "fixed";
             paneElement.style.top = "20px";
@@ -1332,7 +1323,9 @@ export function startNewGallery() {
         if (effectPresets[effectName]) {
           const presets = effectPresets[effectName];
           const options: any = {};
-          Object.keys(presets).forEach((key) => { options[key] = key; });
+          Object.keys(presets).forEach((key) => {
+            options[key] = key;
+          });
           options["Custom"] = "Custom";
           return options;
         }
@@ -1341,48 +1334,217 @@ export function startNewGallery() {
 
       function setupEffectFolders() {
         effectFolders.datamosh = pane.addFolder({ title: "Datamosh Settings" });
-        effectFolders.datamosh.addBinding(config, "datamoshBlockSize", { label: "Block Size", min: 0.1, max: 3.0, step: 0.1 });
-        effectFolders.datamosh.addBinding(config, "datamoshCorruptionFreq", { label: "Corruption Freq", min: 0.1, max: 3.0, step: 0.1 });
-        effectFolders.datamosh.addBinding(config, "datamoshQuantization", { label: "Quantization", min: 0.1, max: 2.0, step: 0.1 });
-        effectFolders.datamosh.addBinding(config, "datamoshDisplacement", { label: "Displacement", min: 0.1, max: 3.0, step: 0.1 });
-        effectFolders.datamosh.addBinding(config, "datamoshTemporal", { label: "Temporal", min: 0.1, max: 2.0, step: 0.1 });
+        effectFolders.datamosh.addBinding(config, "datamoshBlockSize", {
+          label: "Block Size",
+          min: 0.1,
+          max: 3.0,
+          step: 0.1,
+        });
+        effectFolders.datamosh.addBinding(config, "datamoshCorruptionFreq", {
+          label: "Corruption Freq",
+          min: 0.1,
+          max: 3.0,
+          step: 0.1,
+        });
+        effectFolders.datamosh.addBinding(config, "datamoshQuantization", {
+          label: "Quantization",
+          min: 0.1,
+          max: 2.0,
+          step: 0.1,
+        });
+        effectFolders.datamosh.addBinding(config, "datamoshDisplacement", {
+          label: "Displacement",
+          min: 0.1,
+          max: 3.0,
+          step: 0.1,
+        });
+        effectFolders.datamosh.addBinding(config, "datamoshTemporal", {
+          label: "Temporal",
+          min: 0.1,
+          max: 2.0,
+          step: 0.1,
+        });
 
-        effectFolders.pixelSort = pane.addFolder({ title: "Pixel Sort Settings" });
-        effectFolders.pixelSort.addBinding(config, "pixelSortDirection", { label: "Direction", min: 0.0, max: 1.0, step: 0.1 });
-        effectFolders.pixelSort.addBinding(config, "pixelSortThreshold", { label: "Threshold", min: 0.1, max: 2.0, step: 0.1 });
-        effectFolders.pixelSort.addBinding(config, "pixelSortBandWidth", { label: "Band Width", min: 0.1, max: 3.0, step: 0.1 });
-        effectFolders.pixelSort.addBinding(config, "pixelSortSeparation", { label: "Separation", min: 0.1, max: 3.0, step: 0.1 });
-        effectFolders.pixelSort.addBinding(config, "pixelSortSensitivity", { label: "Sensitivity", min: 0.1, max: 2.0, step: 0.1 });
+        effectFolders.pixelSort = pane.addFolder({
+          title: "Pixel Sort Settings",
+        });
+        effectFolders.pixelSort.addBinding(config, "pixelSortDirection", {
+          label: "Direction",
+          min: 0.0,
+          max: 1.0,
+          step: 0.1,
+        });
+        effectFolders.pixelSort.addBinding(config, "pixelSortThreshold", {
+          label: "Threshold",
+          min: 0.1,
+          max: 2.0,
+          step: 0.1,
+        });
+        effectFolders.pixelSort.addBinding(config, "pixelSortBandWidth", {
+          label: "Band Width",
+          min: 0.1,
+          max: 3.0,
+          step: 0.1,
+        });
+        effectFolders.pixelSort.addBinding(config, "pixelSortSeparation", {
+          label: "Separation",
+          min: 0.1,
+          max: 3.0,
+          step: 0.1,
+        });
+        effectFolders.pixelSort.addBinding(config, "pixelSortSensitivity", {
+          label: "Sensitivity",
+          min: 0.1,
+          max: 2.0,
+          step: 0.1,
+        });
 
-        effectFolders.digitalStatic = pane.addFolder({ title: "Digital Static Settings" });
-        effectFolders.digitalStatic.addBinding(config, "staticDensity", { label: "Density", min: 0.1, max: 3.0, step: 0.1 });
-        effectFolders.digitalStatic.addBinding(config, "staticWaveSpeed", { label: "Wave Speed", min: 0.1, max: 3.0, step: 0.1 });
-        effectFolders.digitalStatic.addBinding(config, "staticAnalogNoise", { label: "Analog Noise", min: 0.1, max: 2.0, step: 0.1 });
-        effectFolders.digitalStatic.addBinding(config, "staticChannelShift", { label: "Channel Shift", min: 0.1, max: 2.0, step: 0.1 });
-        effectFolders.digitalStatic.addBinding(config, "staticFlicker", { label: "Flicker", min: 0.0, max: 2.0, step: 0.1 });
+        effectFolders.digitalStatic = pane.addFolder({
+          title: "Digital Static Settings",
+        });
+        effectFolders.digitalStatic.addBinding(config, "staticDensity", {
+          label: "Density",
+          min: 0.1,
+          max: 3.0,
+          step: 0.1,
+        });
+        effectFolders.digitalStatic.addBinding(config, "staticWaveSpeed", {
+          label: "Wave Speed",
+          min: 0.1,
+          max: 3.0,
+          step: 0.1,
+        });
+        effectFolders.digitalStatic.addBinding(config, "staticAnalogNoise", {
+          label: "Analog Noise",
+          min: 0.1,
+          max: 2.0,
+          step: 0.1,
+        });
+        effectFolders.digitalStatic.addBinding(config, "staticChannelShift", {
+          label: "Channel Shift",
+          min: 0.1,
+          max: 2.0,
+          step: 0.1,
+        });
+        effectFolders.digitalStatic.addBinding(config, "staticFlicker", {
+          label: "Flicker",
+          min: 0.0,
+          max: 2.0,
+          step: 0.1,
+        });
 
-        effectFolders.staticSweep = pane.addFolder({ title: "Static Sweep Settings" });
-        effectFolders.staticSweep.addBinding(config, "sweepWidth", { label: "Width", min: 0.1, max: 3.0, step: 0.1 });
-        effectFolders.staticSweep.addBinding(config, "sweepLayers", { label: "Layers", min: 0.1, max: 3.0, step: 0.1 });
-        effectFolders.staticSweep.addBinding(config, "sweepChromaticAberration", { label: "Chromatic Aberration", min: 0.1, max: 3.0, step: 0.1 });
-        effectFolders.staticSweep.addBinding(config, "sweepEdgeGlow", { label: "Edge Glow", min: 0.0, max: 2.0, step: 0.1 });
-        effectFolders.staticSweep.addBinding(config, "sweepFadeTiming", { label: "Fade Timing", min: 0.1, max: 3.0, step: 0.1 });
+        effectFolders.staticSweep = pane.addFolder({
+          title: "Static Sweep Settings",
+        });
+        effectFolders.staticSweep.addBinding(config, "sweepWidth", {
+          label: "Width",
+          min: 0.1,
+          max: 3.0,
+          step: 0.1,
+        });
+        effectFolders.staticSweep.addBinding(config, "sweepLayers", {
+          label: "Layers",
+          min: 0.1,
+          max: 3.0,
+          step: 0.1,
+        });
+        effectFolders.staticSweep.addBinding(
+          config,
+          "sweepChromaticAberration",
+          { label: "Chromatic Aberration", min: 0.1, max: 3.0, step: 0.1 }
+        );
+        effectFolders.staticSweep.addBinding(config, "sweepEdgeGlow", {
+          label: "Edge Glow",
+          min: 0.0,
+          max: 2.0,
+          step: 0.1,
+        });
+        effectFolders.staticSweep.addBinding(config, "sweepFadeTiming", {
+          label: "Fade Timing",
+          min: 0.1,
+          max: 3.0,
+          step: 0.1,
+        });
 
-        effectFolders.glitchWipe = pane.addFolder({ title: "Glitch Wipe Settings" });
-        effectFolders.glitchWipe.addBinding(config, "wipeAngle", { label: "Angle", min: -45.0, max: 45.0, step: 1.0 });
-        effectFolders.glitchWipe.addBinding(config, "wipeAberrationStrength", { label: "Aberration Strength", min: 0.1, max: 3.0, step: 0.1 });
-        effectFolders.glitchWipe.addBinding(config, "wipeEdgeWidth", { label: "Edge Width", min: 0.1, max: 3.0, step: 0.1 });
-        effectFolders.glitchWipe.addBinding(config, "wipeColorBleeding", { label: "Color Bleeding", min: 0.1, max: 3.0, step: 0.1 });
-        effectFolders.glitchWipe.addBinding(config, "wipeTransitionCurve", { label: "Transition Curve", min: 0.1, max: 3.0, step: 0.1 });
+        effectFolders.glitchWipe = pane.addFolder({
+          title: "Glitch Wipe Settings",
+        });
+        effectFolders.glitchWipe.addBinding(config, "wipeAngle", {
+          label: "Angle",
+          min: -45.0,
+          max: 45.0,
+          step: 1.0,
+        });
+        effectFolders.glitchWipe.addBinding(config, "wipeAberrationStrength", {
+          label: "Aberration Strength",
+          min: 0.1,
+          max: 3.0,
+          step: 0.1,
+        });
+        effectFolders.glitchWipe.addBinding(config, "wipeEdgeWidth", {
+          label: "Edge Width",
+          min: 0.1,
+          max: 3.0,
+          step: 0.1,
+        });
+        effectFolders.glitchWipe.addBinding(config, "wipeColorBleeding", {
+          label: "Color Bleeding",
+          min: 0.1,
+          max: 3.0,
+          step: 0.1,
+        });
+        effectFolders.glitchWipe.addBinding(config, "wipeTransitionCurve", {
+          label: "Transition Curve",
+          min: 0.1,
+          max: 3.0,
+          step: 0.1,
+        });
 
-        effectFolders.analogDecay = pane.addFolder({ title: "Analog Decay Settings" });
-        effectFolders.analogDecay.addBinding(config, "analogGrain", { label: "Film Grain", min: 0.0, max: 3.0, step: 0.1 });
-        effectFolders.analogDecay.addBinding(config, "analogBleeding", { label: "Color Bleeding", min: 0.0, max: 3.0, step: 0.1 });
-        effectFolders.analogDecay.addBinding(config, "analogVSync", { label: "VSync Roll", min: 0.0, max: 3.0, step: 0.1 });
-        effectFolders.analogDecay.addBinding(config, "analogScanlines", { label: "Scanlines", min: 0.0, max: 3.0, step: 0.1 });
-        effectFolders.analogDecay.addBinding(config, "analogVignette", { label: "Vignetting", min: 0.0, max: 3.0, step: 0.1 });
-        effectFolders.analogDecay.addBinding(config, "analogJitter", { label: "Temporal Jitter", min: 0.0, max: 3.0, step: 0.1 });
-        effectFolders.analogDecay.addBinding(config, "analogChroma", { label: "Chromatic Aberration", min: 0.0, max: 3.0, step: 0.1 });
+        effectFolders.analogDecay = pane.addFolder({
+          title: "Analog Decay Settings",
+        });
+        effectFolders.analogDecay.addBinding(config, "analogGrain", {
+          label: "Film Grain",
+          min: 0.0,
+          max: 3.0,
+          step: 0.1,
+        });
+        effectFolders.analogDecay.addBinding(config, "analogBleeding", {
+          label: "Color Bleeding",
+          min: 0.0,
+          max: 3.0,
+          step: 0.1,
+        });
+        effectFolders.analogDecay.addBinding(config, "analogVSync", {
+          label: "VSync Roll",
+          min: 0.0,
+          max: 3.0,
+          step: 0.1,
+        });
+        effectFolders.analogDecay.addBinding(config, "analogScanlines", {
+          label: "Scanlines",
+          min: 0.0,
+          max: 3.0,
+          step: 0.1,
+        });
+        effectFolders.analogDecay.addBinding(config, "analogVignette", {
+          label: "Vignetting",
+          min: 0.0,
+          max: 3.0,
+          step: 0.1,
+        });
+        effectFolders.analogDecay.addBinding(config, "analogJitter", {
+          label: "Temporal Jitter",
+          min: 0.0,
+          max: 3.0,
+          step: 0.1,
+        });
+        effectFolders.analogDecay.addBinding(config, "analogChroma", {
+          label: "Chromatic Aberration",
+          min: 0.0,
+          max: 3.0,
+          step: 0.1,
+        });
       }
 
       function updateEffectFolderVisibility(currentEffect: string) {
@@ -1395,16 +1557,24 @@ export function startNewGallery() {
 
       function handleEffectChange(newEffect: string) {
         if (state.shaderMaterial) {
-          state.shaderMaterial.uniforms.uEffectType.value = getEffectIndex(newEffect);
+          state.shaderMaterial.uniforms.uEffectType.value =
+            getEffectIndex(newEffect);
         }
 
         updateEffectFolderVisibility(newEffect);
 
-        const presetsFolder = pane.children.find((child: any) => child.title === "Effect Presets");
+        const presetsFolder = pane.children.find(
+          (child: any) => child.title === "Effect Presets"
+        );
         if (presetsFolder) {
-          const oldBinding = presetsFolder.children.find((child: any) => child.key === "currentEffectPreset");
+          const oldBinding = presetsFolder.children.find(
+            (child: any) => child.key === "currentEffectPreset"
+          );
           if (oldBinding) presetsFolder.remove(oldBinding);
-          presetsFolder.addBinding(config, "currentEffectPreset", { label: "Preset", options: getPresetOptions(newEffect) });
+          presetsFolder.addBinding(config, "currentEffectPreset", {
+            label: "Preset",
+            options: getPresetOptions(newEffect),
+          });
         }
 
         config.currentEffectPreset = "Default";
@@ -1413,56 +1583,100 @@ export function startNewGallery() {
       }
 
       function applyEffectPreset(effectName: string, presetName: string) {
-        if (effectPresets[effectName] && effectPresets[effectName][presetName]) {
+        if (
+          effectPresets[effectName] &&
+          effectPresets[effectName][presetName]
+        ) {
           isApplyingPreset = true;
           Object.assign(config, effectPresets[effectName][presetName]);
           updateShaderUniforms();
           pane.refresh();
-          setTimeout(() => { isApplyingPreset = false; }, 100);
+          setTimeout(() => {
+            isApplyingPreset = false;
+          }, 100);
         }
       }
 
       function updateShaderUniforms() {
         if (!state.shaderMaterial) return;
         const uniforms = state.shaderMaterial.uniforms;
-        if (uniforms.uGlobalIntensity) uniforms.uGlobalIntensity.value = config.globalIntensity;
-        if (uniforms.uSpeedMultiplier) uniforms.uSpeedMultiplier.value = config.speedMultiplier;
-        if (uniforms.uColorShiftAmount) uniforms.uColorShiftAmount.value = config.colorShiftAmount;
-        if (uniforms.uDistortionStrength) uniforms.uDistortionStrength.value = config.distortionStrength;
-        if (uniforms.uNoiseLevel) uniforms.uNoiseLevel.value = config.noiseLevel;
-        if (uniforms.uDatamoshBlockSize) uniforms.uDatamoshBlockSize.value = config.datamoshBlockSize;
-        if (uniforms.uDatamoshCorruptionFreq) uniforms.uDatamoshCorruptionFreq.value = config.datamoshCorruptionFreq;
-        if (uniforms.uDatamoshQuantization) uniforms.uDatamoshQuantization.value = config.datamoshQuantization;
-        if (uniforms.uDatamoshDisplacement) uniforms.uDatamoshDisplacement.value = config.datamoshDisplacement;
-        if (uniforms.uDatamoshTemporal) uniforms.uDatamoshTemporal.value = config.datamoshTemporal;
-        if (uniforms.uPixelSortDirection) uniforms.uPixelSortDirection.value = config.pixelSortDirection;
-        if (uniforms.uPixelSortThreshold) uniforms.uPixelSortThreshold.value = config.pixelSortThreshold;
-        if (uniforms.uPixelSortBandWidth) uniforms.uPixelSortBandWidth.value = config.pixelSortBandWidth;
-        if (uniforms.uPixelSortSeparation) uniforms.uPixelSortSeparation.value = config.pixelSortSeparation;
-        if (uniforms.uPixelSortSensitivity) uniforms.uPixelSortSensitivity.value = config.pixelSortSensitivity;
-        if (uniforms.uStaticDensity) uniforms.uStaticDensity.value = config.staticDensity;
-        if (uniforms.uStaticWaveSpeed) uniforms.uStaticWaveSpeed.value = config.staticWaveSpeed;
-        if (uniforms.uStaticAnalogNoise) uniforms.uStaticAnalogNoise.value = config.staticAnalogNoise;
-        if (uniforms.uStaticChannelShift) uniforms.uStaticChannelShift.value = config.staticChannelShift;
-        if (uniforms.uStaticFlicker) uniforms.uStaticFlicker.value = config.staticFlicker;
-        if (uniforms.uSweepWidth) uniforms.uSweepWidth.value = config.sweepWidth;
-        if (uniforms.uSweepLayers) uniforms.uSweepLayers.value = config.sweepLayers;
-        if (uniforms.uSweepChromaticAberration) uniforms.uSweepChromaticAberration.value = config.sweepChromaticAberration;
-        if (uniforms.uSweepEdgeGlow) uniforms.uSweepEdgeGlow.value = config.sweepEdgeGlow;
-        if (uniforms.uSweepFadeTiming) uniforms.uSweepFadeTiming.value = config.sweepFadeTiming;
+        if (uniforms.uGlobalIntensity)
+          uniforms.uGlobalIntensity.value = config.globalIntensity;
+        if (uniforms.uSpeedMultiplier)
+          uniforms.uSpeedMultiplier.value = config.speedMultiplier;
+        if (uniforms.uColorShiftAmount)
+          uniforms.uColorShiftAmount.value = config.colorShiftAmount;
+        if (uniforms.uDistortionStrength)
+          uniforms.uDistortionStrength.value = config.distortionStrength;
+        if (uniforms.uNoiseLevel)
+          uniforms.uNoiseLevel.value = config.noiseLevel;
+        if (uniforms.uDatamoshBlockSize)
+          uniforms.uDatamoshBlockSize.value = config.datamoshBlockSize;
+        if (uniforms.uDatamoshCorruptionFreq)
+          uniforms.uDatamoshCorruptionFreq.value =
+            config.datamoshCorruptionFreq;
+        if (uniforms.uDatamoshQuantization)
+          uniforms.uDatamoshQuantization.value = config.datamoshQuantization;
+        if (uniforms.uDatamoshDisplacement)
+          uniforms.uDatamoshDisplacement.value = config.datamoshDisplacement;
+        if (uniforms.uDatamoshTemporal)
+          uniforms.uDatamoshTemporal.value = config.datamoshTemporal;
+        if (uniforms.uPixelSortDirection)
+          uniforms.uPixelSortDirection.value = config.pixelSortDirection;
+        if (uniforms.uPixelSortThreshold)
+          uniforms.uPixelSortThreshold.value = config.pixelSortThreshold;
+        if (uniforms.uPixelSortBandWidth)
+          uniforms.uPixelSortBandWidth.value = config.pixelSortBandWidth;
+        if (uniforms.uPixelSortSeparation)
+          uniforms.uPixelSortSeparation.value = config.pixelSortSeparation;
+        if (uniforms.uPixelSortSensitivity)
+          uniforms.uPixelSortSensitivity.value = config.pixelSortSensitivity;
+        if (uniforms.uStaticDensity)
+          uniforms.uStaticDensity.value = config.staticDensity;
+        if (uniforms.uStaticWaveSpeed)
+          uniforms.uStaticWaveSpeed.value = config.staticWaveSpeed;
+        if (uniforms.uStaticAnalogNoise)
+          uniforms.uStaticAnalogNoise.value = config.staticAnalogNoise;
+        if (uniforms.uStaticChannelShift)
+          uniforms.uStaticChannelShift.value = config.staticChannelShift;
+        if (uniforms.uStaticFlicker)
+          uniforms.uStaticFlicker.value = config.staticFlicker;
+        if (uniforms.uSweepWidth)
+          uniforms.uSweepWidth.value = config.sweepWidth;
+        if (uniforms.uSweepLayers)
+          uniforms.uSweepLayers.value = config.sweepLayers;
+        if (uniforms.uSweepChromaticAberration)
+          uniforms.uSweepChromaticAberration.value =
+            config.sweepChromaticAberration;
+        if (uniforms.uSweepEdgeGlow)
+          uniforms.uSweepEdgeGlow.value = config.sweepEdgeGlow;
+        if (uniforms.uSweepFadeTiming)
+          uniforms.uSweepFadeTiming.value = config.sweepFadeTiming;
         if (uniforms.uWipeAngle) uniforms.uWipeAngle.value = config.wipeAngle;
-        if (uniforms.uWipeAberrationStrength) uniforms.uWipeAberrationStrength.value = config.wipeAberrationStrength;
-        if (uniforms.uWipeEdgeWidth) uniforms.uWipeEdgeWidth.value = config.wipeEdgeWidth;
-        if (uniforms.uWipeColorBleeding) uniforms.uWipeColorBleeding.value = config.wipeColorBleeding;
-        if (uniforms.uWipeTransitionCurve) uniforms.uWipeTransitionCurve.value = config.wipeTransitionCurve;
-        if (uniforms.uAnalogGrain) uniforms.uAnalogGrain.value = config.analogGrain;
-        if (uniforms.uAnalogBleeding) uniforms.uAnalogBleeding.value = config.analogBleeding;
-        if (uniforms.uAnalogVSync) uniforms.uAnalogVSync.value = config.analogVSync;
+        if (uniforms.uWipeAberrationStrength)
+          uniforms.uWipeAberrationStrength.value =
+            config.wipeAberrationStrength;
+        if (uniforms.uWipeEdgeWidth)
+          uniforms.uWipeEdgeWidth.value = config.wipeEdgeWidth;
+        if (uniforms.uWipeColorBleeding)
+          uniforms.uWipeColorBleeding.value = config.wipeColorBleeding;
+        if (uniforms.uWipeTransitionCurve)
+          uniforms.uWipeTransitionCurve.value = config.wipeTransitionCurve;
+        if (uniforms.uAnalogGrain)
+          uniforms.uAnalogGrain.value = config.analogGrain;
+        if (uniforms.uAnalogBleeding)
+          uniforms.uAnalogBleeding.value = config.analogBleeding;
+        if (uniforms.uAnalogVSync)
+          uniforms.uAnalogVSync.value = config.analogVSync;
         if (uniforms.uAnalogDropout) uniforms.uAnalogDropout.value = 0.0;
-        if (uniforms.uAnalogScanlines) uniforms.uAnalogScanlines.value = config.analogScanlines;
-        if (uniforms.uAnalogVignette) uniforms.uAnalogVignette.value = config.analogVignette;
-        if (uniforms.uAnalogJitter) uniforms.uAnalogJitter.value = config.analogJitter;
-        if (uniforms.uAnalogChroma) uniforms.uAnalogChroma.value = config.analogChroma;
+        if (uniforms.uAnalogScanlines)
+          uniforms.uAnalogScanlines.value = config.analogScanlines;
+        if (uniforms.uAnalogVignette)
+          uniforms.uAnalogVignette.value = config.analogVignette;
+        if (uniforms.uAnalogJitter)
+          uniforms.uAnalogJitter.value = config.analogJitter;
+        if (uniforms.uAnalogChroma)
+          uniforms.uAnalogChroma.value = config.analogChroma;
       }
 
       function loadImageTexture(src: string) {
@@ -1475,7 +1689,10 @@ export function startNewGallery() {
               clearTimeout(timeout);
               texture.minFilter = texture.magFilter = THREE.LinearFilter;
               (texture as any).userData = {
-                size: new THREE.Vector2((texture.image as any).width, (texture.image as any).height)
+                size: new THREE.Vector2(
+                  (texture.image as any).width,
+                  (texture.image as any).height
+                ),
               };
               resolve(texture);
             },
@@ -1488,7 +1705,10 @@ export function startNewGallery() {
         });
       }
 
-      function createFeaturedImageWrapper(imageIndex: number, transitionDirection: "up" | "down") {
+      function createFeaturedImageWrapper(
+        imageIndex: number,
+        transitionDirection: "up" | "down"
+      ) {
         const featuredWrapper = document.createElement("div");
         featuredWrapper.className = "featured-image-wrapper";
         featuredWrapper.setAttribute("data-featured-wrapper", "");
@@ -1505,9 +1725,12 @@ export function startNewGallery() {
         return featuredWrapper;
       }
 
-      function createTextElements(slideIndex: number, transitionDirection: "up" | "down") {
+      function createTextElements(
+        slideIndex: number,
+        transitionDirection: "up" | "down"
+      ) {
         const newNumber = document.createElement("span");
-        newNumber.textContent = '0' + slideIndex;
+        newNumber.textContent = "0" + slideIndex;
         gsap.set(newNumber, { y: transitionDirection === "down" ? 20 : -20 });
 
         const newCounter = document.createElement("span");
@@ -1520,28 +1743,49 @@ export function startNewGallery() {
 
         const newDescription = document.createElement("p");
         newDescription.textContent = slideData[slideIndex].description;
-        gsap.set(newDescription, { y: transitionDirection === "down" ? 24 : -24 });
-
-        const newParagraphLines = slideData[slideIndex].paragraphLines.map((lineText: string) => {
-          const lineSpan = document.createElement("span");
-          lineSpan.textContent = lineText;
-          gsap.set(lineSpan, { y: transitionDirection === "down" ? 35 : -35 });
-          return lineSpan;
+        gsap.set(newDescription, {
+          y: transitionDirection === "down" ? 24 : -24,
         });
 
-        return { newNumber, newCounter, newTitle, newDescription, newParagraphLines };
+        const newParagraphLines = slideData[slideIndex].paragraphLines.map(
+          (lineText: string) => {
+            const lineSpan = document.createElement("span");
+            lineSpan.textContent = lineText;
+            gsap.set(lineSpan, {
+              y: transitionDirection === "down" ? 35 : -35,
+            });
+            return lineSpan;
+          }
+        );
+
+        return {
+          newNumber,
+          newCounter,
+          newTitle,
+          newDescription,
+          newParagraphLines,
+        };
       }
 
       function getNextImageIndex(direction: "up" | "down") {
         if (direction === "down") {
-          return state.currentImageIndex === config.totalImages - 1 ? 0 : state.currentImageIndex + 1;
+          return state.currentImageIndex === config.totalImages - 1
+            ? 0
+            : state.currentImageIndex + 1;
         } else {
-          return state.currentImageIndex === 0 ? config.totalImages - 1 : state.currentImageIndex - 1;
+          return state.currentImageIndex === 0
+            ? config.totalImages - 1
+            : state.currentImageIndex - 1;
         }
       }
 
       function executeSlideTransition(transitionDirection: "up" | "down") {
-        if (state.isTransitioning || !state.scrollingEnabled || !state.texturesLoaded) return;
+        if (
+          state.isTransitioning ||
+          !state.scrollingEnabled ||
+          !state.texturesLoaded
+        )
+          return;
 
         state.isTransitioning = true;
         state.scrollingEnabled = false;
@@ -1551,25 +1795,52 @@ export function startNewGallery() {
         const nextTexture = state.slideTextures[nextIndex];
         if (!currentTexture || !nextTexture) return;
 
-        const featuredImageContainer = (slider as HTMLElement).querySelector("[data-featured-image]") as HTMLElement;
-        const currentFeaturedWrapper = featuredImageContainer.querySelector("[data-featured-wrapper]") as HTMLElement;
+        const featuredImageContainer = (slider as HTMLElement).querySelector(
+          "[data-featured-image]"
+        ) as HTMLElement;
+        const currentFeaturedWrapper = featuredImageContainer.querySelector(
+          "[data-featured-wrapper]"
+        ) as HTMLElement;
 
-        const numberContainer = (slider as HTMLElement).querySelector("[data-slide-number]") as HTMLElement;
-        const counterContainer = (slider as HTMLElement).querySelector("[data-slide-counter]") as HTMLElement;
-        const titleContainer = (slider as HTMLElement).querySelector("[data-slide-title]") as HTMLElement;
-        const descriptionContainer = (slider as HTMLElement).querySelector("[data-slide-description]") as HTMLElement;
-        const paragraphLine1Container = (slider as HTMLElement).querySelector("[data-paragraph-line-1]") as HTMLElement;
-        const paragraphLine2Container = (slider as HTMLElement).querySelector("[data-paragraph-line-2]") as HTMLElement;
+        const numberContainer = (slider as HTMLElement).querySelector(
+          "[data-slide-number]"
+        ) as HTMLElement;
+        const counterContainer = (slider as HTMLElement).querySelector(
+          "[data-slide-counter]"
+        ) as HTMLElement;
+        const titleContainer = (slider as HTMLElement).querySelector(
+          "[data-slide-title]"
+        ) as HTMLElement;
+        const descriptionContainer = (slider as HTMLElement).querySelector(
+          "[data-slide-description]"
+        ) as HTMLElement;
+        const paragraphLine1Container = (slider as HTMLElement).querySelector(
+          "[data-paragraph-line-1]"
+        ) as HTMLElement;
+        const paragraphLine2Container = (slider as HTMLElement).querySelector(
+          "[data-paragraph-line-2]"
+        ) as HTMLElement;
 
         const currentNumber = numberContainer.querySelector("span");
         const currentCounter = counterContainer.querySelector("span");
         const currentTitle = titleContainer.querySelector("h1");
         const currentDescription = descriptionContainer.querySelector("p");
-        const currentParagraphLine1 = paragraphLine1Container.querySelector("span");
-        const currentParagraphLine2 = paragraphLine2Container.querySelector("span");
+        const currentParagraphLine1 =
+          paragraphLine1Container.querySelector("span");
+        const currentParagraphLine2 =
+          paragraphLine2Container.querySelector("span");
 
-        const newFeaturedWrapper = createFeaturedImageWrapper(nextIndex, transitionDirection);
-        const { newNumber, newCounter, newTitle, newDescription, newParagraphLines } = createTextElements(nextIndex, transitionDirection);
+        const newFeaturedWrapper = createFeaturedImageWrapper(
+          nextIndex,
+          transitionDirection
+        );
+        const {
+          newNumber,
+          newCounter,
+          newTitle,
+          newDescription,
+          newParagraphLines,
+        } = createTextElements(nextIndex, transitionDirection);
 
         featuredImageContainer.appendChild(newFeaturedWrapper);
         numberContainer.appendChild(newNumber);
@@ -1579,77 +1850,371 @@ export function startNewGallery() {
         paragraphLine1Container.appendChild(newParagraphLines[0]);
         paragraphLine2Container.appendChild(newParagraphLines[1]);
 
-        gsap.set(newFeaturedWrapper.querySelector("img"), { y: transitionDirection === "down" ? "-50%" : "50%" });
+        //gsap.set(newFeaturedWrapper.querySelector("img"), { y: transitionDirection === "down" ? "-50%" : "50%" });
 
         state.shaderMaterial.uniforms.uTexture1.value = currentTexture;
         state.shaderMaterial.uniforms.uTexture2.value = nextTexture;
-        state.shaderMaterial.uniforms.uTexture1Size.value = currentTexture.userData.size;
-        state.shaderMaterial.uniforms.uTexture2Size.value = nextTexture.userData.size;
+        state.shaderMaterial.uniforms.uTexture1Size.value =
+          currentTexture.userData.size;
+        state.shaderMaterial.uniforms.uTexture2Size.value =
+          nextTexture.userData.size;
 
         state.currentImageIndex = nextIndex;
 
         const transitionTimeline = gsap.timeline({
           onComplete: () => {
-            [currentFeaturedWrapper, currentNumber, currentCounter, currentTitle, currentDescription, currentParagraphLine1, currentParagraphLine2].forEach((element: any) => {
-              if (element && element.parentNode) element.parentNode.removeChild(element);
+            [
+              currentFeaturedWrapper,
+              currentNumber,
+              currentCounter,
+              currentTitle,
+              currentDescription,
+              currentParagraphLine1,
+              currentParagraphLine2,
+            ].forEach((element: any) => {
+              if (element && element.parentNode)
+                element.parentNode.removeChild(element);
             });
             state.shaderMaterial.uniforms.uProgress.value = 0;
             state.shaderMaterial.uniforms.uTexture1.value = nextTexture;
-            state.shaderMaterial.uniforms.uTexture1Size.value = nextTexture.userData.size;
+            state.shaderMaterial.uniforms.uTexture1Size.value =
+              nextTexture.userData.size;
             state.isTransitioning = false;
-            setTimeout(() => { state.scrollingEnabled = true; state.lastScrollTimestamp = Date.now(); }, 100);
-          }
+            setTimeout(() => {
+              state.scrollingEnabled = true;
+              state.lastScrollTimestamp = Date.now();
+            }, 100);
+          },
         });
 
-        const featuredClipPath = transitionDirection === "down"
-          ? "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"
-          : "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)";
+        const featuredClipPath =
+          transitionDirection === "down"
+            ? "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)"
+            : "polygon(0% 100%, 100% 100%, 100% 0%, 0% 0%)";
 
-        transitionTimeline.fromTo(state.shaderMaterial.uniforms.uProgress, { value: 0 }, { value: 1, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0);
-        transitionTimeline.to(newFeaturedWrapper, { clipPath: featuredClipPath, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0);
-        transitionTimeline.to((currentFeaturedWrapper.querySelector("img") as any), { y: transitionDirection === "down" ? "50%" : "-50%", duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0);
-        transitionTimeline.to((newFeaturedWrapper.querySelector("img") as any), { y: "0%", duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0);
+        // image slide transitions
+        transitionTimeline.fromTo(
+          state.shaderMaterial.uniforms.uProgress,
+          { value: 0 },
+          {
+            value: 1,
+            duration: config.transitionDuration,
+            ease: "cubic-bezier(0.77,0,0.18,1)",
+          },
+          0
+        );
+        // transitionTimeline.to(newFeaturedWrapper, { clipPath: featuredClipPath, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0);
+        // transitionTimeline.to((currentFeaturedWrapper.querySelector("img") as any), { y: transitionDirection === "down" ? "50%" : "-50%", duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0);
+        // transitionTimeline.to((newFeaturedWrapper.querySelector("img") as any), { y: "0%", duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0);
+        // Animation sequence using GSAP
 
-        transitionTimeline.to(currentNumber, { y: transitionDirection === "down" ? -20 : 20, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0);
-        transitionTimeline.to(newNumber, { y: 0, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0);
-        transitionTimeline.to({}, { duration: 0.8, onStart: () => scrambleText(newNumber, '0' + (nextIndex+1).toString(), 0.8, { chars: "∅øΩ§∆◊¶†‡0123456789", revealDelay: 0.3, speed: 0.4 }) }, 0.2);
+        /***** SLIDES ****** */
+        const slides = [...document.querySelectorAll('.slide')];
+        const slidesInner = slides.map((item) =>
+          item.querySelector('.slide__img')
+        );
+        const direction = transitionDirection === "down" ? -1 : 1;
+            // Get the current and upcoming slides and their inner elements
+        const currentSlide = slides[state.currentImageIndex];
+        const currentInner = slidesInner[state.currentImageIndex];
+        const upcomingSlide = slides[getNextImageIndex(transitionDirection)];
+        const upcomingInner = slidesInner[getNextImageIndex(transitionDirection)];
+        console.log(state.currentImageIndex)
+        //state.currentImageIndex++;
+        gsap
+          .timeline({
+            defaults: {
+              duration: 1.5,
+              ease: "power4.inOut",
+            },
+            onStart: () => {
+              // Add class to the upcoming slide to mark it as current
+              upcomingSlide.classList.add('slide--current');
+            },
+            onComplete: () => {
+              console.log('completed timeline')
+              // Remove class from the previous slide to unmark it as current
+              currentSlide.classList.remove('slide--current');
+              // Reset animation flag
+              //this.isAnimating = false;
+            },
+          })
+          // Defining animation steps
+          .addLabel("start", 0)
+          .to(
+            currentSlide,
+            {
+              yPercent: direction * 100,
+            },
+            "start"
+          )
+          .to(
+            currentInner,
+            {
+              yPercent: -direction * 30,
+            },
+            "start"
+          )
+          .fromTo(
+            upcomingSlide,
+            {
+              yPercent: -direction * 100,
+            },
+            {
+              yPercent: 0,
+            },
+            "start"
+          )
+          .fromTo(
+            upcomingInner,
+            {
+              yPercent: direction * 30,
+              //yPercent: 0
+            },
+            {
+              yPercent: 0,
+            },
+            "start"
+          );
 
-        transitionTimeline.to(currentCounter, { y: transitionDirection === "down" ? -20 : 20, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0);
-        transitionTimeline.to(newCounter, { y: 0, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0);
-        transitionTimeline.to({}, { duration: 0.8, onStart: () => scrambleText(newCounter, slideData[nextIndex].number, 0.8, { chars: "∅øΩ§∆◊¶†‡0123456789", revealDelay: 0.3, speed: 0.4 }) }, 0.2);
-        
-        transitionTimeline.to(currentTitle, { y: transitionDirection === "down" ? -60 : 60, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0.02);
-        transitionTimeline.to(newTitle, { y: 0, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0.02);
-        transitionTimeline.to({}, { duration: 1.2, onStart: () => scrambleText(newTitle, slideData[nextIndex].title, 1.2, { chars: "!<>-_\\/[]{}—=+*^?#ABCDEFGHIJKLMNOPQRSTUVWXYZ", revealDelay: 0.4, speed: 0.3 }) }, 0.3);
+        // date
+        transitionTimeline.to(
+          currentNumber,
+          {
+            y: transitionDirection === "down" ? -20 : 20,
+            duration: config.transitionDuration,
+            ease: "cubic-bezier(0.77,0,0.18,1)",
+          },
+          0
+        );
+        transitionTimeline.to(
+          newNumber,
+          {
+            y: 0,
+            duration: config.transitionDuration,
+            ease: "cubic-bezier(0.77,0,0.18,1)",
+          },
+          0
+        );
+        transitionTimeline.to(
+          {},
+          {
+            duration: 0.8,
+            onStart: () =>
+              scrambleText(newNumber, "0" + (nextIndex + 1).toString(), 0.8, {
+                chars: "∅øΩ§∆◊¶†‡0123456789",
+                revealDelay: 0.3,
+                speed: 0.4,
+              }),
+          },
+          0.2
+        );
 
-        transitionTimeline.to(currentDescription, { y: transitionDirection === "down" ? -24 : 24, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0.04);
-        transitionTimeline.to(newDescription, { y: 0, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0.04);
-        transitionTimeline.to({}, { duration: 1.0, onStart: () => scrambleText(newDescription, slideData[nextIndex].description, 1.0, { chars: "!<>-_\\/[]{}—=+*^?#abcdefghijklmnopqrstuvwxyz", revealDelay: 0.5, speed: 0.35 }) }, 0.4);
+        // total counter
+        transitionTimeline.to(
+          currentCounter,
+          {
+            y: transitionDirection === "down" ? -20 : 20,
+            duration: config.transitionDuration,
+            ease: "cubic-bezier(0.77,0,0.18,1)",
+          },
+          0
+        );
+        transitionTimeline.to(
+          newCounter,
+          {
+            y: 0,
+            duration: config.transitionDuration,
+            ease: "cubic-bezier(0.77,0,0.18,1)",
+          },
+          0
+        );
+        transitionTimeline.to(
+          {},
+          {
+            duration: 0.8,
+            onStart: () =>
+              scrambleText(newCounter, slideData[nextIndex].number, 1.8, {
+                chars: "∅øΩ§∆◊¶†‡0123456789",
+                revealDelay: 0.3,
+                speed: 0.4,
+              }),
+          },
+          0.2
+        );
 
-        transitionTimeline.to(currentParagraphLine1, { y: transitionDirection === "down" ? -35 : 35, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0.06);
-        transitionTimeline.to(newParagraphLines[0], { y: 0, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0.06);
-        transitionTimeline.to({}, { duration: 1.4, onStart: () => scrambleText(newParagraphLines[0], slideData[nextIndex].paragraphLines[0], 1.4, { chars: "01!<>-_\\/[]{}—=+*^?#________", revealDelay: 0.6, speed: 0.25 }) }, 0.5);
+        //title
+        transitionTimeline.to(
+          currentTitle,
+          {
+            y: transitionDirection === "down" ? -60 : 60,
+            duration: config.transitionDuration,
+            ease: "cubic-bezier(0.77,0,0.18,1)",
+          },
+          0.02
+        );
+        transitionTimeline.to(
+          newTitle,
+          {
+            y: 0,
+            duration: config.transitionDuration,
+            ease: "cubic-bezier(0.77,0,0.18,1)",
+          },
+          0.02
+        );
+        transitionTimeline.to(
+          {},
+          {
+            duration: 1.2,
+            onStart: () =>
+              scrambleText(newTitle, slideData[nextIndex].title, 1.2, {
+                chars: "!<>-_\\/[]{}—=+*^?#ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+                revealDelay: 0.4,
+                speed: 0.3,
+              }),
+          },
+          0.3
+        );
 
-        transitionTimeline.to(currentParagraphLine2, { y: transitionDirection === "down" ? -35 : 35, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0.08);
-        transitionTimeline.to(newParagraphLines[1], { y: 0, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0.08);
-        transitionTimeline.to({}, { duration: 1.4, onStart: () => scrambleText(newParagraphLines[1], slideData[nextIndex].paragraphLines[1], 1.4, { chars: "01!<>-_\\/[]{}—=+*^?#________", revealDelay: 0.7, speed: 0.25 }) }, 0.6);
+        //tags
+        transitionTimeline.to(
+          currentDescription,
+          {
+            y: transitionDirection === "down" ? -24 : 24,
+            duration: config.transitionDuration,
+            ease: "cubic-bezier(0.77,0,0.18,1)",
+          },
+          0.04
+        );
+        transitionTimeline.to(
+          newDescription,
+          {
+            y: 0,
+            duration: config.transitionDuration,
+            ease: "cubic-bezier(0.77,0,0.18,1)",
+          },
+          0.04
+        );
+        transitionTimeline.to(
+          {},
+          {
+            duration: 1.0,
+            onStart: () =>
+              scrambleText(
+                newDescription,
+                slideData[nextIndex].description,
+                1.0,
+                {
+                  chars: "!<>-_\\/[]{}—=+*^?#abcdefghijklmnopqrstuvwxyz",
+                  revealDelay: 0.5,
+                  speed: 0.35,
+                }
+              ),
+          },
+          0.4
+        );
+
+        // paragraph lines
+        transitionTimeline.to(
+          currentParagraphLine1,
+          {
+            y: transitionDirection === "down" ? -35 : 35,
+            duration: config.transitionDuration,
+            ease: "cubic-bezier(0.77,0,0.18,1)",
+          },
+          0.06
+        );
+        transitionTimeline.to(
+          newParagraphLines[0],
+          {
+            y: 0,
+            duration: config.transitionDuration,
+            ease: "cubic-bezier(0.77,0,0.18,1)",
+          },
+          0.06
+        );
+        transitionTimeline.to(
+          {},
+          {
+            duration: 1.4,
+            onStart: () =>
+              scrambleText(
+                newParagraphLines[0],
+                slideData[nextIndex].paragraphLines[0],
+                1.4,
+                {
+                  chars: "01!<>-_\\/[]{}—=+*^?#________",
+                  revealDelay: 0.6,
+                  speed: 0.25,
+                }
+              ),
+          },
+          0.5
+        );
+
+        transitionTimeline.to(
+          currentParagraphLine2,
+          {
+            y: transitionDirection === "down" ? -35 : 35,
+            duration: config.transitionDuration,
+            ease: "cubic-bezier(0.77,0,0.18,1)",
+          },
+          0.08
+        );
+        transitionTimeline.to(
+          newParagraphLines[1],
+          {
+            y: 0,
+            duration: config.transitionDuration,
+            ease: "cubic-bezier(0.77,0,0.18,1)",
+          },
+          0.08
+        );
+        transitionTimeline.to(
+          {},
+          {
+            duration: 1.4,
+            onStart: () =>
+              scrambleText(
+                newParagraphLines[1],
+                slideData[nextIndex].paragraphLines[1],
+                1.4,
+                {
+                  chars: "01!<>-_\\/[]{}—=+*^?#________",
+                  revealDelay: 0.7,
+                  speed: 0.25,
+                }
+              ),
+          },
+          0.6
+        );
       }
 
       function handleScrollInteraction(scrollDirection: "up" | "down") {
         const currentTimestamp = Date.now();
         if (state.isTransitioning || !state.scrollingEnabled) return;
-        if (currentTimestamp - state.lastScrollTimestamp < config.scrollThrottleDelay) return;
+        if (
+          currentTimestamp - state.lastScrollTimestamp <
+          config.scrollThrottleDelay
+        )
+          return;
         state.lastScrollTimestamp = currentTimestamp;
         executeSlideTransition(scrollDirection);
       }
 
       async function initializeRenderer() {
-        const canvas = (slider as HTMLElement).querySelector("[data-webgl-canvas]") as HTMLCanvasElement | null;
+        const canvas = (slider as HTMLElement).querySelector(
+          "[data-webgl-canvas]"
+        ) as HTMLCanvasElement | null;
         if (!canvas) return;
 
         state.scene = new THREE.Scene();
         state.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-        state.renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false, alpha: false });
+        state.renderer = new THREE.WebGLRenderer({
+          canvas: canvas,
+          antialias: false,
+          alpha: false,
+        });
         state.renderer.setSize(window.innerWidth, window.innerHeight);
         state.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
@@ -1659,7 +2224,9 @@ export function startNewGallery() {
             uTexture2: { value: null },
             uProgress: { value: 0.0 },
             uTime: { value: 0.0 },
-            uResolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+            uResolution: {
+              value: new THREE.Vector2(window.innerWidth, window.innerHeight),
+            },
             uTexture1Size: { value: new THREE.Vector2(1, 1) },
             uTexture2Size: { value: new THREE.Vector2(1, 1) },
             uEffectType: { value: getEffectIndex(config.currentEffect) },
@@ -1690,7 +2257,9 @@ export function startNewGallery() {
             // Static Sweep uniforms
             uSweepWidth: { value: config.sweepWidth },
             uSweepLayers: { value: config.sweepLayers },
-            uSweepChromaticAberration: { value: config.sweepChromaticAberration },
+            uSweepChromaticAberration: {
+              value: config.sweepChromaticAberration,
+            },
             uSweepEdgeGlow: { value: config.sweepEdgeGlow },
             uSweepFadeTiming: { value: config.sweepFadeTiming },
             // Glitch Wipe uniforms
@@ -1706,10 +2275,10 @@ export function startNewGallery() {
             uAnalogScanlines: { value: config.analogScanlines },
             uAnalogVignette: { value: config.analogVignette },
             uAnalogJitter: { value: config.analogJitter },
-            uAnalogChroma: { value: config.analogChroma }
+            uAnalogChroma: { value: config.analogChroma },
           },
           vertexShader,
-          fragmentShader
+          fragmentShader,
         });
 
         const geometry = new THREE.PlaneGeometry(2, 2);
@@ -1726,17 +2295,22 @@ export function startNewGallery() {
         }
 
         if (state.slideTextures.length >= 2) {
-          state.shaderMaterial.uniforms.uTexture1.value = state.slideTextures[0];
-          state.shaderMaterial.uniforms.uTexture2.value = state.slideTextures[1];
-          state.shaderMaterial.uniforms.uTexture1Size.value = state.slideTextures[0].userData.size;
-          state.shaderMaterial.uniforms.uTexture2Size.value = state.slideTextures[1].userData.size;
+          state.shaderMaterial.uniforms.uTexture1.value =
+            state.slideTextures[0];
+          state.shaderMaterial.uniforms.uTexture2.value =
+            state.slideTextures[1];
+          state.shaderMaterial.uniforms.uTexture1Size.value =
+            state.slideTextures[0].userData.size;
+          state.shaderMaterial.uniforms.uTexture2Size.value =
+            state.slideTextures[1].userData.size;
           state.texturesLoaded = true;
           state.scrollingEnabled = true;
         }
 
         const render = () => {
           requestAnimationFrame(render);
-          state.shaderMaterial.uniforms.uTime.value = (Date.now() - state.startTime) * 0.001;
+          state.shaderMaterial.uniforms.uTime.value =
+            (Date.now() - state.startTime) * 0.001;
           state.renderer.render(state.scene, state.camera);
         };
         render();
@@ -1754,48 +2328,116 @@ export function startNewGallery() {
         };
         const onTouchMove = (touchMoveEvent: TouchEvent) => {
           touchMoveEvent.preventDefault();
-          if (!state.isTouchActive || state.isTransitioning || !state.scrollingEnabled) return;
+          if (
+            !state.isTouchActive ||
+            state.isTransitioning ||
+            !state.scrollingEnabled
+          )
+            return;
           const touchCurrentPosition = touchMoveEvent.touches[0].clientY;
-          const touchDifference = state.touchStartPosition - touchCurrentPosition;
+          const touchDifference =
+            state.touchStartPosition - touchCurrentPosition;
           if (Math.abs(touchDifference) > config.touchThreshold) {
             state.isTouchActive = false;
             const swipeDirection = touchDifference > 0 ? "down" : "up";
             handleScrollInteraction(swipeDirection as any);
           }
         };
-        const onTouchEnd = () => { state.isTouchActive = false; };
+        const onTouchEnd = () => {
+          state.isTouchActive = false;
+        };
         const onKeyDown = (e: KeyboardEvent) => {
           e.preventDefault();
           switch (e.code) {
             case "KeyH": {
-              const paneElement = document.querySelector(".tp-dfwv") as HTMLElement | null;
+              const paneElement = document.querySelector(
+                ".tp-dfwv"
+              ) as HTMLElement | null;
               if (paneElement) {
                 const isHidden = paneElement.style.visibility === "hidden";
-                if (isHidden) { paneElement.style.visibility = "visible"; paneElement.style.opacity = "1"; }
-                else { paneElement.style.visibility = "hidden"; paneElement.style.opacity = "0"; }
+                if (isHidden) {
+                  paneElement.style.visibility = "visible";
+                  paneElement.style.opacity = "1";
+                } else {
+                  paneElement.style.visibility = "hidden";
+                  paneElement.style.opacity = "0";
+                }
               }
               break;
             }
-            case "Digit1": config.currentEffect = "datamosh"; handleEffectChange(config.currentEffect); break;
-            case "Digit2": config.currentEffect = "pixelSort"; handleEffectChange(config.currentEffect); break;
-            case "Digit3": config.currentEffect = "digitalStatic"; handleEffectChange(config.currentEffect); break;
-            case "Digit4": config.currentEffect = "staticSweep"; handleEffectChange(config.currentEffect); break;
-            case "Digit5": config.currentEffect = "glitchWipe"; handleEffectChange(config.currentEffect); break;
-            case "Digit6": config.currentEffect = "analogDecay"; handleEffectChange(config.currentEffect); break;
-            case "KeyP": cyclePresets(); break;
+            case "Digit1":
+              config.currentEffect = "datamosh";
+              handleEffectChange(config.currentEffect);
+              break;
+            case "Digit2":
+              config.currentEffect = "pixelSort";
+              handleEffectChange(config.currentEffect);
+              break;
+            case "Digit3":
+              config.currentEffect = "digitalStatic";
+              handleEffectChange(config.currentEffect);
+              break;
+            case "Digit4":
+              config.currentEffect = "staticSweep";
+              handleEffectChange(config.currentEffect);
+              break;
+            case "Digit5":
+              config.currentEffect = "glitchWipe";
+              handleEffectChange(config.currentEffect);
+              break;
+            case "Digit6":
+              config.currentEffect = "analogDecay";
+              handleEffectChange(config.currentEffect);
+              break;
+            case "KeyP":
+              cyclePresets();
+              break;
             case "Equal":
-            case "NumpadAdd": config.globalIntensity = Math.min(2.0, config.globalIntensity + 0.1); updateShaderUniforms(); if (pane) pane.refresh(); break;
+            case "NumpadAdd":
+              config.globalIntensity = Math.min(
+                2.0,
+                config.globalIntensity + 0.1
+              );
+              updateShaderUniforms();
+              if (pane) pane.refresh();
+              break;
             case "Minus":
-            case "NumpadSubtract": config.globalIntensity = Math.max(0.1, config.globalIntensity - 0.1); updateShaderUniforms(); if (pane) pane.refresh(); break;
-            case "BracketRight": config.speedMultiplier = Math.min(3.0, config.speedMultiplier + 0.1); updateShaderUniforms(); if (pane) pane.refresh(); break;
-            case "BracketLeft": config.speedMultiplier = Math.max(0.1, config.speedMultiplier - 0.1); updateShaderUniforms(); if (pane) pane.refresh(); break;
-            case "KeyR": resetToDefaults(); break;
+            case "NumpadSubtract":
+              config.globalIntensity = Math.max(
+                0.1,
+                config.globalIntensity - 0.1
+              );
+              updateShaderUniforms();
+              if (pane) pane.refresh();
+              break;
+            case "BracketRight":
+              config.speedMultiplier = Math.min(
+                3.0,
+                config.speedMultiplier + 0.1
+              );
+              updateShaderUniforms();
+              if (pane) pane.refresh();
+              break;
+            case "BracketLeft":
+              config.speedMultiplier = Math.max(
+                0.1,
+                config.speedMultiplier - 0.1
+              );
+              updateShaderUniforms();
+              if (pane) pane.refresh();
+              break;
+            case "KeyR":
+              resetToDefaults();
+              break;
           }
         };
         const onResize = () => {
           if (state.renderer && state.shaderMaterial) {
             state.renderer.setSize(window.innerWidth, window.innerHeight);
-            state.shaderMaterial.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
+            state.shaderMaterial.uniforms.uResolution.value.set(
+              window.innerWidth,
+              window.innerHeight
+            );
           }
         };
 
@@ -1817,7 +2459,9 @@ export function startNewGallery() {
       }
 
       function cyclePresets() {
-        const currentPresets = Object.keys(effectPresets[config.currentEffect] || {});
+        const currentPresets = Object.keys(
+          effectPresets[config.currentEffect] || {}
+        );
         if (currentPresets.length === 0) return;
         const currentIndex = currentPresets.indexOf(config.currentEffectPreset);
         const nextIndex = (currentIndex + 1) % currentPresets.length;
@@ -1845,7 +2489,9 @@ export function startNewGallery() {
   }
 
   function initSliderAfterPreloader() {
-    setTimeout(() => { initImageSlider(); }, 100);
+    setTimeout(() => {
+      initImageSlider();
+    }, 100);
   }
 
   // Initialize with preloader
@@ -1859,5 +2505,3 @@ export function startNewGallery() {
     preloaderStyle.remove();
   };
 }
-
-

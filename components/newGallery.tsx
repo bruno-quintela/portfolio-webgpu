@@ -4,7 +4,74 @@ import { useEffect } from "react";
 import { startNewGallery } from "./newGalleryLogic";
 
 const NewGallery = () => {
-  useEffect(() => startNewGallery(), []);
+  const slideData = [
+    {
+        url: "https://assets.codepen.io/7558/horror-01.jpg",
+      title: "Awakening Abyss",
+      description: "#Eldritch #Emergence",
+      number: "13:04:2025",
+      paragraphLines: [
+        "Archived VHS documentary footage captures the moment",
+        "an ancient cosmic entity ruptures frozen silence.",
+      ],
+      prompt:
+        "Extreme footage of icy Cthulhu-like horror rising out of a shattering ice sinkhole. VHS dystopian documentary style, eerie retro science fiction, dark future photography fused with 3D Zdzislaw Beksinski surrealism. Downward vertigo angle, madness, haunted atmosphere, static, glitches, and digital noise. Saturated, vibrant colors with cold blue highlights and fractured light.",
+      caption: "Eldritch emergence in cracked ice",
+    },
+    {
+        url: "https://assets.codepen.io/7558/horror-02.jpg",
+      title: "Fractured Signal",
+      description: "#Glitch #Documentary",
+      number: "04:04:2025",
+      paragraphLines: [
+        "The broadcast distorts as forbidden knowledge leaks",
+        "through corrupted frames and spectral interference.",
+      ],
+      prompt:
+        "Glitch-heavy VHS transmission of a forbidden signal, blending cosmic horror iconography with retro-futuristic decay. Strange symbols bleeding through static, warped depths suggesting an otherworldly intelligence. Heavy digital noise, color aberrations, and surreal background shapes borrowing from Beksinski's dreamlike textures. Sense of paranoia and collapsing reality.",
+      caption: "Corrupted broadcast of the unknown",
+    },
+    {
+        url: "https://assets.codepen.io/7558/horror-03.jpg",
+      title: "Echoes of the Deep",
+      description: "#Haunted #Vision",
+      number: "03:04:2025",
+      paragraphLines: [
+        "Submerged memories resurface in spectral echoes,",
+        "reminding viewers that the abyss remembers.",
+      ],
+      prompt:
+        "Eerie underwater surrealism showing the slow emergence of a drowned cosmic entity, lit by dying neon and flickering VHS artifacts. Documentary-style overlay with timestamps, phantom reflections, and faint, impossible geometry. Atmospheric fog, subtle demonic undertones, and a sense that the depths are watching back.",
+      caption: "Submerged cosmic remembrance",
+    },
+    {
+        url: "https://assets.codepen.io/7558/horror-04.jpg",
+      title: "Glitching Sanctum",
+      description: "#Digital #Cultifacts",
+      number: "05:04:2025",
+      paragraphLines: [
+        "A sacred data temple collapses into noise,",
+        "its ritual code leaking forbidden patterns.",
+      ],
+      prompt:
+        "Dark future interior of a collapsing digital shrine, where eldritch runes are rendered as corrupted code. Mixed media: 3D Beksinski-inspired architecture dissolving into pixel shards, VHS tracking errors tearing the scene, and occult imagery flickering in neon. Vertigo-inducing perspective, heavy contrast between shadow and glitch-lit form.",
+      caption: "Ritual code corruption",
+    },
+    {
+        url: "https://assets.codepen.io/7558/horror-05.jpg",
+      title: "Frozen Leviathan",
+      description: "#Apocalyptic #Witness",
+      number: "09:04:2025",
+      paragraphLines: [
+        "The last frame holds the frozen titan—half-buried,",
+        "its silence a prophecy of an unraveling world.",
+      ],
+      prompt:
+        "Dystopian aftermath shot of a gigantic eldritch leviathan encased in fractured ice, seen through a damaged documentary lens. Grainy VHS overlay, color bleeding, and subtle animation glitches hinting at latent motion. Sky warped with surreal auroras; the scene balances frozen stillness with impending doom.",
+      caption: "Stilled titanic omen",
+    },
+  ];
+  useEffect(() => startNewGallery(slideData), []);
 
   return (
     <main
@@ -81,22 +148,20 @@ const NewGallery = () => {
         </div>
       </aside>
 
-
-        <aside className="corner-text corner-text-top-right slide-counter">
-          <div className="counter-container counter-date">
-            <div className="counter-strip" data-slide-counter>
-              <span>01:12:1232</span>
-            </div>
+      <aside className="corner-text corner-text-top-right slide-counter">
+        <div className="counter-container counter-date">
+          <div className="counter-strip" data-slide-counter>
+            <span>01:12:1232</span>
           </div>
-          <div className="counter-separator"></div>
-          <div className="counter-container counter-number">
-            <div className="counter-strip" data-slide-number>
-              <span>02</span>
-            </div>
+        </div>
+        <div className="counter-separator"></div>
+        <div className="counter-container counter-number">
+          <div className="counter-strip" data-slide-number>
+            <span>02</span>
           </div>
-         
-          <div className="counter-total ml-1">&nbsp;/&nbsp;05</div>
+        </div>
 
+        <div className="counter-total ml-1">&nbsp;/&nbsp;05</div>
       </aside>
 
       {/* <aside className="corner-text corner-text-bottom-right" aria-hidden="true">
@@ -135,14 +200,24 @@ const NewGallery = () => {
         <div>STIRS</div>
       </aside>
 
-      <section className="featured-image" data-featured-image>
-        <div className="featured-image-wrapper" data-featured-wrapper>
+      <section className="slides" data-featured-image>
+        {slideData.map((slide, index) => (
+          <div key={index} className={`slide ${index === 0 ? 'slide--current' : ''}`}>
+            <div
+              className="slide__img"
+              style={{ backgroundImage: `url(${slide.url})`,
+                
+               }}
+            ></div>
+          </div>
+        ))}
+        {/* <div className="featured-image-wrapper" data-featured-wrapper>
           <img
             className="featured-image"
             src="https://assets.codepen.io/7558/horror-01.jpg"
             alt="Awakening Abyss - Eldritch horror scene with cosmic entity emerging from dark abyss"
           />
-        </div>
+        </div> */}
       </section>
 
       <header className="slide-text" data-slide-text>

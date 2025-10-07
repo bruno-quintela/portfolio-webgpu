@@ -1,4 +1,90 @@
 
+/* image slides */
+
+.slides {
+  z-index: 1;
+  position: absolute;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  margin:auto;
+  width: 350px;
+  height: 350px;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: 100%;
+  grid-template-columns: 100%;
+  place-items: center;
+}
+
+.slide {
+  width: 100%;
+  height: 100%;
+  grid-area: 1 / 1 / -1 / -1;
+  pointer-events: none;
+  opacity: 0;
+  overflow: hidden;
+  position: relative;
+  display: grid;
+  place-items: center;
+  will-change: transform, opacity;
+}
+
+.slide--current {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.deco {
+  width: 100%;
+  height: 100%;
+  grid-area: 1 / 1 / -1 / -1;
+  pointer-events: none;
+  position: relative;
+  opacity: 0;
+  background: #8c718e;
+  will-change: transform, opacity;
+}
+
+.deco--1 {
+  background: #d4503e;
+}
+
+.deco--2 {
+  background: #1c1a1a;
+}
+
+.deco--3 {
+  background: #4e4141;
+}
+
+.deco--4 {
+  background: #000;
+}
+
+.deco--5 {
+  background: #060b17;
+}
+
+.deco--6 {
+  background: #34365c;
+}
+
+.deco--7 {
+  background: #9f6794;
+}
+
+.slide__img {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  will-change: transform, opacity, filter;
+}
+
+
 /*TODO: move this to gallery.css*/
 .slide-counter {
   display: flex;
@@ -200,6 +286,8 @@ z-index: 10; */
   width: 100vw;
   height: 100vh;
   z-index: 1;
+  transform: translateX(0);
+  perspective-origin: center; 
   pointer-events: none;
 }
 
@@ -248,7 +336,7 @@ z-index: 10; */
 }
 
 .corner-text-top-right {
-  top: 4rem;
+  top: 6rem;
   right: 2rem;
   text-align: right;
 }
@@ -310,7 +398,7 @@ z-index: 10; */
 
 .slide-text {
   position: absolute;
-  top: 4rem;
+  top: 5rem;
   left: 2rem;
   /* transform: translate(-50%, -50%); */
   color: var(--color-text);
@@ -373,6 +461,7 @@ z-index: 10; */
   height: 24px;
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
   overflow: hidden;
+  margin-top: 8px;
 }
 
 .slide-description p {
@@ -394,12 +483,12 @@ z-index: 10; */
 
 .slide-paragraph {
   position: absolute;
-  top: 12rem;
+  top: 20rem;
   left: 2rem;
   /* transform: translate(50%, -50%); */
   color: var(--color-text);
   z-index: var(--content-z);
-  width: 100%;
+  width: 25%;
   text-align: left;
   overflow: hidden;
 }
@@ -407,7 +496,7 @@ z-index: 10; */
 .slide-paragraph-line {
   position: relative;
   width: 100%;
-  height: 28px;
+  height: 18px;
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
   overflow: hidden;
 }
@@ -422,9 +511,9 @@ z-index: 10; */
   left: 0;
   color: var(--color-text);
   font-family: var(--font-sans);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 400;
-  line-height: 1;
+  line-height: 1.2;
   transform: translateY(0px);
   will-change: transform;
   margin: 0;
