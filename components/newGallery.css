@@ -16,19 +16,28 @@
   grid-template-rows: 100%;
   grid-template-columns: 100%;
   place-items: center;
+  background-color: rgba(0, 0, 0, .95);
+  backdrop-filter: blur(4px); 
 }
 
 .slide {
   width: 100%;
   height: 100%;
   grid-area: 1 / 1 / -1 / -1;
-  pointer-events: none;
+  pointer-events: auto;
+  cursor: pointer;
   opacity: 0;
   overflow: hidden;
   position: relative;
   display: grid;
   place-items: center;
   will-change: transform, opacity;
+}
+
+.slide--clicked {
+  pointer-events: auto;
+  opacity: 1;
+  cursor:pointer;
 }
 
 .slide--current {
@@ -483,10 +492,10 @@ z-index: 10; */
 
 .slide-paragraph {
   position: absolute;
-  top: 20rem;
+  bottom: 8rem;
   left: 2rem;
   /* transform: translate(50%, -50%); */
-  color: var(--color-text);
+  color: #aaa;
   z-index: var(--content-z);
   width: 25%;
   text-align: left;

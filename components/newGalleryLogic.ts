@@ -334,25 +334,23 @@ export function startNewGallery(slideData: any) {
 
     const sliders = document.querySelectorAll("[data-image-slider-init]");
     sliders.forEach((slider) => {
-      const imageCollection = [
-        "https://assets.codepen.io/7558/horror-01.jpg",
-        "https://assets.codepen.io/7558/horror-02.jpg",
-        "https://assets.codepen.io/7558/horror-03.jpg",
-        "https://assets.codepen.io/7558/horror-04.jpg",
-        "https://assets.codepen.io/7558/horror-05.jpg",
-      ];
-
-      
+      // const imageCollection = [
+      //   "https://assets.codepen.io/7558/horror-01.jpg",
+      //   "https://assets.codepen.io/7558/horror-02.jpg",
+      //   "https://assets.codepen.io/7558/horror-03.jpg",
+      //   "https://assets.codepen.io/7558/horror-04.jpg",
+      //   "https://assets.codepen.io/7558/horror-05.jpg",
+      // ];
 
       // Enhanced configuration with all settings including Analog Decay
       const config: any = {
-        totalImages: imageCollection.length,
+        //totalImages: slideData.length,
         transitionDuration: 1.8,
         scrollThrottleDelay: 1000,
         touchThreshold: 10,
         // Current state
-        currentEffect: "datamosh",
-        currentEffectPreset: "Default",
+        currentEffect: "digitalStatic",
+        currentEffectPreset: "digitalStatic",
         // Global settings that affect all effects
         globalIntensity: 1.0,
         speedMultiplier: 1.0,
@@ -1705,25 +1703,25 @@ export function startNewGallery(slideData: any) {
         });
       }
 
-      function createFeaturedImageWrapper(
-        imageIndex: number,
-        transitionDirection: "up" | "down"
-      ) {
-        const featuredWrapper = document.createElement("div");
-        featuredWrapper.className = "featured-image-wrapper";
-        featuredWrapper.setAttribute("data-featured-wrapper", "");
-        const featuredImage = document.createElement("img");
-        featuredImage.src = imageCollection[imageIndex];
-        featuredImage.alt = `Featured fashion portrait ${imageIndex + 1}`;
-        featuredWrapper.appendChild(featuredImage);
+      // function createFeaturedImageWrapper(
+      //   imageIndex: number,
+      //   transitionDirection: "up" | "down"
+      // ) {
+      //   const featuredWrapper = document.createElement("div");
+      //   featuredWrapper.className = "featured-image-wrapper";
+      //   featuredWrapper.setAttribute("data-featured-wrapper", "");
+      //   const featuredImage = document.createElement("img");
+      //   featuredImage.src = imageCollection[imageIndex];
+      //   featuredImage.alt = `Featured fashion portrait ${imageIndex + 1}`;
+      //   featuredWrapper.appendChild(featuredImage);
 
-        const initialClipPath =
-          transitionDirection === "down"
-            ? "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)"
-            : "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)";
-        featuredWrapper.style.clipPath = initialClipPath;
-        return featuredWrapper;
-      }
+      //   const initialClipPath =
+      //     transitionDirection === "down"
+      //       ? "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)"
+      //       : "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)";
+      //   featuredWrapper.style.clipPath = initialClipPath;
+      //   return featuredWrapper;
+      // }
 
       function createTextElements(
         slideIndex: number,
@@ -1769,15 +1767,113 @@ export function startNewGallery(slideData: any) {
 
       function getNextImageIndex(direction: "up" | "down") {
         if (direction === "down") {
-          return state.currentImageIndex === config.totalImages - 1
+          return state.currentImageIndex === slideData.length - 1
             ? 0
             : state.currentImageIndex + 1;
         } else {
           return state.currentImageIndex === 0
-            ? config.totalImages - 1
+            ? slideData.length - 1
             : state.currentImageIndex - 1;
         }
       }
+
+      function toggleSlideGallery() {
+        console.log('clicked slide')
+        /***** SLIDES ****** */
+        const slidesContainer = document.querySelectorAll(".slides");
+        const slides = [...document.querySelectorAll(".slide")];
+        const slidesInner = slides.map((item) =>
+          item.querySelector(".slide__img")
+        );
+        const direction = 1;
+        const nextIndex = state.currentImageIndex + 1;
+        // Get the current and upcoming slides and their inner elements
+        const currentSlide = slides[state.currentImageIndex];
+        const upcomingSlide = slides[nextIndex];
+        const upcomingInner = slidesInner[nextIndex];
+        console.log(state.currentImageIndex)
+        console.log(nextIndex)
+        gsap
+          .timeline({
+            defaults: {
+              duration: 1.25,
+              ease: "power4.inOut",
+            },
+            onStart: () => {
+              // Add class to the upcoming slide to mark it as current
+              if (currentSlide.classList.contains("slide--clicked")) {
+                currentSlide.classList.remove("slide--clicked");
+              } else {
+                currentSlide.classList.add("slide--clicked");
+              }
+
+              gsap.set(upcomingSlide, { zIndex: 99 });
+            },
+            onComplete: () => {
+              // Remove class from the previous slide to unmark it as current
+              //upcomingSlide.classList.remove("slide--clicked");
+              gsap.set(upcomingSlide, { zIndex: 1 });
+            },
+          })
+          // Defining animation steps
+          .addLabel("start", 0)
+          .to(
+            currentSlide,
+            {
+              duration: 0.4,
+              ease: "sine",
+              scale: 0.95,
+              autoAlpha: 0.0,
+            },
+            "start"
+          )
+          .to(
+            slidesContainer,
+            {
+              width: "100%",
+              //autoAlpha: .75,
+            },
+            "start+=0.5"
+          );
+          // .to(
+          //   currentSlide,
+          //   {
+          //     yPercent: -direction * 20,
+          //     autoAlpha: 0,
+          //   },
+          //   "start+=0.4"
+          // )
+          // .fromTo(
+          //   upcomingSlide,
+          //   {
+          //     autoAlpha: 1,
+          //     scale: 1,
+          //     yPercent: direction * 100,
+          //   },
+          //   {
+          //     yPercent: 0,
+          //   },
+          //   "start+=0.1"
+          // )
+          // .fromTo(
+          //   upcomingInner,
+          //   {
+          //     yPercent: -direction * 50,
+          //   },
+          //   {
+          //     yPercent: 0,
+          //   },
+          //   "start+=0.1"
+          // );
+      }
+
+      const slides = [...document.querySelectorAll(".slide")];
+      slides.map((slide)=>{
+        slide.addEventListener("click",()=>{
+          console.log('slide clicked')
+          toggleSlideGallery();
+        })
+      })
 
       function executeSlideTransition(transitionDirection: "up" | "down") {
         if (
@@ -1795,12 +1891,12 @@ export function startNewGallery(slideData: any) {
         const nextTexture = state.slideTextures[nextIndex];
         if (!currentTexture || !nextTexture) return;
 
-        const featuredImageContainer = (slider as HTMLElement).querySelector(
-          "[data-featured-image]"
-        ) as HTMLElement;
-        const currentFeaturedWrapper = featuredImageContainer.querySelector(
-          "[data-featured-wrapper]"
-        ) as HTMLElement;
+        // const featuredImageContainer = (slider as HTMLElement).querySelector(
+        //   "[data-featured-image]"
+        // ) as HTMLElement;
+        // const currentFeaturedWrapper = featuredImageContainer.querySelector(
+        //   "[data-featured-wrapper]"
+        // ) as HTMLElement;
 
         const numberContainer = (slider as HTMLElement).querySelector(
           "[data-slide-number]"
@@ -1830,10 +1926,10 @@ export function startNewGallery(slideData: any) {
         const currentParagraphLine2 =
           paragraphLine2Container.querySelector("span");
 
-        const newFeaturedWrapper = createFeaturedImageWrapper(
-          nextIndex,
-          transitionDirection
-        );
+        // const newFeaturedWrapper = createFeaturedImageWrapper(
+        //   nextIndex,
+        //   transitionDirection
+        // );
         const {
           newNumber,
           newCounter,
@@ -1842,7 +1938,7 @@ export function startNewGallery(slideData: any) {
           newParagraphLines,
         } = createTextElements(nextIndex, transitionDirection);
 
-        featuredImageContainer.appendChild(newFeaturedWrapper);
+        //featuredImageContainer.appendChild(newFeaturedWrapper);
         numberContainer.appendChild(newNumber);
         counterContainer.appendChild(newCounter);
         titleContainer.appendChild(newTitle);
@@ -1859,12 +1955,10 @@ export function startNewGallery(slideData: any) {
         state.shaderMaterial.uniforms.uTexture2Size.value =
           nextTexture.userData.size;
 
-        state.currentImageIndex = nextIndex;
-
         const transitionTimeline = gsap.timeline({
           onComplete: () => {
             [
-              currentFeaturedWrapper,
+              //currentFeaturedWrapper,
               currentNumber,
               currentCounter,
               currentTitle,
@@ -1909,18 +2003,19 @@ export function startNewGallery(slideData: any) {
         // Animation sequence using GSAP
 
         /***** SLIDES ****** */
-        const slides = [...document.querySelectorAll('.slide')];
+        const slides = [...document.querySelectorAll(".slide")];
         const slidesInner = slides.map((item) =>
-          item.querySelector('.slide__img')
+          item.querySelector(".slide__img")
         );
         const direction = transitionDirection === "down" ? -1 : 1;
-            // Get the current and upcoming slides and their inner elements
+        // Get the current and upcoming slides and their inner elements
         const currentSlide = slides[state.currentImageIndex];
         const currentInner = slidesInner[state.currentImageIndex];
-        const upcomingSlide = slides[getNextImageIndex(transitionDirection)];
-        const upcomingInner = slidesInner[getNextImageIndex(transitionDirection)];
-        console.log(state.currentImageIndex)
-        //state.currentImageIndex++;
+        const upcomingSlide = slides[nextIndex];
+        const upcomingInner = slidesInner[nextIndex];
+
+        // update next index
+        state.currentImageIndex = nextIndex;
         gsap
           .timeline({
             defaults: {
@@ -1929,12 +2024,12 @@ export function startNewGallery(slideData: any) {
             },
             onStart: () => {
               // Add class to the upcoming slide to mark it as current
-              upcomingSlide.classList.add('slide--current');
+              upcomingSlide.classList.add("slide--current");
             },
             onComplete: () => {
-              console.log('completed timeline')
+              console.log("completed timeline");
               // Remove class from the previous slide to unmark it as current
-              currentSlide.classList.remove('slide--current');
+              currentSlide.classList.remove("slide--current");
               // Reset animation flag
               //this.isAnimating = false;
             },
@@ -2285,9 +2380,9 @@ export function startNewGallery(slideData: any) {
         const mesh = new THREE.Mesh(geometry, state.shaderMaterial);
         state.scene.add(mesh);
 
-        for (let i = 0; i < imageCollection.length; i++) {
+        for (let i = 0; i < slideData.length; i++) {
           try {
-            const texture = await loadImageTexture(imageCollection[i]);
+            const texture = await loadImageTexture(slideData[i].url);
             state.slideTextures.push(texture);
           } catch (error) {
             console.warn(`Failed to load image ${i}:`, error);
