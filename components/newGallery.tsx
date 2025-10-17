@@ -6,7 +6,7 @@ import { startNewGallery } from "./newGalleryLogic";
 const NewGallery = () => {
   const slideData = [
     {
-        url: "https://assets.codepen.io/7558/horror-01.jpg",
+      url: "https://assets.codepen.io/7558/horror-01.jpg",
       title: "Awakening Abyss",
       description: "#Eldritch #Emergence",
       number: "13:04:2025",
@@ -17,6 +17,28 @@ const NewGallery = () => {
       prompt:
         "Extreme footage of icy Cthulhu-like horror rising out of a shattering ice sinkhole. VHS dystopian documentary style, eerie retro science fiction, dark future photography fused with 3D Zdzislaw Beksinski surrealism. Downward vertigo angle, madness, haunted atmosphere, static, glitches, and digital noise. Saturated, vibrant colors with cold blue highlights and fractured light.",
       caption: "Eldritch emergence in cracked ice",
+      slides: [
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-01.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-02.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-03.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-04.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-05.jpg'
+        }
+      ]
     },
     {
         url: "https://assets.codepen.io/7558/horror-02.jpg",
@@ -30,6 +52,28 @@ const NewGallery = () => {
       prompt:
         "Glitch-heavy VHS transmission of a forbidden signal, blending cosmic horror iconography with retro-futuristic decay. Strange symbols bleeding through static, warped depths suggesting an otherworldly intelligence. Heavy digital noise, color aberrations, and surreal background shapes borrowing from Beksinski's dreamlike textures. Sense of paranoia and collapsing reality.",
       caption: "Corrupted broadcast of the unknown",
+      slides: [
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-01.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-02.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-03.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-04.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-05.jpg'
+        }
+      ]
     },
     {
         url: "https://assets.codepen.io/7558/horror-03.jpg",
@@ -43,6 +87,28 @@ const NewGallery = () => {
       prompt:
         "Eerie underwater surrealism showing the slow emergence of a drowned cosmic entity, lit by dying neon and flickering VHS artifacts. Documentary-style overlay with timestamps, phantom reflections, and faint, impossible geometry. Atmospheric fog, subtle demonic undertones, and a sense that the depths are watching back.",
       caption: "Submerged cosmic remembrance",
+      slides: [
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-01.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-02.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-03.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-04.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-05.jpg'
+        }
+      ]
     },
     {
         url: "https://assets.codepen.io/7558/horror-04.jpg",
@@ -56,9 +122,55 @@ const NewGallery = () => {
       prompt:
         "Dark future interior of a collapsing digital shrine, where eldritch runes are rendered as corrupted code. Mixed media: 3D Beksinski-inspired architecture dissolving into pixel shards, VHS tracking errors tearing the scene, and occult imagery flickering in neon. Vertigo-inducing perspective, heavy contrast between shadow and glitch-lit form.",
       caption: "Ritual code corruption",
+      slides: [
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-01.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-02.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-03.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-04.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-05.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-03.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-04.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-05.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-03.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-04.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-05.jpg'
+        }
+      ]
     },
     {
-        url: "https://assets.codepen.io/7558/horror-05.jpg",
+      url: "https://assets.codepen.io/7558/horror-05.jpg",
       title: "Frozen Leviathan",
       description: "#Apocalyptic #Witness",
       number: "09:04:2025",
@@ -69,6 +181,40 @@ const NewGallery = () => {
       prompt:
         "Dystopian aftermath shot of a gigantic eldritch leviathan encased in fractured ice, seen through a damaged documentary lens. Grainy VHS overlay, color bleeding, and subtle animation glitches hinting at latent motion. Sky warped with surreal auroras; the scene balances frozen stillness with impending doom.",
       caption: "Stilled titanic omen",
+      slides: [
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-01.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-02.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-03.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-03.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-04.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-05.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-04.jpg'
+        },
+        {
+          title: '01',
+          url: 'https://assets.codepen.io/7558/horror-05.jpg'
+        }
+      ]
     },
   ];
   useEffect(() => startNewGallery(slideData), []);
@@ -88,7 +234,6 @@ const NewGallery = () => {
       <div className="geometric-background">
         <svg className="geometric-svg" viewBox="0 0 1920 1080">
           <g id="grid-lines"></g>
-
           <text className="geometric-text" x="550" y="250">
             THE CREATIVE
           </text>
@@ -180,14 +325,13 @@ const NewGallery = () => {
         <p>4 - STATIC SWEEP</p>
         <p>5 - GLITCH WIPE</p>
         <p>6 - ANALOG DECAY</p>
-        <p>P - CYCLE PRESETS</p>
-        <p>+/- INTENSITY</p>
-        <p>[ ] SPEED</p>
-        <p>R - RESET</p>
       </nav>
 
-      <aside className="corner-text corner-text-center" aria-hidden="true">
-        <div>R&rsquo;LYEH</div>
+      <aside id="verticalTitle" className="corner-text corner-text-center" aria-hidden="true">
+        {
+          slideData.map((slide, index) => <div key={index}>{slide.title}</div>)
+        }
+        {/* <div>R&rsquo;LYEH</div>
         <div>FHTAGN</div>
         <div></div>
         <div></div>
@@ -197,7 +341,7 @@ const NewGallery = () => {
         <div></div>
         <div>THE</div>
         <div>SLEEPER</div>
-        <div>STIRS</div>
+        <div>STIRS</div> */}
       </aside>
 
       <section className="slides" data-featured-image>
@@ -209,6 +353,17 @@ const NewGallery = () => {
                 
                }}
             ></div>
+            <div className="slide-images-container">
+              {slide.slides?.map((image, index)=>
+                (
+                  <div
+                    key={index}
+                    className="slide-image"
+                    style={{ backgroundImage: `url(${image.url})`}}
+                  ></div>
+                ))}
+
+            </div>
           </div>
         ))}
         {/* <div className="featured-image-wrapper" data-featured-wrapper>

@@ -334,13 +334,6 @@ export function startNewGallery(slideData: any) {
 
     const sliders = document.querySelectorAll("[data-image-slider-init]");
     sliders.forEach((slider) => {
-      // const imageCollection = [
-      //   "https://assets.codepen.io/7558/horror-01.jpg",
-      //   "https://assets.codepen.io/7558/horror-02.jpg",
-      //   "https://assets.codepen.io/7558/horror-03.jpg",
-      //   "https://assets.codepen.io/7558/horror-04.jpg",
-      //   "https://assets.codepen.io/7558/horror-05.jpg",
-      // ];
 
       // Enhanced configuration with all settings including Analog Decay
       const config: any = {
@@ -1782,37 +1775,48 @@ export function startNewGallery(slideData: any) {
         /***** SLIDES ****** */
         const slidesContainer = document.querySelectorAll(".slides");
         const slides = [...document.querySelectorAll(".slide")];
-        const slidesInner = slides.map((item) =>
-          item.querySelector(".slide__img")
-        );
-        const direction = 1;
+        // const slidesInner = slides.map((item) =>
+        //   item.querySelector(".slide__img")
+        // );
+        //const direction = 1;
         const nextIndex = state.currentImageIndex + 1;
         // Get the current and upcoming slides and their inner elements
         const currentSlide = slides[state.currentImageIndex];
+        const currentSlideImage = slides[state.currentImageIndex].getElementsByClassName('slide__img');
+        const currentSlideGallery = slides[state.currentImageIndex].getElementsByClassName('slide-images-container')
         const upcomingSlide = slides[nextIndex];
-        const upcomingInner = slidesInner[nextIndex];
+        //const upcomingInner = slidesInner[nextIndex];
         console.log(state.currentImageIndex)
         console.log(nextIndex)
-        gsap
+
+        // Check if slide is already clicked
+        const isAlreadyClicked = currentSlide.classList.contains("slide--clicked");
+
+        if (!isAlreadyClicked) {
+          gsap
           .timeline({
             defaults: {
               duration: 1.25,
               ease: "power4.inOut",
             },
             onStart: () => {
-              // Add class to the upcoming slide to mark it as current
-              if (currentSlide.classList.contains("slide--clicked")) {
+              // Toggle class
+              if (isAlreadyClicked) {
                 currentSlide.classList.remove("slide--clicked");
               } else {
                 currentSlide.classList.add("slide--clicked");
               }
 
-              gsap.set(upcomingSlide, { zIndex: 99 });
+              if (upcomingSlide) {
+                gsap.set(upcomingSlide, { zIndex: 99 });
+              }
             },
             onComplete: () => {
               // Remove class from the previous slide to unmark it as current
               //upcomingSlide.classList.remove("slide--clicked");
-              gsap.set(upcomingSlide, { zIndex: 1 });
+              if (upcomingSlide) {
+                gsap.set(upcomingSlide, { zIndex: 1 });
+              }
             },
           })
           // Defining animation steps
@@ -1822,27 +1826,43 @@ export function startNewGallery(slideData: any) {
             {
               duration: 0.4,
               ease: "sine",
-              scale: 0.95,
-              autoAlpha: 0.0,
+              scaleY: 1.,
+              scaleX: 1,
+              autoAlpha: 1,
             },
             "start"
           )
           .to(
+            currentSlideImage,
+             {
+               autoAlpha: .5,
+             },
+             "start"
+          )
+          .to(
             slidesContainer,
-            {
+            { 
               width: "100%",
-              //autoAlpha: .75,
             },
-            "start+=0.5"
-          );
-          // .to(
-          //   currentSlide,
-          //   {
-          //     yPercent: -direction * 20,
-          //     autoAlpha: 0,
-          //   },
-          //   "start+=0.4"
-          // )
+            "start+=0.05"
+          )
+          .to(
+            currentSlideImage,
+             {
+               scaleY: 1,
+               yPercent: -100,
+               autoAlpha: 1,
+             },
+             "start+=1"
+          )
+          .to(
+            currentSlideGallery,
+            {
+              yPercent: -100,
+              autoAlpha: 1,
+            },
+            "start+=1.2"
+         )
           // .fromTo(
           //   upcomingSlide,
           //   {
@@ -1865,12 +1885,78 @@ export function startNewGallery(slideData: any) {
           //   },
           //   "start+=0.1"
           // );
+        } else {
+          gsap
+          .timeline({
+            defaults: {
+              duration: 1.25,
+              ease: "power4.inOut",
+            },
+            onStart: () => {
+              // Toggle class
+              if (isAlreadyClicked) {
+                currentSlide.classList.remove("slide--clicked");
+              } else {
+                currentSlide.classList.add("slide--clicked");
+              }
+
+              if (upcomingSlide) {
+                gsap.set(upcomingSlide, { zIndex: 99 });
+              }
+            },
+            onComplete: () => {
+              // Remove class from the previous slide to unmark it as current
+              //upcomingSlide.classList.remove("slide--clicked");
+              if (upcomingSlide) {
+                gsap.set(upcomingSlide, { zIndex: 1 });
+              }
+            },
+          })
+          // Defining animation steps
+          .addLabel("start", 0)
+          .to(
+            currentSlideGallery,
+            {
+              yPercent: 0,
+              autoAlpha: 1,
+            },
+            "start"
+         )
+          .to(
+            currentSlideImage,
+             {
+               scaleY: 1,
+               yPercent: 0,
+               autoAlpha: 1,
+             },
+             "start+=0.2"
+          )
+          .to(
+            currentSlide,
+            {
+              duration: 0.4,
+              ease: "sine",
+              scale: 1,
+              autoAlpha: 1,
+            },
+            "start+=1.2"
+          )
+          .to(
+            slidesContainer,
+            {
+              width: "350px",
+              scale: 1,
+            },
+            "start+=1.6"
+          )
+          
+        }
+        
       }
 
       const slides = [...document.querySelectorAll(".slide")];
       slides.map((slide)=>{
         slide.addEventListener("click",()=>{
-          console.log('slide clicked')
           toggleSlideGallery();
         })
       })
