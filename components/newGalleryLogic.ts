@@ -1954,12 +1954,69 @@ export function startNewGallery(slideData: any) {
         
       }
 
+      const slidesContainer = document.querySelector(".slides");
       const slides = [...document.querySelectorAll(".slide")];
-      slides.map((slide)=>{
-        slide.addEventListener("click",()=>{
+
+      // Add click handlers to individual slide images first
+      const slideImages = [...document.querySelectorAll(".slide-image")];
+      slideImages.forEach((slideImage) => {
+        slideImage.addEventListener("click", (e) => {
+          e.stopPropagation(); // Prevent triggering the parent slide click
+
+          const parentContainer = slideImage.parentElement;
+          if (!parentContainer) return;
+
+          const allImagesInContainer = [...parentContainer.querySelectorAll(".slide-image")];
+          const isCurrentlyExpanded = slideImage.classList.contains("expanded");
+
+          if (isCurrentlyExpanded) {
+            // Collapse this image and reset all others
+            allImagesInContainer.forEach((img) => {
+              img.classList.remove("expanded", "collapsed");
+            });
+          } else {
+            // Expand this image and collapse all others
+            allImagesInContainer.forEach((img) => {
+              if (img === slideImage) {
+                img.classList.add("expanded");
+                img.classList.remove("collapsed");
+              } else {
+                img.classList.add("collapsed");
+                img.classList.remove("expanded");
+              }
+            });
+          }
+        });
+      });
+
+      // Add click handler to slides to open gallery
+      slides.forEach((slide) => {
+        slide.addEventListener("click", (e) => {
+          const target = e.target as HTMLElement;
+          const isGalleryOpen = slide.classList.contains("slide--clicked");
+
+          // Only open gallery if clicking on slide but not on an image, and gallery is not open
+          if (!target.classList.contains("slide-image") && !isGalleryOpen) {
+            toggleSlideGallery();
+          }
+        });
+      });
+
+      // Add click handler to document - clicking outside slidesContainer closes the gallery
+      const handleOutsideClick = (e: MouseEvent) => {
+        const target = e.target as HTMLElement;
+        const currentSlide = document.querySelectorAll(".slide")[state.currentImageIndex];
+
+        // Check if gallery is open (slide has 'slide--clicked' class)
+        const isGalleryOpen = currentSlide?.classList.contains("slide--clicked");
+
+        // Only close if gallery is open AND click is outside slidesContainer
+        if (isGalleryOpen && slidesContainer && !slidesContainer.contains(target)) {
           toggleSlideGallery();
-        })
-      })
+        }
+      };
+
+      document.addEventListener("click", handleOutsideClick);
 
       function executeSlideTransition(transitionDirection: "up" | "down") {
         if (

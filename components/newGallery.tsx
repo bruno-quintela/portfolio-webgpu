@@ -6,213 +6,268 @@ import { startNewGallery } from "./newGalleryLogic";
 const NewGallery = () => {
   const slideData = [
     {
-      url: "https://assets.codepen.io/7558/horror-01.jpg",
-      title: "Awakening Abyss",
-      description: "#Eldritch #Emergence",
+      url: "/images/images1/strange_evangelion_1970s_movie_poster_bold_japanese_typography_cyberpunk_strange_weapon_posingwires_htzadoil95ic0w28kvno_2.png",
+      title: "Evangelion Echoes",
+      description: "#Cyberpunk #Mecha",
       number: "13:04:2025",
       paragraphLines: [
-        "Archived VHS documentary footage captures the moment",
-        "an ancient cosmic entity ruptures frozen silence.",
+        "Bold typography meets cyberpunk aesthetics,",
+        "where strange weapons and wires intertwine.",
       ],
       prompt:
-        "Extreme footage of icy Cthulhu-like horror rising out of a shattering ice sinkhole. VHS dystopian documentary style, eerie retro science fiction, dark future photography fused with 3D Zdzislaw Beksinski surrealism. Downward vertigo angle, madness, haunted atmosphere, static, glitches, and digital noise. Saturated, vibrant colors with cold blue highlights and fractured light.",
-      caption: "Eldritch emergence in cracked ice",
+        "Strange evangelion 1970s movie poster with bold Japanese typography, cyberpunk aesthetic, strange weapon posing with intricate wires and copper details.",
+      caption: "Retro-future Japanese mecha poster",
       slides: [
         {
           title: '01',
-          url: 'https://assets.codepen.io/7558/horror-01.jpg'
+          url: '/images/images1/strange_evangelion_1970s_movie_poster_bold_japanese_typography_cyberpunk_strange_weapon_posingwires_htzadoil95ic0w28kvno_2.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-02.jpg'
+          title: '02',
+          url: '/images/images1/strange_evangelion_movie_poster_bold_japanese_typography_cyberpunk_strange_weapon_posingwiresintric_1ml08hdwaf5z4r6e5td7_2.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-03.jpg'
+          title: '03',
+          url: '/images/images1/strange_evangelion_movie_poster_bold_japanese_typography_cyberpunk_strange_weapon_posingwiresintric_2l7pokmfbi9wkgiv47sk_3.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-04.jpg'
+          title: '04',
+          url: '/images/images1/strange_evangelion_movie_poster_bold_japanese_typography_cyberpunk_strange_weapon_posingwiresintric_px8xitxmb5140biynpeq_1.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-05.jpg'
+          title: '05',
+          url: '/images/images1/weird_2020s_movie_poster_bold_japanese_typography_cyberpunk_strange_mecha_asian_girl_posingwiresint_5a10lgnx4dn24wdxeobu_0.png'
+        },
+        {
+          title: '06',
+          url: '/images/images1/weird_2020s_movie_poster_bold_japanese_typography_cyberpunk_strange_mecha_asian_girl_posingwiresint_uzxxuuvtm4309jqxo16v_1.png'
+        },
+        {
+          title: '07',
+          url: '/images/images1/weird_2020s_movie_poster_bold_japanese_typography_cyberpunk_strange_mecha_asian_girl_posingwiresint_z3ee8rhrtz9e11atexbf_2.png'
+        },
+        {
+          title: '08',
+          url: '/images/images1/weird_2020s_movie_poster_bold_japanese_typography_cyberpunk_strange_mecha_posingwiresintricate_copp_44xdew77hmwi9qcgjflh_2.png'
+        },
+        {
+          title: '09',
+          url: '/images/images1/weird_2020s_movie_poster_bold_japanese_typography_cyberpunk_strange_mecha_posingwiresintricate_copp_4quaqe2rcl6t0yzgumvd_0.png'
+        },
+        {
+          title: '10',
+          url: '/images/images1/weird_2020s_movie_poster_bold_japanese_typography_cyberpunk_strange_mecha_posingwiresintricate_copp_das503wbg4jjum76y0fc_1.png'
         }
       ]
     },
     {
-        url: "https://assets.codepen.io/7558/horror-02.jpg",
-      title: "Fractured Signal",
-      description: "#Glitch #Documentary",
+      url: "/images/images2/cyberpunk_mecha_evangelion_latex_steampunk_monkfull_body_posingwhite_spheric_helmet_cyberpunk_arm_i_z0053qk3qah7l1vjpnyt_2.png",
+      title: "Steampunk Monk",
+      description: "#Mecha #Evangelion",
       number: "04:04:2025",
       paragraphLines: [
-        "The broadcast distorts as forbidden knowledge leaks",
-        "through corrupted frames and spectral interference.",
+        "Latex meets steampunk in a fusion of monk",
+        "and machine with translucent white spheric helmet.",
       ],
       prompt:
-        "Glitch-heavy VHS transmission of a forbidden signal, blending cosmic horror iconography with retro-futuristic decay. Strange symbols bleeding through static, warped depths suggesting an otherworldly intelligence. Heavy digital noise, color aberrations, and surreal background shapes borrowing from Beksinski's dreamlike textures. Sense of paranoia and collapsing reality.",
-      caption: "Corrupted broadcast of the unknown",
+        "Cyberpunk mecha evangelion latex steampunk monk, full body posing with white spheric helmet and cyberpunk arm implants.",
+      caption: "Monk-mecha hybrid aesthetic",
       slides: [
         {
           title: '01',
-          url: 'https://assets.codepen.io/7558/horror-01.jpg'
+          url: '/images/images2/cyberpunk_mecha_evangelion_latex_steampunk_monkfull_body_posingwhite_spheric_helmet_cyberpunk_arm_i_z0053qk3qah7l1vjpnyt_2.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-02.jpg'
+          title: '02',
+          url: '/images/images2/cyberpunk_mecha_evangelion_latex_steampunk_monkfull_body_translucentwhite_spheric_helmet_huge_left__jgahasmqbf111rrcz6bt_22.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-03.jpg'
+          title: '03',
+          url: '/images/images2/cyberpunk_mecha_evangelion_latex_steampunk_monkfull_body_translucentwhite_spheric_helmet_huge_left__mzg68e3bz4asnow1b0ao_3.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-04.jpg'
+          title: '04',
+          url: '/images/images2/cyberpunk_mecha_evangelion_latex_steampunk_monkfull_body_translucentwhite_spheric_helmet_huge_left__vozr0ahxxhr38mrkl0ds_1.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-05.jpg'
+          title: '05',
+          url: '/images/images2/cyberpunk_mecha_evangelion_steampunk_monkfull_body_posingwhite_spheric_helmet_cyberpunk_arm_implant_ibosxfmisztfdzfuwruy_1.png'
         }
       ]
     },
     {
-        url: "https://assets.codepen.io/7558/horror-03.jpg",
-      title: "Echoes of the Deep",
-      description: "#Haunted #Vision",
+      url: "/images/images3/a_steampunk_royal_templar_with_a_white_steampunk_rounded_heavy_mecha_in_the_background_buddhist_mon_4ehoqo6q04zgw25agepv_0.png",
+      title: "Royal Templar",
+      description: "#Steampunk #Knight",
       number: "03:04:2025",
       paragraphLines: [
-        "Submerged memories resurface in spectral echoes,",
-        "reminding viewers that the abyss remembers.",
+        "A royal templar stands before rounded heavy mecha,",
+        "Buddhist monk meets medieval knight aesthetic.",
       ],
       prompt:
-        "Eerie underwater surrealism showing the slow emergence of a drowned cosmic entity, lit by dying neon and flickering VHS artifacts. Documentary-style overlay with timestamps, phantom reflections, and faint, impossible geometry. Atmospheric fog, subtle demonic undertones, and a sense that the depths are watching back.",
-      caption: "Submerged cosmic remembrance",
+        "Steampunk royal templar with white steampunk rounded heavy mecha in the background, Buddhist monk influence with medieval knight elements.",
+      caption: "Templar-mecha convergence",
       slides: [
         {
           title: '01',
-          url: 'https://assets.codepen.io/7558/horror-01.jpg'
+          url: '/images/images3/a_steampunk_royal_templar_with_a_white_steampunk_rounded_heavy_mecha_in_the_background_buddhist_mon_4ehoqo6q04zgw25agepv_0.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-02.jpg'
+          title: '02',
+          url: '/images/images3/a_topless_asian_steampunk_royal_knight_templar_with_a_white_steampunk_rounded_heavy_mecha_in_the_ba_z2ksasvrvedi53v2f93y_3.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-03.jpg'
+          title: '03',
+          url: '/images/images3/a_topless_steampunk_royal_templar_with_a_white_steampunk_rounded_heavy_mecha_in_the_background_budd_7h66ufg32uuabtcnp2q6_2.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-04.jpg'
+          title: '04',
+          url: '/images/images3/a_topless_steampunk_royal_templar_with_a_white_steampunk_rounded_heavy_mecha_in_the_background_budd_vpxc3n51uh773cfz3rwz_2.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-05.jpg'
+          title: '05',
+          url: '/images/images3/a_topless_steampunk_royal_templar_with_a_white_steampunk_rounded_heavy_mecha_in_the_background_budd_zgn0ll9mf1adjawp8tb5_3.png'
+        },
+        {
+          title: '06',
+          url: '/images/images3/a_topless_steampunk_royal_templar_with_a_white_steampunk_rounded_heavy_mecha_in_the_background_budd_zwxvc2ebzgkidtuzl8qw_0.png'
         }
       ]
     },
     {
-        url: "https://assets.codepen.io/7558/horror-04.jpg",
-      title: "Glitching Sanctum",
-      description: "#Digital #Cultifacts",
+      url: "/images/images4/a_clothless_steampunk_royal_knight_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posin_iyi338m4inn4glhgtz0j_12.png",
+      title: "Royal Guardian",
+      description: "#Knight #Mecha",
       number: "05:04:2025",
       paragraphLines: [
-        "A sacred data temple collapses into noise,",
-        "its ritual code leaking forbidden patterns.",
+        "Steampunk royal knights with white cute mecha,",
+        "voluptuous curves meet mechanical guardians.",
       ],
       prompt:
-        "Dark future interior of a collapsing digital shrine, where eldritch runes are rendered as corrupted code. Mixed media: 3D Beksinski-inspired architecture dissolving into pixel shards, VHS tracking errors tearing the scene, and occult imagery flickering in neon. Vertigo-inducing perspective, heavy contrast between shadow and glitch-lit form.",
-      caption: "Ritual code corruption",
+        "Steampunk royal knight and monk with white cute mecha in the background, voluptuous curves posing with mechanical elements.",
+      caption: "Knight-mecha aesthetic fusion",
       slides: [
         {
           title: '01',
-          url: 'https://assets.codepen.io/7558/horror-01.jpg'
+          url: '/images/images4/a_clothless_steampunk_royal_knight_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posin_iyi338m4inn4glhgtz0j_12.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-02.jpg'
+          title: '02',
+          url: '/images/images4/a_clothless_steampunk_royal_knight_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posin_t5uas1ou71wswkk093o6_1.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-03.jpg'
+          title: '03',
+          url: '/images/images4/a_clothless_steampunk_royal_monk_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posing__2l71go144yptsjul0ql2_0.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-04.jpg'
+          title: '04',
+          url: '/images/images4/a_clothless_steampunk_royal_monk_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posing__kdsmz79qmthznakd50di_2.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-05.jpg'
+          title: '05',
+          url: '/images/images4/a_clothless_steampunk_royal_monk_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posing__o99j5snry02n22cvnzaj_0.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-03.jpg'
+          title: '06',
+          url: '/images/images4/a_clothless_steampunk_royal_monk_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posing__ret798s1j1oba82bx35t_3.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-04.jpg'
-        },
-        {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-05.jpg'
-        },
-        {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-03.jpg'
-        },
-        {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-04.jpg'
-        },
-        {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-05.jpg'
+          title: '07',
+          url: '/images/images4/a_clothless_steampunk_royal_monk_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posing__xk640xf5kdldn4t0voj5_3.png'
         }
       ]
     },
     {
-      url: "https://assets.codepen.io/7558/horror-05.jpg",
-      title: "Frozen Leviathan",
-      description: "#Apocalyptic #Witness",
+      url: "/images/images5/white_steampunk_mechhelmet_full_of_water_with_exotic_fishes_medusa_octopustranslucentsteampunk_deta_9k72gncqrt3wizywmyvh_2.png",
+      title: "Aquatic Helmet",
+      description: "#Bioluminescent #Underwater",
       number: "09:04:2025",
       paragraphLines: [
-        "The last frame holds the frozen titan—half-buried,",
-        "its silence a prophecy of an unraveling world.",
+        "White steampunk helmet filled with water,",
+        "exotic fishes and medusa octopus bioluminescent.",
       ],
       prompt:
-        "Dystopian aftermath shot of a gigantic eldritch leviathan encased in fractured ice, seen through a damaged documentary lens. Grainy VHS overlay, color bleeding, and subtle animation glitches hinting at latent motion. Sky warped with surreal auroras; the scene balances frozen stillness with impending doom.",
-      caption: "Stilled titanic omen",
+        "White steampunk mech helmet full of water with exotic fishes, medusa octopus, translucent steampunk details, bioluminescent Buddhist elements.",
+      caption: "Underwater mech aesthetic",
       slides: [
         {
           title: '01',
-          url: 'https://assets.codepen.io/7558/horror-01.jpg'
+          url: '/images/images5/white_steampunk_mechhelmet_full_of_water_with_exotic_fishes_medusa_octopustranslucentsteampunk_deta_9k72gncqrt3wizywmyvh_2.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-02.jpg'
+          title: '02',
+          url: '/images/images5/white_steampunk_mechhelmet_full_of_water_with_exotic_fishes_medusa_octopustranslucentsteampunk_deta_a3m3wrvtmifht8o7jmdp_2.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-03.jpg'
+          title: '03',
+          url: '/images/images5/white_steampunk_mechhelmet_full_of_water_with_exotic_fishes_medusa_octopustranslucentsteampunk_deta_f212auz2pt4j74fikrd0_3.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-03.jpg'
+          title: '04',
+          url: '/images/images5/white_steampunk_mechhelmet_full_of_water_with_exotic_fishes_medusa_octopustranslucentsteampunk_deta_m3ft1ysfklotlc3b0ssj_2.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-04.jpg'
+          title: '05',
+          url: '/images/images5/white_steampunk_mechhelmet_full_of_water_with_exotic_fishes_medusa_octopustranslucentsteampunk_deta_o0g4j81v1mju5rvnmta2_3.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-05.jpg'
+          title: '06',
+          url: '/images/images5/white_steampunk_mechhelmet_full_of_water_with_exotic_fishes_medusa_octopustranslucentsteampunk_deta_so6t5fv7lqnfvu5u1cuf_1.png'
         },
         {
-          title: '01',
-          url: 'https://assets.codepen.io/7558/horror-04.jpg'
-        },
+          title: '07',
+          url: '/images/images5/white_steampunk_mechhelmet_full_of_water_with_fishtranslucentsteampunk_detailsbioluminiscentbuddhis_kk44gs5uacd91y8o59eu_1.png'
+        }
+      ]
+    },
+    {
+      url: "/images/images6/_1950s_vintage_topless_house_wife__vintage_1950s_clothes_inside_the_house_fluffy_pet_on_lapfull_bod_55ucpkd1rm3mmlsheq6m_1.png",
+      title: "Retro Future",
+      description: "#Vintage #Steampunk",
+      number: "12:04:2025",
+      paragraphLines: [
+        "1950s vintage aesthetic meets 2050s future,",
+        "steampunk armor blends with retro domesticity.",
+      ],
+      prompt:
+        "1950s vintage housewife with vintage clothes inside house, fluffy pet on lap, transitioning to 2050s housewife with steampunk armor, busty full body posing.",
+      caption: "Time-traveling domestic aesthetic",
+      slides: [
         {
           title: '01',
-          url: 'https://assets.codepen.io/7558/horror-05.jpg'
+          url: '/images/images6/_1950s_vintage_topless_house_wife__vintage_1950s_clothes_inside_the_house_fluffy_pet_on_lapfull_bod_55ucpkd1rm3mmlsheq6m_1.png'
+        },
+        {
+          title: '02',
+          url: '/images/images6/_1950s_vintage_topless_house_wife__vintage_1950s_clothes_inside_the_house_fluffy_pet_on_lapfull_bod_nhbtp81zo00j3oo0f1nq_0.png'
+        },
+        {
+          title: '03',
+          url: '/images/images6/_1950s_vintage_topless_house_wife__vintage_1950s_clothes_inside_the_house_fluffy_pet_on_lapfull_bod_u9vrerc5tlkwe1fmc34z_2.png'
+        },
+        {
+          title: '04',
+          url: '/images/images6/_1950s_vintage_topless_house_wife__vintage_1950s_clothes_inside_the_house_fluffy_pet_on_lapfull_bod_wjezq826chl5s9p01mtk_2.png'
+        },
+        {
+          title: '05',
+          url: '/images/images6/_2050s_housewife__vintage_2000s_clothes_full_body_bustyleft_shoulder_steampunk_armor_posingsteampun_4aovdp2gdnbccxtxu2ys_1.png'
+        },
+        {
+          title: '06',
+          url: '/images/images6/_2050s_housewife__vintage_2000s_clothes_full_body_bustyleft_shoulder_steampunk_armor_posingsteampun_5nwgbwijh2c3363ddrj1_3.png'
+        },
+        {
+          title: '07',
+          url: '/images/images6/_2050s_housewife__vintage_2000s_clothes_full_body_bustyleft_shoulder_steampunk_armor_posingsteampun_82vcmir2zobcndnpn65m_3.png'
+        },
+        {
+          title: '08',
+          url: '/images/images6/vintage_1920s_housewife_vintage_2000s_clothes_full_body_bustyleft_shoulder_steampunk_armor_posingst_gxkukrvkvv0adzivf39g_1.png'
+        },
+        {
+          title: '09',
+          url: '/images/images6/vintage_1920s_housewife_vintage_2000s_clothes_full_body_bustyleft_shoulder_steampunk_armor_posingst_u265vqhpdklvjysw4iyc_2.png'
         }
       ]
     },
