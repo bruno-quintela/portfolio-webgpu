@@ -413,7 +413,7 @@ const NewGallery = () => {
                 (
                   <div
                     key={index}
-                    className="slide-image"
+                    className={`slide-image ${index === 0 ? 'selected' : ''}`}
                     style={{ backgroundImage: `url(${image.url})`}}
                   ></div>
                 ))}

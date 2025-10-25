@@ -1962,27 +1962,27 @@ export function startNewGallery(slideData: any) {
       slideImages.forEach((slideImage) => {
         slideImage.addEventListener("click", (e) => {
           e.stopPropagation(); // Prevent triggering the parent slide click
-
+          console.log("slide image clicked",slideImage)
           const parentContainer = slideImage.parentElement;
           if (!parentContainer) return;
 
           const allImagesInContainer = [...parentContainer.querySelectorAll(".slide-image")];
-          const isCurrentlyExpanded = slideImage.classList.contains("expanded");
+          const isCurrentlySelected = slideImage.classList.contains("selected");
 
-          if (isCurrentlyExpanded) {
+          if (isCurrentlySelected) {
             // Collapse this image and reset all others
             allImagesInContainer.forEach((img) => {
-              img.classList.remove("expanded", "collapsed");
+              img.classList.remove("selected", "collapsed");
             });
           } else {
             // Expand this image and collapse all others
             allImagesInContainer.forEach((img) => {
               if (img === slideImage) {
-                img.classList.add("expanded");
+                img.classList.add("selected");
                 img.classList.remove("collapsed");
               } else {
                 img.classList.add("collapsed");
-                img.classList.remove("expanded");
+                img.classList.remove("selected");
               }
             });
           }
