@@ -593,6 +593,8 @@ export function startNewGallery(slideData: any) {
         slideTextures: [] as any[],
         texturesLoaded: false,
         startTime: Date.now(),
+        // Track currently selected/expanded gallery image texture
+        selectedGalleryTexture: null,
       };
 
       // Tweakpane state
@@ -1960,9 +1962,9 @@ export function startNewGallery(slideData: any) {
       // Add click handlers to individual slide images first
       const slideImages = [...document.querySelectorAll(".slide-image")];
       slideImages.forEach((slideImage) => {
-        slideImage.addEventListener("click", (e) => {
+        slideImage.addEventListener("click", async (e) => {
           e.stopPropagation(); // Prevent triggering the parent slide click
-          console.log("slide image clicked",slideImage)
+          console.log("slide image clicked", slideImage);
           const parentContainer = slideImage.parentElement;
           if (!parentContainer) return;
 
@@ -1985,6 +1987,52 @@ export function startNewGallery(slideData: any) {
                 img.classList.remove("selected");
               }
             });
+          }
+
+          // Store the selected gallery image texture
+          if (state.texturesLoaded && state.shaderMaterial && !isCurrentlySelected) {
+            try {
+              // Get the image URL from the clicked slide image
+              const imgElement = slideImage as HTMLElement;
+              const bgImage = imgElement.style.backgroundImage;
+              if (bgImage) {
+                // Extract URL from background-image: url("...")
+                const urlMatch = bgImage.match(/url\(["']?(.+?)["']?\)/);
+                if (urlMatch && urlMatch[1]) {
+                  const imageUrl = urlMatch[1];
+                  
+                  // Load the new texture
+                  const texture: any = await loadImageTexture(imageUrl);
+                  
+                  // Store it as the selected gallery texture
+                  state.selectedGalleryTexture = texture;
+                  
+                  // Update textures immediately
+                  state.shaderMaterial.uniforms.uTexture1.value = state.shaderMaterial.uniforms.uTexture2.value;
+                  state.shaderMaterial.uniforms.uTexture2.value = texture;
+                  state.shaderMaterial.uniforms.uTexture1Size.value = state.shaderMaterial.uniforms.uTexture2Size.value;
+                  state.shaderMaterial.uniforms.uTexture2Size.value = texture.userData.size;
+                  
+                  // Animate the transition
+                  gsap.to(state.shaderMaterial.uniforms.uProgress, {
+                    value: 1,
+                    duration: 1.5,
+                    ease: "power2.inOut",
+                    onComplete: () => {
+                      // Reset progress after transition
+                      state.shaderMaterial.uniforms.uProgress.value = 0;
+                      state.shaderMaterial.uniforms.uTexture1.value = texture;
+                      state.shaderMaterial.uniforms.uTexture1Size.value = texture.userData.size;
+                    }
+                  });
+                }
+              }
+            } catch (error) {
+              console.error("Failed to load image for background:", error);
+            }
+          } else if (isCurrentlySelected) {
+            // When deselecting, clear the selected texture
+            state.selectedGalleryTexture = null;
           }
         });
       });
@@ -2018,7 +2066,7 @@ export function startNewGallery(slideData: any) {
 
       document.addEventListener("click", handleOutsideClick);
 
-      function executeSlideTransition(transitionDirection: "up" | "down") {
+      async function executeSlideTransition(transitionDirection: "up" | "down") {
         if (
           state.isTransitioning ||
           !state.scrollingEnabled ||
@@ -2030,8 +2078,39 @@ export function startNewGallery(slideData: any) {
         state.scrollingEnabled = false;
 
         const nextIndex = getNextImageIndex(transitionDirection);
-        const currentTexture = state.slideTextures[state.currentImageIndex];
-        const nextTexture = state.slideTextures[nextIndex];
+        
+        // Always use the selected gallery texture if one is selected, otherwise use current slide texture
+        const currentTexture = state.selectedGalleryTexture || state.slideTextures[state.currentImageIndex];
+        
+        // For next texture, also check if the next slide has a selected gallery image
+        // Get the first image from next slide's gallery as the target
+        const nextSlideData = slideData[nextIndex];
+        let nextTexture = state.slideTextures[nextIndex];
+        
+        // Try to find a selected image in the next slide's gallery
+        if (nextSlideData && nextSlideData.slides && nextSlideData.slides.length > 0) {
+          const nextSlideElement = document.querySelectorAll('.slide')[nextIndex];
+          if (nextSlideElement) {
+            const selectedImageInNext = nextSlideElement.querySelector('.slide-image.selected');
+            if (selectedImageInNext) {
+              const imgElement = selectedImageInNext as HTMLElement;
+              const bgImage = imgElement.style.backgroundImage;
+              if (bgImage) {
+                const urlMatch = bgImage.match(/url\(["']?(.+?)["']?\)/);
+                if (urlMatch && urlMatch[1]) {
+                  const imageUrl = urlMatch[1];
+                  try {
+                    const nextGalleryTexture: any = await loadImageTexture(imageUrl);
+                    nextTexture = nextGalleryTexture;
+                  } catch (error) {
+                    console.log("Could not load next gallery texture, using slide texture");
+                  }
+                }
+              }
+            }
+          }
+        }
+        
         if (!currentTexture || !nextTexture) return;
 
         // const featuredImageContainer = (slider as HTMLElement).querySelector(
@@ -2116,6 +2195,11 @@ export function startNewGallery(slideData: any) {
             state.shaderMaterial.uniforms.uTexture1.value = nextTexture;
             state.shaderMaterial.uniforms.uTexture1Size.value =
               nextTexture.userData.size;
+            
+            // Update the selected gallery texture to the new slide texture
+            // so the next transition starts from this new image
+            state.selectedGalleryTexture = nextTexture;
+            
             state.isTransitioning = false;
             setTimeout(() => {
               state.scrollingEnabled = true;
