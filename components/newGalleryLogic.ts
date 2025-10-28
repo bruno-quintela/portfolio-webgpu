@@ -1946,7 +1946,7 @@ export function startNewGallery(slideData: any) {
           .to(
             slidesContainer,
             {
-              width: "350px",
+              width: "100%",
               scale: 1,
             },
             "start+=1.6"
@@ -2001,6 +2001,15 @@ export function startNewGallery(slideData: any) {
                 if (urlMatch && urlMatch[1]) {
                   const imageUrl = urlMatch[1];
                   
+                  // Update the slide's background image to show this selected image
+                  const currentSlide = parentContainer.closest('.slide');
+                  if (currentSlide) {
+                    const slideImg = currentSlide.querySelector('.slide__img') as HTMLElement;
+                    if (slideImg) {
+                      slideImg.style.backgroundImage = `url(${imageUrl})`;
+                    }
+                  }
+                  
                   // Load the new texture
                   const texture: any = await loadImageTexture(imageUrl);
                   
@@ -2018,6 +2027,16 @@ export function startNewGallery(slideData: any) {
                     value: 1,
                     duration: 1.5,
                     ease: "power2.inOut",
+                    onStart: () => {
+                      // Close the gallery when transition starts
+                      const currentSlide = parentContainer.closest('.slide');
+                      setTimeout(()=>{
+                        if (currentSlide && currentSlide.classList.contains('slide--clicked')) {
+                          toggleSlideGallery();
+                        }
+                      },600)
+                      
+                    },
                     onComplete: () => {
                       // Reset progress after transition
                       state.shaderMaterial.uniforms.uProgress.value = 0;
@@ -2031,7 +2050,15 @@ export function startNewGallery(slideData: any) {
               console.error("Failed to load image for background:", error);
             }
           } else if (isCurrentlySelected) {
-            // When deselecting, clear the selected texture
+            // When deselecting, restore the original slide image and clear the selected texture
+            const currentSlide = parentContainer.closest('.slide');
+            if (currentSlide) {
+              const slideImg = currentSlide.querySelector('.slide__img') as HTMLElement;
+              if (slideImg && state.slideTextures[state.currentImageIndex]) {
+                // Restore to original slide URL
+                slideImg.style.backgroundImage = `url(${slideData[state.currentImageIndex].url})`;
+              }
+            }
             state.selectedGalleryTexture = null;
           }
         });
