@@ -581,6 +581,8 @@ export function startNewGallery(galleryData: any) {
       let state: any = {
         currentImageIndex: 0, // Index of the currently displayed main slide
         currentGalleryImageIndex: 0, // Index of the currently displayed image within the selected gallery
+        selectedGalleryIndex: null,
+        selectedGallerySlideIndex: null,
         isTransitioning: false,
         scrollingEnabled: true,
         lastScrollTimestamp: 0,
@@ -1796,6 +1798,7 @@ export function startNewGallery(galleryData: any) {
         const isAlreadyClicked = currentSlide.classList.contains("slide--clicked");
 
         if (!isAlreadyClicked) {
+          state.selectedGalleryIndex = state.currentImageIndex;
           gsap
           .timeline({
             defaults: {
@@ -1889,6 +1892,8 @@ export function startNewGallery(galleryData: any) {
           //   "start+=0.1"
           // );
         } else {
+          state.selectedGalleryIndex = null;
+          state.selectedGallerySlideIndex = null;
           gsap
           .timeline({
             defaults: {
@@ -1970,6 +1975,7 @@ export function startNewGallery(galleryData: any) {
           if (!parentContainer) return;
 
           const allImagesInContainer = [...parentContainer.querySelectorAll(".slide-image")];
+          const clickedIndex = allImagesInContainer.indexOf(slideImage as HTMLElement);
           const isCurrentlySelected = slideImage.classList.contains("selected");
 
           if (isCurrentlySelected) {
@@ -1977,6 +1983,8 @@ export function startNewGallery(galleryData: any) {
             allImagesInContainer.forEach((img) => {
               img.classList.remove("selected", "collapsed");
             });
+            state.selectedGallerySlideIndex = null;
+            state.selectedGalleryTexture = null;
           } else {
             // Expand this image and collapse all others
             allImagesInContainer.forEach((img) => {
@@ -1988,6 +1996,7 @@ export function startNewGallery(galleryData: any) {
                 img.classList.remove("selected");
               }
             });
+            state.selectedGallerySlideIndex = clickedIndex;
           }
 
           // Store the selected gallery image texture
