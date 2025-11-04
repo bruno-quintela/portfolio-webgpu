@@ -6,7 +6,7 @@ import { gsap } from "gsap";
 
 //gsap.registerPlugin(ScrambleTextPlugin);
 
-export function startNewGallery(slideData: any) {
+export function startNewGallery(galleryData: any) {
   if (typeof window === "undefined") return () => {};
 
   const preloaderStyle = document.createElement("style");
@@ -337,7 +337,7 @@ export function startNewGallery(slideData: any) {
 
       // Enhanced configuration with all settings including Analog Decay
       const config: any = {
-        //totalImages: slideData.length,
+        //totalImages: galleryData.length,
         transitionDuration: 1.8,
         scrollThrottleDelay: 1000,
         touchThreshold: 10,
@@ -579,7 +579,8 @@ export function startNewGallery(slideData: any) {
       };
 
       let state: any = {
-        currentImageIndex: 0,
+        currentImageIndex: 0, // Index of the currently displayed main slide
+        currentGalleryImageIndex: 0, // Index of the currently displayed image within the selected gallery
         isTransitioning: false,
         scrollingEnabled: true,
         lastScrollTimestamp: 0,
@@ -1727,20 +1728,20 @@ export function startNewGallery(slideData: any) {
         gsap.set(newNumber, { y: transitionDirection === "down" ? 20 : -20 });
 
         const newCounter = document.createElement("span");
-        newCounter.textContent = slideData[slideIndex].number;
+        newCounter.textContent = galleryData[slideIndex].number;
         gsap.set(newCounter, { y: transitionDirection === "down" ? 20 : -20 });
 
         const newTitle = document.createElement("h1");
-        newTitle.textContent = slideData[slideIndex].title;
+        newTitle.textContent = galleryData[slideIndex].title;
         gsap.set(newTitle, { y: transitionDirection === "down" ? 60 : -60 });
 
         const newDescription = document.createElement("p");
-        newDescription.textContent = slideData[slideIndex].description;
+        newDescription.textContent = galleryData[slideIndex].description;
         gsap.set(newDescription, {
           y: transitionDirection === "down" ? 24 : -24,
         });
 
-        const newParagraphLines = slideData[slideIndex].paragraphLines.map(
+        const newParagraphLines = galleryData[slideIndex].paragraphLines.map(
           (lineText: string) => {
             const lineSpan = document.createElement("span");
             lineSpan.textContent = lineText;
@@ -1762,12 +1763,12 @@ export function startNewGallery(slideData: any) {
 
       function getNextImageIndex(direction: "up" | "down") {
         if (direction === "down") {
-          return state.currentImageIndex === slideData.length - 1
+          return state.currentImageIndex === galleryData.length - 1
             ? 0
             : state.currentImageIndex + 1;
         } else {
           return state.currentImageIndex === 0
-            ? slideData.length - 1
+            ? galleryData.length - 1
             : state.currentImageIndex - 1;
         }
       }
@@ -2056,7 +2057,7 @@ export function startNewGallery(slideData: any) {
               const slideImg = currentSlide.querySelector('.slide__img') as HTMLElement;
               if (slideImg && state.slideTextures[state.currentImageIndex]) {
                 // Restore to original slide URL
-                slideImg.style.backgroundImage = `url(${slideData[state.currentImageIndex].url})`;
+                slideImg.style.backgroundImage = `url(${galleryData[state.currentImageIndex].cover})`;
               }
             }
             state.selectedGalleryTexture = null;
@@ -2111,11 +2112,11 @@ export function startNewGallery(slideData: any) {
         
         // For next texture, also check if the next slide has a selected gallery image
         // Get the first image from next slide's gallery as the target
-        const nextSlideData = slideData[nextIndex];
+        const nextgalleryData = galleryData[nextIndex];
         let nextTexture = state.slideTextures[nextIndex];
         
         // Try to find a selected image in the next slide's gallery
-        if (nextSlideData && nextSlideData.slides && nextSlideData.slides.length > 0) {
+        if (nextgalleryData && nextgalleryData.slides && nextgalleryData.slides.length > 0) {
           const nextSlideElement = document.querySelectorAll('.slide')[nextIndex];
           if (nextSlideElement) {
             const selectedImageInNext = nextSlideElement.querySelector('.slide-image.selected');
@@ -2383,7 +2384,7 @@ export function startNewGallery(slideData: any) {
           {
             duration: 0.8,
             onStart: () =>
-              scrambleText(newCounter, slideData[nextIndex].number, 1.8, {
+              scrambleText(newCounter, galleryData[nextIndex].number, 1.8, {
                 chars: "∅øΩ§∆◊¶†‡0123456789",
                 revealDelay: 0.3,
                 speed: 0.4,
@@ -2416,7 +2417,7 @@ export function startNewGallery(slideData: any) {
           {
             duration: 1.2,
             onStart: () =>
-              scrambleText(newTitle, slideData[nextIndex].title, 1.2, {
+              scrambleText(newTitle, galleryData[nextIndex].title, 1.2, {
                 chars: "!<>-_\\/[]{}—=+*^?#ABCDEFGHIJKLMNOPQRSTUVWXYZ",
                 revealDelay: 0.4,
                 speed: 0.3,
@@ -2451,7 +2452,7 @@ export function startNewGallery(slideData: any) {
             onStart: () =>
               scrambleText(
                 newDescription,
-                slideData[nextIndex].description,
+                galleryData[nextIndex].description,
                 1.0,
                 {
                   chars: "!<>-_\\/[]{}—=+*^?#abcdefghijklmnopqrstuvwxyz",
@@ -2489,7 +2490,7 @@ export function startNewGallery(slideData: any) {
             onStart: () =>
               scrambleText(
                 newParagraphLines[0],
-                slideData[nextIndex].paragraphLines[0],
+                galleryData[nextIndex].paragraphLines[0],
                 1.4,
                 {
                   chars: "01!<>-_\\/[]{}—=+*^?#________",
@@ -2526,7 +2527,7 @@ export function startNewGallery(slideData: any) {
             onStart: () =>
               scrambleText(
                 newParagraphLines[1],
-                slideData[nextIndex].paragraphLines[1],
+                galleryData[nextIndex].paragraphLines[1],
                 1.4,
                 {
                   chars: "01!<>-_\\/[]{}—=+*^?#________",
@@ -2634,9 +2635,9 @@ export function startNewGallery(slideData: any) {
         const mesh = new THREE.Mesh(geometry, state.shaderMaterial);
         state.scene.add(mesh);
 
-        for (let i = 0; i < slideData.length; i++) {
+        for (let i = 0; i < galleryData.length; i++) {
           try {
-            const texture = await loadImageTexture(slideData[i].url);
+            const texture = await loadImageTexture(galleryData[i].cover);
             state.slideTextures.push(texture);
           } catch (error) {
             console.warn(`Failed to load image ${i}:`, error);

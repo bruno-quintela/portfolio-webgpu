@@ -4,9 +4,9 @@ import { useEffect } from "react";
 import { startNewGallery } from "./newGalleryLogic";
 
 const NewGallery = () => {
-  const slideData = [
+  const galleryData = [
     {
-      url: "/images/images1/strange_evangelion_1970s_movie_poster_bold_japanese_typography_cyberpunk_strange_weapon_posingwires_htzadoil95ic0w28kvno_2.png",
+      cover: "/images/images1/strange_evangelion_1970s_movie_poster_bold_japanese_typography_cyberpunk_strange_weapon_posingwires_htzadoil95ic0w28kvno_2.png",
       title: "Evangelion Echoes",
       description: "#Cyberpunk #Mecha",
       number: "13:04:2025",
@@ -61,7 +61,7 @@ const NewGallery = () => {
       ]
     },
     {
-      url: "/images/images2/cyberpunk_mecha_evangelion_latex_steampunk_monkfull_body_posingwhite_spheric_helmet_cyberpunk_arm_i_z0053qk3qah7l1vjpnyt_2.png",
+      cover: "/images/images2/cyberpunk_mecha_evangelion_latex_steampunk_monkfull_body_posingwhite_spheric_helmet_cyberpunk_arm_i_z0053qk3qah7l1vjpnyt_2.png",
       title: "Steampunk Monk",
       description: "#Mecha #Evangelion",
       number: "04:04:2025",
@@ -96,7 +96,7 @@ const NewGallery = () => {
       ]
     },
     {
-      url: "/images/images3/a_steampunk_royal_templar_with_a_white_steampunk_rounded_heavy_mecha_in_the_background_buddhist_mon_4ehoqo6q04zgw25agepv_0.png",
+      cover: "/images/images3/a_steampunk_royal_templar_with_a_white_steampunk_rounded_heavy_mecha_in_the_background_buddhist_mon_4ehoqo6q04zgw25agepv_0.png",
       title: "Royal Templar",
       description: "#Steampunk #Knight",
       number: "03:04:2025",
@@ -135,7 +135,7 @@ const NewGallery = () => {
       ]
     },
     {
-      url: "/images/images4/a_clothless_steampunk_royal_knight_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posin_iyi338m4inn4glhgtz0j_12.png",
+      cover: "/images/images4/a_clothless_steampunk_royal_knight_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posin_iyi338m4inn4glhgtz0j_12.png",
       title: "Royal Guardian",
       description: "#Knight #Mecha",
       number: "05:04:2025",
@@ -178,7 +178,7 @@ const NewGallery = () => {
       ]
     },
     {
-      url: "/images/images5/white_steampunk_mechhelmet_full_of_water_with_exotic_fishes_medusa_octopustranslucentsteampunk_deta_9k72gncqrt3wizywmyvh_2.png",
+      cover: "/images/images5/white_steampunk_mechhelmet_full_of_water_with_exotic_fishes_medusa_octopustranslucentsteampunk_deta_9k72gncqrt3wizywmyvh_2.png",
       title: "Aquatic Helmet",
       description: "#Bioluminescent #Underwater",
       number: "09:04:2025",
@@ -221,7 +221,7 @@ const NewGallery = () => {
       ]
     },
     {
-      url: "/images/images6/_1950s_vintage_topless_house_wife__vintage_1950s_clothes_inside_the_house_fluffy_pet_on_lapfull_bod_55ucpkd1rm3mmlsheq6m_1.png",
+      cover: "/images/images6/_1950s_vintage_topless_house_wife__vintage_1950s_clothes_inside_the_house_fluffy_pet_on_lapfull_bod_55ucpkd1rm3mmlsheq6m_1.png",
       title: "Retro Future",
       description: "#Vintage #Steampunk",
       number: "12:04:2025",
@@ -272,7 +272,7 @@ const NewGallery = () => {
       ]
     },
   ];
-  useEffect(() => startNewGallery(slideData), []);
+  useEffect(() => startNewGallery(galleryData), []);
 
   return (
     <main
@@ -384,7 +384,7 @@ const NewGallery = () => {
 
       <aside id="verticalTitle" className="corner-text corner-text-center" aria-hidden="true">
         {
-          slideData.map((slide, index) => <div key={index}>{slide.title}</div>)
+          galleryData.map((gallery, index) => <div key={index}>{gallery.title}</div>)
         }
         {/* <div>R&rsquo;LYEH</div>
         <div>FHTAGN</div>
@@ -400,21 +400,21 @@ const NewGallery = () => {
       </aside>
 
       <section className="slides" data-featured-image>
-        {slideData.map((slide, index) => (
+        {galleryData.map((gallery, index) => (
           <div key={index} className={`slide ${index === 0 ? 'slide--current' : ''}`}>
             <div
               className="slide__img"
-              style={{ backgroundImage: `url(${slide.url})`,
+              style={{ backgroundImage: `url(${gallery.cover})`,
                 
                }}
             ></div>
             <div className="slide-images-container">
-              {slide.slides?.map((image, index)=>
+              {gallery.slides?.map((slide, index)=>
                 (
                   <div
                     key={index}
                     className={`slide-image ${index === 0 ? 'selected' : ''}`}
-                    style={{ backgroundImage: `url(${image.url})`}}
+                    style={{ backgroundImage: `url(${slide.url})`}}
                   ></div>
                 ))}
 
