@@ -1776,6 +1776,7 @@ export function startNewGallery(galleryData: any) {
       }
 
       function toggleSlideGallery() {
+        state.isViewingGallery = false;
         console.log('clicked slide')
         /***** SLIDES ****** */
         const slidesContainer = document.querySelectorAll(".slides");
@@ -1953,6 +1954,194 @@ export function startNewGallery(galleryData: any) {
             slidesContainer,
             {
               width: "60%",
+              scale: 1,
+            },
+            "start+=1.6"
+          )
+          
+        }
+        
+      }
+
+      function toggleViewGallery() {
+        state.isViewingGallery = true;
+        console.log('toggle view gallery', state.isViewingGallery)
+        /***** SLIDES ****** */
+        const slidesContainer = document.querySelectorAll(".slides");
+        const slides = [...document.querySelectorAll(".slide")];
+        // const slidesInner = slides.map((item) =>
+        //   item.querySelector(".slide__img")
+        // );
+        //const direction = 1;
+        const nextIndex = state.currentImageIndex + 1;
+        // Get the current and upcoming slides and their inner elements
+        const currentSlide = slides[state.currentImageIndex];
+        const currentSlideImage = slides[state.currentImageIndex].getElementsByClassName('slide__img');
+        const currentSlideGallery = slides[state.currentImageIndex].getElementsByClassName('slide-images-container')
+        const upcomingSlide = slides[nextIndex];
+        //const upcomingInner = slidesInner[nextIndex];
+        console.log(state.currentImageIndex)
+        console.log(nextIndex)
+
+        // Check if slide is already clicked
+        const isAlreadyClicked = currentSlide.classList.contains("slide--clicked");
+
+        if (!isAlreadyClicked) {
+          state.selectedGalleryIndex = state.currentImageIndex;
+          gsap
+          .timeline({
+            defaults: {
+              duration: 1.25,
+              ease: "power4.inOut",
+            },
+            onStart: () => {
+              // Toggle class
+              if (isAlreadyClicked) {
+                currentSlide.classList.remove("slide--clicked");
+              } else {
+                currentSlide.classList.add("slide--clicked");
+              }
+
+              if (upcomingSlide) {
+                gsap.set(upcomingSlide, { zIndex: 99 });
+              }
+            },
+            onComplete: () => {
+              // Remove class from the previous slide to unmark it as current
+              //upcomingSlide.classList.remove("slide--clicked");
+              if (upcomingSlide) {
+                gsap.set(upcomingSlide, { zIndex: 1 });
+              }
+            },
+          })
+          // Defining animation steps
+          .addLabel("start", 0)
+          .to(
+            currentSlide,
+            {
+              duration: 0.4,
+              ease: "sine",
+              scaleY: 1.,
+              scaleX: 1,
+              autoAlpha: 1,
+            },
+            "start"
+          )
+          .to(
+            currentSlideImage,
+             {
+               autoAlpha: .5,
+             },
+             "start"
+          )
+          .to(
+            slidesContainer,
+            { 
+              width: "100%",
+            },
+            "start+=0.05"
+          )
+          .to(
+            currentSlideImage,
+             {
+               scaleY: 1,
+               yPercent: -100,
+               autoAlpha: 1,
+             },
+             "start+=1"
+          )
+          .to(
+            currentSlideGallery,
+            {
+              yPercent: -100,
+              autoAlpha: 1,
+            },
+            "start+=1.2"
+         )
+          // .fromTo(
+          //   upcomingSlide,
+          //   {
+          //     autoAlpha: 1,
+          //     scale: 1,
+          //     yPercent: direction * 100,
+          //   },
+          //   {
+          //     yPercent: 0,
+          //   },
+          //   "start+=0.1"
+          // )
+          // .fromTo(
+          //   upcomingInner,
+          //   {
+          //     yPercent: -direction * 50,
+          //   },
+          //   {
+          //     yPercent: 0,
+          //   },
+          //   "start+=0.1"
+          // );
+        } else {
+          state.selectedGalleryIndex = null;
+          state.selectedGallerySlideIndex = null;
+          gsap
+          .timeline({
+            defaults: {
+              duration: 1.25,
+              ease: "power4.inOut",
+            },
+            onStart: () => {
+              // Toggle class
+              if (isAlreadyClicked) {
+                currentSlide.classList.remove("slide--clicked");
+              } else {
+                currentSlide.classList.add("slide--clicked");
+              }
+
+              if (upcomingSlide) {
+                gsap.set(upcomingSlide, { zIndex: 99 });
+              }
+            },
+            onComplete: () => {
+              // Remove class from the previous slide to unmark it as current
+              //upcomingSlide.classList.remove("slide--clicked");
+              if (upcomingSlide) {
+                gsap.set(upcomingSlide, { zIndex: 1 });
+              }
+            },
+          })
+          // Defining animation steps
+          .addLabel("start", 0)
+          .to(
+            currentSlideGallery,
+            {
+              yPercent: 0,
+              autoAlpha: 1,
+            },
+            "start"
+         )
+          .to(
+            currentSlideImage,
+             {
+               scaleY: 1,
+               yPercent: 0,
+               autoAlpha: 1,
+             },
+             "start+=0.2"
+          )
+          .to(
+            currentSlide,
+            {
+              duration: 0.4,
+              ease: "sine",
+              scale: 1,
+              autoAlpha: 1,
+            },
+            "start+=1.2"
+          )
+          .to(
+            slidesContainer,
+            {
+              width: "100%",
               scale: 1,
             },
             "start+=1.6"
@@ -2806,6 +2995,17 @@ export function startNewGallery(galleryData: any) {
         window.addEventListener("touchend", onTouchEnd);
         document.addEventListener("keydown", onKeyDown);
         window.addEventListener("resize", onResize);
+
+        const viewButtons = document.querySelectorAll(".view-centered-button");
+        viewButtons.forEach((button) => {
+            button.addEventListener("click", (event) => {
+                const htmlButton = button as HTMLElement;
+                if (htmlButton.parentElement && htmlButton.parentElement.classList.contains('selected')) {
+                    event.stopPropagation();
+                    toggleViewGallery();
+                }
+            });
+        });
 
         cleanupFns.push(() => {
           window.removeEventListener("wheel", onWheel as any);

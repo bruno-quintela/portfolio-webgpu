@@ -415,7 +415,9 @@ const NewGallery = () => {
                     key={index}
                     className={`slide-image ${index === 0 ? 'selected' : ''}`}
                     style={{ backgroundImage: `url(${slide.url})`}}
-                  ></div>
+                  >
+                    <div className="view-centered-button">View</div>
+                  </div>
                 ))}
 
             </div>
