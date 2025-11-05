@@ -9,7 +9,7 @@
   left:0;
   right:0;
   margin:auto;
-  width: 100%;
+  width: 60%;
   height: 33%;
   overflow: hidden;
   display: grid;
@@ -73,7 +73,7 @@
   }
   .slide-image.selected {
     /* flex-grow: 100; */
-    flex-basis: 20%;
+    flex-basis: 33%;
     filter: grayscale(0) brightness(100%);;
     opacity: 1;
     z-index: 2;
@@ -354,6 +354,7 @@ z-index: 10; */
   left: 0;
   width: 100vw;
   height: 100vh;
+  background-color: rgba(0, 0, 0, 0.25);
   z-index: 1;
   transform: translateX(0);
   perspective-origin: center; 

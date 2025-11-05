@@ -144,7 +144,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="fixed top-0 w-full h-auto z-50">
+    <header className="fixed top-0 w-full h-auto z-50 bg-black">
       <audio id="startClickSound" preload="auto">
             <source src="https://assets.codepen.io/7558/preloader-2s-001.mp3" type="audio/mpeg" />
         </audio>
@@ -173,7 +173,7 @@ const Header: React.FC = () => {
             <source src="https://assets.codepen.io/7558/lxstnght-night-angel.mp3" type="audio/mpeg" />
         </audio>
 
-      <div className=" grid grid-cols-4 items-center gap-8 px-8 py-4 pb-5 backdrop-blur-sm hover:bg-black/100 z-50 transition-all duration-300">
+      <div className=" grid grid-cols-4 items-center gap-8 px-8 py-4 backdrop-blur-sm hover:bg-black/100 z-50 transition-all duration-300">
         {/* Left Side */}
         <nav id="main-nav" className="flex items-center">
           {/* <div className="logo-container">

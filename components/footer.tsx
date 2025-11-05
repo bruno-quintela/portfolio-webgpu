@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
 
 
   return (
-    <footer className="fixed bottom-0 w-full h-auto bg-black/0 backdrop-blur-sm  hover:bg-black/100 z-50 transition-all duration-300">
+    <footer className="fixed bottom-0 w-full h-auto bg-black/100 backdrop-blur-sm  hover:bg-black/100 z-50 transition-all duration-300">
       
       {/* NAVIGATION Content */}
       

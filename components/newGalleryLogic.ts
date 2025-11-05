@@ -1952,7 +1952,7 @@ export function startNewGallery(galleryData: any) {
           .to(
             slidesContainer,
             {
-              width: "100%",
+              width: "60%",
               scale: 1,
             },
             "start+=1.6"
@@ -2039,12 +2039,12 @@ export function startNewGallery(galleryData: any) {
                     ease: "power2.inOut",
                     onStart: () => {
                       // Close the gallery when transition starts
-                      const currentSlide = parentContainer.closest('.slide');
-                      setTimeout(()=>{
-                        if (currentSlide && currentSlide.classList.contains('slide--clicked')) {
-                          toggleSlideGallery();
-                        }
-                      },600)
+                      // const currentSlide = parentContainer.closest('.slide');
+                      // setTimeout(()=>{
+                      //   if (currentSlide && currentSlide.classList.contains('slide--clicked')) {
+                      //     toggleSlideGallery();
+                      //   }
+                      // },600)
                       
                     },
                     onComplete: () => {
