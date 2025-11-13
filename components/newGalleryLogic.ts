@@ -1763,6 +1763,10 @@ export function startNewGallery(galleryData: any) {
         };
       }
 
+      slider.addEventListener("wheel", handleWheel);
+      slider.addEventListener("touchstart", handleTouchStart, { passive: true });
+      slider.addEventListener("touchmove", handleTouchMove, { passive: true });
+
       function getNextImageIndex(direction: "up" | "down", isViewingGallery: boolean) {
         if(isViewingGallery) {
           if (direction === "down") {
@@ -1785,6 +1789,211 @@ export function startNewGallery(galleryData: any) {
               : state.currentImageIndex - 1;
           }
         }
+      }
+
+      function handleWheel(event: WheelEvent) {
+        const currentTime = Date.now();
+        if (
+          !state.scrollingEnabled ||
+          currentTime - state.lastScrollTimestamp < config.scrollThrottleDelay
+        ) {
+          return;
+        }
+
+        if (Math.abs(event.deltaY) > 20) {
+          const direction = event.deltaY > 0 ? "down" : "up";
+          transitionSlide(direction);
+          state.lastScrollTimestamp = currentTime;
+        }
+      }
+
+      function handleTouchStart(event: TouchEvent) {
+        if (!state.scrollingEnabled) return;
+        state.isTouchActive = true;
+        state.touchStartPosition = event.touches[0].clientY;
+      }
+
+      function handleTouchMove(event: TouchEvent) {
+        if (!state.scrollingEnabled || !state.isTouchActive) return;
+
+        const currentTime = Date.now();
+        if (currentTime - state.lastScrollTimestamp < config.scrollThrottleDelay) {
+          return;
+        }
+
+        const touchEndPosition = event.touches[0].clientY;
+        const touchDelta = state.touchStartPosition - touchEndPosition;
+
+        if (Math.abs(touchDelta) > config.touchThreshold) {
+          const direction = touchDelta > 0 ? "down" : "up";
+          transitionSlide(direction);
+          state.lastScrollTimestamp = currentTime;
+          state.isTouchActive = false;
+        }
+      }
+
+      function animateTextTransition(
+        timeline: gsap.core.Timeline,
+        direction: "up" | "down",
+        oldElements: any,
+        newElements: any
+      ) {
+        const { oldNumber, oldCounter, oldTitle, oldDescription, oldParagraphLines } = oldElements;
+        const { newNumber, newCounter, newTitle, newDescription, newParagraphLines } = newElements;
+
+        const yOffset = direction === "down" ? -20 : 20;
+        const yOffsetTitle = direction === "down" ? -60 : 60;
+        const yOffsetDesc = direction === "down" ? -24 : 24;
+        const yOffsetPara = direction === "down" ? -35 : 35;
+
+        timeline
+          .to(
+            [oldNumber, oldCounter],
+            { y: yOffset, autoAlpha: 0, duration: 0.4, ease: "power1.in" },
+            0
+          )
+          .to(
+            [newNumber, newCounter],
+            { y: 0, autoAlpha: 1, duration: 0.4, ease: "power1.out" },
+            "<0.2"
+          )
+          .to(
+            oldTitle,
+            { y: yOffsetTitle, autoAlpha: 0, duration: 0.6, ease: "power2.in" },
+            0
+          )
+          .to(
+            newTitle,
+            { y: 0, autoAlpha: 1, duration: 0.6, ease: "power2.out" },
+            "<0.2"
+          )
+          .to(
+            oldDescription,
+            {
+              y: yOffsetDesc,
+              autoAlpha: 0,
+              duration: 0.5,
+              ease: "power1.in",
+            },
+            0
+          )
+          .to(
+            newDescription,
+            { y: 0, autoAlpha: 1, duration: 0.5, ease: "power1.out" },
+            "<0.2"
+          )
+          .to(
+            oldParagraphLines,
+            {
+              y: yOffsetPara,
+              autoAlpha: 0,
+              duration: 0.4,
+              stagger: 0.05,
+              ease: "power1.in",
+            },
+            0
+          )
+          .to(
+            newParagraphLines,
+            {
+              y: 0,
+              autoAlpha: 1,
+              duration: 0.4,
+              stagger: 0.05,
+              ease: "power1.out",
+            },
+            "<0.2"
+          );
+      }
+
+      function transitionSlide(direction: "up" | "down") {
+        if (state.isTransitioning) return;
+        state.isTransitioning = true;
+
+        const isViewingGallery = state.selectedGalleryIndex !== null;
+        const nextImageIndex = getNextImageIndex(direction, isViewingGallery);
+
+        const oldNumber = document.querySelector('[data-slide-number=""]');
+        const oldCounter = document.querySelector('[data-slide-counter=""]');
+        const oldTitle = document.querySelector('[data-slide-title=""]');
+        const oldDescription = document.querySelector(
+          '[data-slide-description=""]'
+        );
+        const oldParagraph = document.querySelector(
+          '[data-slide-paragraph=""]'
+        );
+        const oldParagraphLines = oldParagraph
+          ? Array.from(oldParagraph.children)
+          : [];
+
+        const {
+          newNumber,
+          newCounter,
+          newTitle,
+          newDescription,
+          newParagraphLines,
+        } = createTextElements(nextImageIndex, direction);
+
+        if (oldNumber) oldNumber.parentElement?.appendChild(newNumber);
+        if (oldCounter) oldCounter.parentElement?.appendChild(newCounter);
+        if (oldTitle) oldTitle.parentElement?.appendChild(newTitle);
+        if (oldDescription)
+          oldDescription.parentElement?.appendChild(newDescription);
+        if (oldParagraph) {
+          newParagraphLines.forEach((line) => oldParagraph.appendChild(line));
+        }
+
+        const timeline = gsap.timeline({
+          onComplete: () => {
+            oldNumber?.remove();
+            oldCounter?.remove();
+            oldTitle?.remove();
+            oldDescription?.remove();
+            oldParagraphLines.forEach((line) => line.remove());
+
+            newNumber.setAttribute("data-slide-number", "");
+            newCounter.setAttribute("data-slide-counter", "");
+            newTitle.setAttribute("data-slide-title", "");
+            newDescription.setAttribute("data-slide-description", "");
+            newParagraphLines.forEach((line) =>
+              line.setAttribute("data-slide-paragraph-line", "")
+            );
+
+            if(isViewingGallery) {
+              state.selectedSlideIndex = nextImageIndex;
+            } else {
+              state.currentImageIndex = nextImageIndex;
+            }
+            state.isTransitioning = false;
+          },
+        });
+
+        timeline
+          .to(state.shaderMaterial.uniforms.uProgress, {
+            value: 1,
+            duration: config.transitionDuration,
+            ease: "power2.inOut",
+            onStart: () => {
+              const nextTexture = isViewingGallery ? state.slideTextures[state.selectedGalleryIndex][nextImageIndex] : state.slideTextures[nextImageIndex];
+              state.shaderMaterial.uniforms.uTexture2.value = nextTexture;
+              state.shaderMaterial.uniforms.uTexture2Size.value =
+                nextTexture.userData.size;
+            },
+            onComplete: () => {
+              const currentTexture = isViewingGallery ? state.slideTextures[state.selectedGalleryIndex][nextImageIndex] : state.slideTextures[nextImageIndex];
+              state.shaderMaterial.uniforms.uTexture1.value = currentTexture;
+              state.shaderMaterial.uniforms.uTexture1Size.value =
+                currentTexture.userData.size;
+              state.shaderMaterial.uniforms.uProgress.value = 0;
+            },
+          });
+
+        animateTextTransition(
+          timeline,
+          direction,
+          { oldNumber, oldCounter, oldTitle, oldDescription, oldParagraphLines },
+          { newNumber, newCounter, newTitle, newDescription, newParagraphLines }
+        );
       }
 
       function toggleSlideGallery() {
