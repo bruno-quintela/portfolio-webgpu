@@ -658,21 +658,20 @@ z-index: 10; */
   }
 }
 
-.slide-image .view-centered-button {
+.slide-image .slide-details-container {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  bottom: 0;
+  left: 0;
+  width:100%;
   padding: 10px 20px;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.9);
   color: white;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
-.slide-image.selected .view-centered-button {
+.slide-image.selected .slide-details-container {
   opacity: 1;
 }

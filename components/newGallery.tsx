@@ -20,43 +20,133 @@ const NewGallery = () => {
       slides: [
         {
           title: '01',
-          url: '/images/images1/strange_evangelion_1970s_movie_poster_bold_japanese_typography_cyberpunk_strange_weapon_posingwires_htzadoil95ic0w28kvno_2.png'
+          url: '/images/images1/strange_evangelion_1970s_movie_poster_bold_japanese_typography_cyberpunk_strange_weapon_posingwires_htzadoil95ic0w28kvno_2.png',
+          description: "#Cyberpunk #Mecha",
+          number: "13:04:2025",
+          paragraphLines: [
+            "Bold typography meets cyberpunk aesthetics,",
+            "where strange weapons and wires intertwine.",
+          ],
+          prompt:
+            "Strange evangelion 1970s movie poster with bold Japanese typography, cyberpunk aesthetic, strange weapon posing with intricate wires and copper details.",
+          caption: "Retro-future Japanese mecha poster",
         },
         {
           title: '02',
-          url: '/images/images1/strange_evangelion_movie_poster_bold_japanese_typography_cyberpunk_strange_weapon_posingwiresintric_1ml08hdwaf5z4r6e5td7_2.png'
+          url: '/images/images1/strange_evangelion_movie_poster_bold_japanese_typography_cyberpunk_strange_weapon_posingwiresintric_1ml08hdwaf5z4r6e5td7_2.png',
+          description: "#Cyberpunk #Mecha",
+          number: "13:04:2025",
+          paragraphLines: [
+            "Bold typography meets cyberpunk aesthetics,",
+            "where strange weapons and wires intertwine.",
+          ],
+          prompt:
+            "Strange evangelion 1970s movie poster with bold Japanese typography, cyberpunk aesthetic, strange weapon posing with intricate wires and copper details.",
+          caption: "Retro-future Japanese mecha poster",
         },
         {
           title: '03',
-          url: '/images/images1/strange_evangelion_movie_poster_bold_japanese_typography_cyberpunk_strange_weapon_posingwiresintric_2l7pokmfbi9wkgiv47sk_3.png'
+          url: '/images/images1/strange_evangelion_movie_poster_bold_japanese_typography_cyberpunk_strange_weapon_posingwiresintric_2l7pokmfbi9wkgiv47sk_3.png',
+          description: "#Cyberpunk #Mecha",
+          number: "13:04:2025",
+          paragraphLines: [
+            "Bold typography meets cyberpunk aesthetics,",
+            "where strange weapons and wires intertwine.",
+          ],
+          prompt:
+            "Strange evangelion 1970s movie poster with bold Japanese typography, cyberpunk aesthetic, strange weapon posing with intricate wires and copper details.",
+          caption: "Retro-future Japanese mecha poster",
         },
         {
           title: '04',
-          url: '/images/images1/strange_evangelion_movie_poster_bold_japanese_typography_cyberpunk_strange_weapon_posingwiresintric_px8xitxmb5140biynpeq_1.png'
+          url: '/images/images1/strange_evangelion_movie_poster_bold_japanese_typography_cyberpunk_strange_weapon_posingwiresintric_px8xitxmb5140biynpeq_1.png',
+          description: "#Cyberpunk #Mecha",
+          number: "13:04:2025",
+          paragraphLines: [
+            "Bold typography meets cyberpunk aesthetics,",
+            "where strange weapons and wires intertwine.",
+          ],
+          prompt:
+            "Strange evangelion 1970s movie poster with bold Japanese typography, cyberpunk aesthetic, strange weapon posing with intricate wires and copper details.",
+          caption: "Retro-future Japanese mecha poster",
         },
         {
           title: '05',
-          url: '/images/images1/weird_2020s_movie_poster_bold_japanese_typography_cyberpunk_strange_mecha_asian_girl_posingwiresint_5a10lgnx4dn24wdxeobu_0.png'
+          url: '/images/images1/weird_2020s_movie_poster_bold_japanese_typography_cyberpunk_strange_mecha_asian_girl_posingwiresint_5a10lgnx4dn24wdxeobu_0.png',
+          description: "#Cyberpunk #Mecha",
+          number: "13:04:2025",
+          paragraphLines: [
+            "Bold typography meets cyberpunk aesthetics,",
+            "where strange weapons and wires intertwine.",
+          ],
+          prompt:
+            "Strange evangelion 1970s movie poster with bold Japanese typography, cyberpunk aesthetic, strange weapon posing with intricate wires and copper details.",
+          caption: "Retro-future Japanese mecha poster",
         },
         {
           title: '06',
-          url: '/images/images1/weird_2020s_movie_poster_bold_japanese_typography_cyberpunk_strange_mecha_asian_girl_posingwiresint_uzxxuuvtm4309jqxo16v_1.png'
+          url: '/images/images1/weird_2020s_movie_poster_bold_japanese_typography_cyberpunk_strange_mecha_asian_girl_posingwiresint_uzxxuuvtm4309jqxo16v_1.png',
+          description: "#Cyberpunk #Mecha",
+          number: "13:04:2025",
+          paragraphLines: [
+            "Bold typography meets cyberpunk aesthetics,",
+            "where strange weapons and wires intertwine.",
+          ],
+          prompt:
+            "Strange evangelion 1970s movie poster with bold Japanese typography, cyberpunk aesthetic, strange weapon posing with intricate wires and copper details.",
+          caption: "Retro-future Japanese mecha poster",
         },
         {
           title: '07',
-          url: '/images/images1/weird_2020s_movie_poster_bold_japanese_typography_cyberpunk_strange_mecha_asian_girl_posingwiresint_z3ee8rhrtz9e11atexbf_2.png'
+          url: '/images/images1/weird_2020s_movie_poster_bold_japanese_typography_cyberpunk_strange_mecha_asian_girl_posingwiresint_z3ee8rhrtz9e11atexbf_2.png',
+          description: "#Cyberpunk #Mecha",
+          number: "13:04:2025",
+          paragraphLines: [
+            "Bold typography meets cyberpunk aesthetics,",
+            "where strange weapons and wires intertwine.",
+          ],
+          prompt:
+            "Strange evangelion 1970s movie poster with bold Japanese typography, cyberpunk aesthetic, strange weapon posing with intricate wires and copper details.",
+          caption: "Retro-future Japanese mecha poster",
         },
         {
           title: '08',
-          url: '/images/images1/weird_2020s_movie_poster_bold_japanese_typography_cyberpunk_strange_mecha_posingwiresintricate_copp_44xdew77hmwi9qcgjflh_2.png'
+          url: '/images/images1/weird_2020s_movie_poster_bold_japanese_typography_cyberpunk_strange_mecha_posingwiresintricate_copp_44xdew77hmwi9qcgjflh_2.png',
+          description: "#Cyberpunk #Mecha",
+          number: "13:04:2025",
+          paragraphLines: [
+            "Bold typography meets cyberpunk aesthetics,",
+            "where strange weapons and wires intertwine.",
+          ],
+          prompt:
+            "Strange evangelion 1970s movie poster with bold Japanese typography, cyberpunk aesthetic, strange weapon posing with intricate wires and copper details.",
+          caption: "Retro-future Japanese mecha poster",
         },
         {
           title: '09',
-          url: '/images/images1/weird_2020s_movie_poster_bold_japanese_typography_cyberpunk_strange_mecha_posingwiresintricate_copp_4quaqe2rcl6t0yzgumvd_0.png'
+          url: '/images/images1/weird_2020s_movie_poster_bold_japanese_typography_cyberpunk_strange_mecha_posingwiresintricate_copp_4quaqe2rcl6t0yzgumvd_0.png',
+          description: "#Cyberpunk #Mecha",
+          number: "13:04:2025",
+          paragraphLines: [
+            "Bold typography meets cyberpunk aesthetics,",
+            "where strange weapons and wires intertwine.",
+          ],
+          prompt:
+            "Strange evangelion 1970s movie poster with bold Japanese typography, cyberpunk aesthetic, strange weapon posing with intricate wires and copper details.",
+          caption: "Retro-future Japanese mecha poster",
         },
         {
           title: '10',
-          url: '/images/images1/weird_2020s_movie_poster_bold_japanese_typography_cyberpunk_strange_mecha_posingwiresintricate_copp_das503wbg4jjum76y0fc_1.png'
+          url: '/images/images1/weird_2020s_movie_poster_bold_japanese_typography_cyberpunk_strange_mecha_posingwiresintricate_copp_das503wbg4jjum76y0fc_1.png',
+          description: "#Cyberpunk #Mecha",
+          number: "13:04:2025",
+          paragraphLines: [
+            "Bold typography meets cyberpunk aesthetics,",
+            "where strange weapons and wires intertwine.",
+          ],
+          prompt:
+            "Strange evangelion 1970s movie poster with bold Japanese typography, cyberpunk aesthetic, strange weapon posing with intricate wires and copper details.",
+          caption: "Retro-future Japanese mecha poster",
         }
       ]
     },
@@ -75,23 +165,68 @@ const NewGallery = () => {
       slides: [
         {
           title: '01',
-          url: '/images/images2/cyberpunk_mecha_evangelion_latex_steampunk_monkfull_body_posingwhite_spheric_helmet_cyberpunk_arm_i_z0053qk3qah7l1vjpnyt_2.png'
+          url: '/images/images2/cyberpunk_mecha_evangelion_latex_steampunk_monkfull_body_posingwhite_spheric_helmet_cyberpunk_arm_i_z0053qk3qah7l1vjpnyt_2.png',
+          description: "#Mecha #Evangelion",
+          number: "04:04:2025",
+          paragraphLines: [
+            "Latex meets steampunk in a fusion of monk",
+            "and machine with translucent white spheric helmet.",
+          ],
+          prompt:
+            "Cyberpunk mecha evangelion latex steampunk monk, full body posing with white spheric helmet and cyberpunk arm implants.",
+          caption: "Monk-mecha hybrid aesthetic",
         },
         {
           title: '02',
-          url: '/images/images2/cyberpunk_mecha_evangelion_latex_steampunk_monkfull_body_translucentwhite_spheric_helmet_huge_left__jgahasmqbf111rrcz6bt_22.png'
+          url: '/images/images2/cyberpunk_mecha_evangelion_latex_steampunk_monkfull_body_translucentwhite_spheric_helmet_huge_left__jgahasmqbf111rrcz6bt_22.png',
+          description: "#Mecha #Evangelion",
+          number: "04:04:2025",
+          paragraphLines: [
+            "Latex meets steampunk in a fusion of monk",
+            "and machine with translucent white spheric helmet.",
+          ],
+          prompt:
+            "Cyberpunk mecha evangelion latex steampunk monk, full body posing with white spheric helmet and cyberpunk arm implants.",
+          caption: "Monk-mecha hybrid aesthetic",
         },
         {
           title: '03',
-          url: '/images/images2/cyberpunk_mecha_evangelion_latex_steampunk_monkfull_body_translucentwhite_spheric_helmet_huge_left__mzg68e3bz4asnow1b0ao_3.png'
+          url: '/images/images2/cyberpunk_mecha_evangelion_latex_steampunk_monkfull_body_translucentwhite_spheric_helmet_huge_left__mzg68e3bz4asnow1b0ao_3.png',
+          description: "#Mecha #Evangelion",
+          number: "04:04:2025",
+          paragraphLines: [
+            "Latex meets steampunk in a fusion of monk",
+            "and machine with translucent white spheric helmet.",
+          ],
+          prompt:
+            "Cyberpunk mecha evangelion latex steampunk monk, full body posing with white spheric helmet and cyberpunk arm implants.",
+          caption: "Monk-mecha hybrid aesthetic",
         },
         {
           title: '04',
-          url: '/images/images2/cyberpunk_mecha_evangelion_latex_steampunk_monkfull_body_translucentwhite_spheric_helmet_huge_left__vozr0ahxxhr38mrkl0ds_1.png'
+          url: '/images/images2/cyberpunk_mecha_evangelion_latex_steampunk_monkfull_body_translucentwhite_spheric_helmet_huge_left__vozr0ahxxhr38mrkl0ds_1.png',
+          description: "#Mecha #Evangelion",
+          number: "04:04:2025",
+          paragraphLines: [
+            "Latex meets steampunk in a fusion of monk",
+            "and machine with translucent white spheric helmet.",
+          ],
+          prompt:
+            "Cyberpunk mecha evangelion latex steampunk monk, full body posing with white spheric helmet and cyberpunk arm implants.",
+          caption: "Monk-mecha hybrid aesthetic",
         },
         {
           title: '05',
-          url: '/images/images2/cyberpunk_mecha_evangelion_steampunk_monkfull_body_posingwhite_spheric_helmet_cyberpunk_arm_implant_ibosxfmisztfdzfuwruy_1.png'
+          url: '/images/images2/cyberpunk_mecha_evangelion_steampunk_monkfull_body_posingwhite_spheric_helmet_cyberpunk_arm_implant_ibosxfmisztfdzfuwruy_1.png',
+          description: "#Mecha #Evangelion",
+          number: "04:04:2025",
+          paragraphLines: [
+            "Latex meets steampunk in a fusion of monk",
+            "and machine with translucent white spheric helmet.",
+          ],
+          prompt:
+            "Cyberpunk mecha evangelion latex steampunk monk, full body posing with white spheric helmet and cyberpunk arm implants.",
+          caption: "Monk-mecha hybrid aesthetic",
         }
       ]
     },
@@ -110,27 +245,81 @@ const NewGallery = () => {
       slides: [
         {
           title: '01',
-          url: '/images/images3/a_steampunk_royal_templar_with_a_white_steampunk_rounded_heavy_mecha_in_the_background_buddhist_mon_4ehoqo6q04zgw25agepv_0.png'
+          url: '/images/images3/a_steampunk_royal_templar_with_a_white_steampunk_rounded_heavy_mecha_in_the_background_buddhist_mon_4ehoqo6q04zgw25agepv_0.png',
+          description: "#Steampunk #Knight",
+          number: "03:04:2025",
+          paragraphLines: [
+            "A royal templar stands before rounded heavy mecha,",
+            "Buddhist monk meets medieval knight aesthetic.",
+          ],
+          prompt:
+            "Steampunk royal templar with white steampunk rounded heavy mecha in the background, Buddhist monk influence with medieval knight elements.",
+          caption: "Templar-mecha convergence",
         },
         {
           title: '02',
-          url: '/images/images3/a_topless_asian_steampunk_royal_knight_templar_with_a_white_steampunk_rounded_heavy_mecha_in_the_ba_z2ksasvrvedi53v2f93y_3.png'
+          url: '/images/images3/a_topless_asian_steampunk_royal_knight_templar_with_a_white_steampunk_rounded_heavy_mecha_in_the_ba_z2ksasvrvedi53v2f93y_3.png',
+          description: "#Steampunk #Knight",
+          number: "03:04:2025",
+          paragraphLines: [
+            "A royal templar stands before rounded heavy mecha,",
+            "Buddhist monk meets medieval knight aesthetic.",
+          ],
+          prompt:
+            "Steampunk royal templar with white steampunk rounded heavy mecha in the background, Buddhist monk influence with medieval knight elements.",
+          caption: "Templar-mecha convergence",
         },
         {
           title: '03',
-          url: '/images/images3/a_topless_steampunk_royal_templar_with_a_white_steampunk_rounded_heavy_mecha_in_the_background_budd_7h66ufg32uuabtcnp2q6_2.png'
+          url: '/images/images3/a_topless_steampunk_royal_templar_with_a_white_steampunk_rounded_heavy_mecha_in_the_background_budd_7h66ufg32uuabtcnp2q6_2.png',
+          description: "#Steampunk #Knight",
+          number: "03:04:2025",
+          paragraphLines: [
+            "A royal templar stands before rounded heavy mecha,",
+            "Buddhist monk meets medieval knight aesthetic.",
+          ],
+          prompt:
+            "Steampunk royal templar with white steampunk rounded heavy mecha in the background, Buddhist monk influence with medieval knight elements.",
+          caption: "Templar-mecha convergence",
         },
         {
           title: '04',
-          url: '/images/images3/a_topless_steampunk_royal_templar_with_a_white_steampunk_rounded_heavy_mecha_in_the_background_budd_vpxc3n51uh773cfz3rwz_2.png'
+          url: '/images/images3/a_topless_steampunk_royal_templar_with_a_white_steampunk_rounded_heavy_mecha_in_the_background_budd_vpxc3n51uh773cfz3rwz_2.png',
+          description: "#Steampunk #Knight",
+          number: "03:04:2025",
+          paragraphLines: [
+            "A royal templar stands before rounded heavy mecha,",
+            "Buddhist monk meets medieval knight aesthetic.",
+          ],
+          prompt:
+            "Steampunk royal templar with white steampunk rounded heavy mecha in the background, Buddhist monk influence with medieval knight elements.",
+          caption: "Templar-mecha convergence",
         },
         {
           title: '05',
-          url: '/images/images3/a_topless_steampunk_royal_templar_with_a_white_steampunk_rounded_heavy_mecha_in_the_background_budd_zgn0ll9mf1adjawp8tb5_3.png'
+          url: '/images/images3/a_topless_steampunk_royal_templar_with_a_white_steampunk_rounded_heavy_mecha_in_the_background_budd_zgn0ll9mf1adjawp8tb5_3.png',
+          description: "#Steampunk #Knight",
+          number: "03:04:2025",
+          paragraphLines: [
+            "A royal templar stands before rounded heavy mecha,",
+            "Buddhist monk meets medieval knight aesthetic.",
+          ],
+          prompt:
+            "Steampunk royal templar with white steampunk rounded heavy mecha in the background, Buddhist monk influence with medieval knight elements.",
+          caption: "Templar-mecha convergence",
         },
         {
           title: '06',
-          url: '/images/images3/a_topless_steampunk_royal_templar_with_a_white_steampunk_rounded_heavy_mecha_in_the_background_budd_zwxvc2ebzgkidtuzl8qw_0.png'
+          url: '/images/images3/a_topless_steampunk_royal_templar_with_a_white_steampunk_rounded_heavy_mecha_in_the_background_budd_zwxvc2ebzgkidtuzl8qw_0.png',
+          description: "#Steampunk #Knight",
+          number: "03:04:2025",
+          paragraphLines: [
+            "A royal templar stands before rounded heavy mecha,",
+            "Buddhist monk meets medieval knight aesthetic.",
+          ],
+          prompt:
+            "Steampunk royal templar with white steampunk rounded heavy mecha in the background, Buddhist monk influence with medieval knight elements.",
+          caption: "Templar-mecha convergence",
         }
       ]
     },
@@ -149,31 +338,94 @@ const NewGallery = () => {
       slides: [
         {
           title: '01',
-          url: '/images/images4/a_clothless_steampunk_royal_knight_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posin_iyi338m4inn4glhgtz0j_12.png'
+          url: '/images/images4/a_clothless_steampunk_royal_knight_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posin_iyi338m4inn4glhgtz0j_12.png',
+          description: "#Knight #Mecha",
+          number: "05:04:2025",
+          paragraphLines: [
+            "Steampunk royal knights with white cute mecha,",
+            "voluptuous curves meet mechanical guardians.",
+          ],
+          prompt:
+            "Steampunk royal knight and monk with white cute mecha in the background, voluptuous curves posing with mechanical elements.",
+          caption: "Knight-mecha aesthetic fusion",
         },
         {
           title: '02',
-          url: '/images/images4/a_clothless_steampunk_royal_knight_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posin_t5uas1ou71wswkk093o6_1.png'
+          url: '/images/images4/a_clothless_steampunk_royal_knight_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posin_t5uas1ou71wswkk093o6_1.png',
+          description: "#Knight #Mecha",
+          number: "05:04:2025",
+          paragraphLines: [
+            "Steampunk royal knights with white cute mecha,",
+            "voluptuous curves meet mechanical guardians.",
+          ],
+          prompt:
+            "Steampunk royal knight and monk with white cute mecha in the background, voluptuous curves posing with mechanical elements.",
+          caption: "Knight-mecha aesthetic fusion",
         },
         {
           title: '03',
-          url: '/images/images4/a_clothless_steampunk_royal_monk_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posing__2l71go144yptsjul0ql2_0.png'
+          url: '/images/images4/a_clothless_steampunk_royal_monk_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posing__2l71go144yptsjul0ql2_0.png',
+          description: "#Knight #Mecha",
+          number: "05:04:2025",
+          paragraphLines: [
+            "Steampunk royal knights with white cute mecha,",
+            "voluptuous curves meet mechanical guardians.",
+          ],
+          prompt:
+            "Steampunk royal knight and monk with white cute mecha in the background, voluptuous curves posing with mechanical elements.",
+          caption: "Knight-mecha aesthetic fusion",
         },
         {
           title: '04',
-          url: '/images/images4/a_clothless_steampunk_royal_monk_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posing__kdsmz79qmthznakd50di_2.png'
+          url: '/images/images4/a_clothless_steampunk_royal_monk_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posing__kdsmz79qmthznakd50di_2.png',
+          description: "#Knight #Mecha",
+          number: "05:04:2025",
+          paragraphLines: [
+            "Steampunk royal knights with white cute mecha,",
+            "voluptuous curves meet mechanical guardians.",
+          ],
+          prompt:
+            "Steampunk royal knight and monk with white cute mecha in the background, voluptuous curves posing with mechanical elements.",
+          caption: "Knight-mecha aesthetic fusion",
         },
         {
           title: '05',
-          url: '/images/images4/a_clothless_steampunk_royal_monk_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posing__o99j5snry02n22cvnzaj_0.png'
+          url: '/images/images4/a_clothless_steampunk_royal_monk_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posing__o99j5snry02n22cvnzaj_0.png',
+          description: "#Knight #Mecha",
+          number: "05:04:2025",
+          paragraphLines: [
+            "Steampunk royal knights with white cute mecha,",
+            "voluptuous curves meet mechanical guardians.",
+          ],
+          prompt:
+            "Steampunk royal knight and monk with white cute mecha in the background, voluptuous curves posing with mechanical elements.",
+          caption: "Knight-mecha aesthetic fusion",
         },
         {
           title: '06',
-          url: '/images/images4/a_clothless_steampunk_royal_monk_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posing__ret798s1j1oba82bx35t_3.png'
+          url: '/images/images4/a_clothless_steampunk_royal_monk_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posing__ret798s1j1oba82bx35t_3.png',
+          description: "#Knight #Mecha",
+          number: "05:04:2025",
+          paragraphLines: [
+            "Steampunk royal knights with white cute mecha,",
+            "voluptuous curves meet mechanical guardians.",
+          ],
+          prompt:
+            "Steampunk royal knight and monk with white cute mecha in the background, voluptuous curves posing with mechanical elements.",
+          caption: "Knight-mecha aesthetic fusion",
         },
         {
           title: '07',
-          url: '/images/images4/a_clothless_steampunk_royal_monk_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posing__xk640xf5kdldn4t0voj5_3.png'
+          url: '/images/images4/a_clothless_steampunk_royal_monk_with_a_white_cute_mecha_in_the_backgroundvoluptuous_curves_posing__xk640xf5kdldn4t0voj5_3.png',
+          description: "#Knight #Mecha",
+          number: "05:04:2025",
+          paragraphLines: [
+            "Steampunk royal knights with white cute mecha,",
+            "voluptuous curves meet mechanical guardians.",
+          ],
+          prompt:
+            "Steampunk royal knight and monk with white cute mecha in the background, voluptuous curves posing with mechanical elements.",
+          caption: "Knight-mecha aesthetic fusion",
         }
       ]
     },
@@ -192,31 +444,94 @@ const NewGallery = () => {
       slides: [
         {
           title: '01',
-          url: '/images/images5/white_steampunk_mechhelmet_full_of_water_with_exotic_fishes_medusa_octopustranslucentsteampunk_deta_9k72gncqrt3wizywmyvh_2.png'
+          url: '/images/images5/white_steampunk_mechhelmet_full_of_water_with_exotic_fishes_medusa_octopustranslucentsteampunk_deta_9k72gncqrt3wizywmyvh_2.png',
+          description: "#Bioluminescent #Underwater",
+          number: "09:04:2025",
+          paragraphLines: [
+            "White steampunk helmet filled with water,",
+            "exotic fishes and medusa octopus bioluminescent.",
+          ],
+          prompt:
+            "White steampunk mech helmet full of water with exotic fishes, medusa octopus, translucent steampunk details, bioluminescent Buddhist elements.",
+          caption: "Underwater mech aesthetic",
         },
         {
           title: '02',
-          url: '/images/images5/white_steampunk_mechhelmet_full_of_water_with_exotic_fishes_medusa_octopustranslucentsteampunk_deta_a3m3wrvtmifht8o7jmdp_2.png'
+          url: '/images/images5/white_steampunk_mechhelmet_full_of_water_with_exotic_fishes_medusa_octopustranslucentsteampunk_deta_a3m3wrvtmifht8o7jmdp_2.png',
+          description: "#Bioluminescent #Underwater",
+          number: "09:04:2025",
+          paragraphLines: [
+            "White steampunk helmet filled with water,",
+            "exotic fishes and medusa octopus bioluminescent.",
+          ],
+          prompt:
+            "White steampunk mech helmet full of water with exotic fishes, medusa octopus, translucent steampunk details, bioluminescent Buddhist elements.",
+          caption: "Underwater mech aesthetic",
         },
         {
           title: '03',
-          url: '/images/images5/white_steampunk_mechhelmet_full_of_water_with_exotic_fishes_medusa_octopustranslucentsteampunk_deta_f212auz2pt4j74fikrd0_3.png'
+          url: '/images/images5/white_steampunk_mechhelmet_full_of_water_with_exotic_fishes_medusa_octopustranslucentsteampunk_deta_f212auz2pt4j74fikrd0_3.png',
+          description: "#Bioluminescent #Underwater",
+          number: "09:04:2025",
+          paragraphLines: [
+            "White steampunk helmet filled with water,",
+            "exotic fishes and medusa octopus bioluminescent.",
+          ],
+          prompt:
+            "White steampunk mech helmet full of water with exotic fishes, medusa octopus, translucent steampunk details, bioluminescent Buddhist elements.",
+          caption: "Underwater mech aesthetic",
         },
         {
           title: '04',
-          url: '/images/images5/white_steampunk_mechhelmet_full_of_water_with_exotic_fishes_medusa_octopustranslucentsteampunk_deta_m3ft1ysfklotlc3b0ssj_2.png'
+          url: '/images/images5/white_steampunk_mechhelmet_full_of_water_with_exotic_fishes_medusa_octopustranslucentsteampunk_deta_m3ft1ysfklotlc3b0ssj_2.png',
+          description: "#Bioluminescent #Underwater",
+          number: "09:04:2025",
+          paragraphLines: [
+            "White steampunk helmet filled with water,",
+            "exotic fishes and medusa octopus bioluminescent.",
+          ],
+          prompt:
+            "White steampunk mech helmet full of water with exotic fishes, medusa octopus, translucent steampunk details, bioluminescent Buddhist elements.",
+          caption: "Underwater mech aesthetic",
         },
         {
           title: '05',
-          url: '/images/images5/white_steampunk_mechhelmet_full_of_water_with_exotic_fishes_medusa_octopustranslucentsteampunk_deta_o0g4j81v1mju5rvnmta2_3.png'
+          url: '/images/images5/white_steampunk_mechhelmet_full_of_water_with_exotic_fishes_medusa_octopustranslucentsteampunk_deta_o0g4j81v1mju5rvnmta2_3.png',
+          description: "#Bioluminescent #Underwater",
+          number: "09:04:2025",
+          paragraphLines: [
+            "White steampunk helmet filled with water,",
+            "exotic fishes and medusa octopus bioluminescent.",
+          ],
+          prompt:
+            "White steampunk mech helmet full of water with exotic fishes, medusa octopus, translucent steampunk details, bioluminescent Buddhist elements.",
+          caption: "Underwater mech aesthetic",
         },
         {
           title: '06',
-          url: '/images/images5/white_steampunk_mechhelmet_full_of_water_with_exotic_fishes_medusa_octopustranslucentsteampunk_deta_so6t5fv7lqnfvu5u1cuf_1.png'
+          url: '/images/images5/white_steampunk_mechhelmet_full_of_water_with_exotic_fishes_medusa_octopustranslucentsteampunk_deta_so6t5fv7lqnfvu5u1cuf_1.png',
+          description: "#Bioluminescent #Underwater",
+          number: "09:04:2025",
+          paragraphLines: [
+            "White steampunk helmet filled with water,",
+            "exotic fishes and medusa octopus bioluminescent.",
+          ],
+          prompt:
+            "White steampunk mech helmet full of water with exotic fishes, medusa octopus, translucent steampunk details, bioluminescent Buddhist elements.",
+          caption: "Underwater mech aesthetic",
         },
         {
           title: '07',
-          url: '/images/images5/white_steampunk_mechhelmet_full_of_water_with_fishtranslucentsteampunk_detailsbioluminiscentbuddhis_kk44gs5uacd91y8o59eu_1.png'
+          url: '/images/images5/white_steampunk_mechhelmet_full_of_water_with_fishtranslucentsteampunk_detailsbioluminiscentbuddhis_kk44gs5uacd91y8o59eu_1.png',
+          description: "#Bioluminescent #Underwater",
+          number: "09:04:2025",
+          paragraphLines: [
+            "White steampunk helmet filled with water,",
+            "exotic fishes and medusa octopus bioluminescent.",
+          ],
+          prompt:
+            "White steampunk mech helmet full of water with exotic fishes, medusa octopus, translucent steampunk details, bioluminescent Buddhist elements.",
+          caption: "Underwater mech aesthetic",
         }
       ]
     },
@@ -235,39 +550,120 @@ const NewGallery = () => {
       slides: [
         {
           title: '01',
-          url: '/images/images6/_1950s_vintage_topless_house_wife__vintage_1950s_clothes_inside_the_house_fluffy_pet_on_lapfull_bod_55ucpkd1rm3mmlsheq6m_1.png'
+          url: '/images/images6/_1950s_vintage_topless_house_wife__vintage_1950s_clothes_inside_the_house_fluffy_pet_on_lapfull_bod_55ucpkd1rm3mmlsheq6m_1.png',
+          description: "#Vintage #Steampunk",
+          number: "12:04:2025",
+          paragraphLines: [
+            "1950s vintage aesthetic meets 2050s future,",
+            "steampunk armor blends with retro domesticity.",
+          ],
+          prompt:
+            "1950s vintage housewife with vintage clothes inside house, fluffy pet on lap, transitioning to 2050s housewife with steampunk armor, busty full body posing.",
+          caption: "Time-traveling domestic aesthetic",
         },
         {
           title: '02',
-          url: '/images/images6/_1950s_vintage_topless_house_wife__vintage_1950s_clothes_inside_the_house_fluffy_pet_on_lapfull_bod_nhbtp81zo00j3oo0f1nq_0.png'
+          url: '/images/images6/_1950s_vintage_topless_house_wife__vintage_1950s_clothes_inside_the_house_fluffy_pet_on_lapfull_bod_nhbtp81zo00j3oo0f1nq_0.png',
+          description: "#Vintage #Steampunk",
+          number: "12:04:2025",
+          paragraphLines: [
+            "1950s vintage aesthetic meets 2050s future,",
+            "steampunk armor blends with retro domesticity.",
+          ],
+          prompt:
+            "1950s vintage housewife with vintage clothes inside house, fluffy pet on lap, transitioning to 2050s housewife with steampunk armor, busty full body posing.",
+          caption: "Time-traveling domestic aesthetic",
         },
         {
           title: '03',
-          url: '/images/images6/_1950s_vintage_topless_house_wife__vintage_1950s_clothes_inside_the_house_fluffy_pet_on_lapfull_bod_u9vrerc5tlkwe1fmc34z_2.png'
+          url: '/images/images6/_1950s_vintage_topless_house_wife__vintage_1950s_clothes_inside_the_house_fluffy_pet_on_lapfull_bod_u9vrerc5tlkwe1fmc34z_2.png',
+          description: "#Vintage #Steampunk",
+          number: "12:04:2025",
+          paragraphLines: [
+            "1950s vintage aesthetic meets 2050s future,",
+            "steampunk armor blends with retro domesticity.",
+          ],
+          prompt:
+            "1950s vintage housewife with vintage clothes inside house, fluffy pet on lap, transitioning to 2050s housewife with steampunk armor, busty full body posing.",
+          caption: "Time-traveling domestic aesthetic",
         },
         {
           title: '04',
-          url: '/images/images6/_1950s_vintage_topless_house_wife__vintage_1950s_clothes_inside_the_house_fluffy_pet_on_lapfull_bod_wjezq826chl5s9p01mtk_2.png'
+          url: '/images/images6/_1950s_vintage_topless_house_wife__vintage_1950s_clothes_inside_the_house_fluffy_pet_on_lapfull_bod_wjezq826chl5s9p01mtk_2.png',
+          description: "#Vintage #Steampunk",
+          number: "12:04:2025",
+          paragraphLines: [
+            "1950s vintage aesthetic meets 2050s future,",
+            "steampunk armor blends with retro domesticity.",
+          ],
+          prompt:
+            "1950s vintage housewife with vintage clothes inside house, fluffy pet on lap, transitioning to 2050s housewife with steampunk armor, busty full body posing.",
+          caption: "Time-traveling domestic aesthetic",
         },
         {
           title: '05',
-          url: '/images/images6/_2050s_housewife__vintage_2000s_clothes_full_body_bustyleft_shoulder_steampunk_armor_posingsteampun_4aovdp2gdnbccxtxu2ys_1.png'
+          url: '/images/images6/_2050s_housewife__vintage_2000s_clothes_full_body_bustyleft_shoulder_steampunk_armor_posingsteampun_4aovdp2gdnbccxtxu2ys_1.png',
+          description: "#Vintage #Steampunk",
+          number: "12:04:2025",
+          paragraphLines: [
+            "1950s vintage aesthetic meets 2050s future,",
+            "steampunk armor blends with retro domesticity.",
+          ],
+          prompt:
+            "1950s vintage housewife with vintage clothes inside house, fluffy pet on lap, transitioning to 2050s housewife with steampunk armor, busty full body posing.",
+          caption: "Time-traveling domestic aesthetic",
         },
         {
           title: '06',
-          url: '/images/images6/_2050s_housewife__vintage_2000s_clothes_full_body_bustyleft_shoulder_steampunk_armor_posingsteampun_5nwgbwijh2c3363ddrj1_3.png'
+          url: '/images/images6/_2050s_housewife__vintage_2000s_clothes_full_body_bustyleft_shoulder_steampunk_armor_posingsteampun_5nwgbwijh2c3363ddrj1_3.png',
+          description: "#Vintage #Steampunk",
+          number: "12:04:2025",
+          paragraphLines: [
+            "1950s vintage aesthetic meets 2050s future,",
+            "steampunk armor blends with retro domesticity.",
+          ],
+          prompt:
+            "1950s vintage housewife with vintage clothes inside house, fluffy pet on lap, transitioning to 2050s housewife with steampunk armor, busty full body posing.",
+          caption: "Time-traveling domestic aesthetic",
         },
         {
           title: '07',
-          url: '/images/images6/_2050s_housewife__vintage_2000s_clothes_full_body_bustyleft_shoulder_steampunk_armor_posingsteampun_82vcmir2zobcndnpn65m_3.png'
+          url: '/images/images6/_2050s_housewife__vintage_2000s_clothes_full_body_bustyleft_shoulder_steampunk_armor_posingsteampun_82vcmir2zobcndnpn65m_3.png',
+          description: "#Vintage #Steampunk",
+          number: "12:04:2025",
+          paragraphLines: [
+            "1950s vintage aesthetic meets 2050s future,",
+            "steampunk armor blends with retro domesticity.",
+          ],
+          prompt:
+            "1950s vintage housewife with vintage clothes inside house, fluffy pet on lap, transitioning to 2050s housewife with steampunk armor, busty full body posing.",
+          caption: "Time-traveling domestic aesthetic",
         },
         {
           title: '08',
-          url: '/images/images6/vintage_1920s_housewife_vintage_2000s_clothes_full_body_bustyleft_shoulder_steampunk_armor_posingst_gxkukrvkvv0adzivf39g_1.png'
+          url: '/images/images6/vintage_1920s_housewife_vintage_2000s_clothes_full_body_bustyleft_shoulder_steampunk_armor_posingst_gxkukrvkvv0adzivf39g_1.png',
+          description: "#Vintage #Steampunk",
+          number: "12:04:2025",
+          paragraphLines: [
+            "1950s vintage aesthetic meets 2050s future,",
+            "steampunk armor blends with retro domesticity.",
+          ],
+          prompt:
+            "1950s vintage housewife with vintage clothes inside house, fluffy pet on lap, transitioning to 2050s housewife with steampunk armor, busty full body posing.",
+          caption: "Time-traveling domestic aesthetic",
         },
         {
           title: '09',
-          url: '/images/images6/vintage_1920s_housewife_vintage_2000s_clothes_full_body_bustyleft_shoulder_steampunk_armor_posingst_u265vqhpdklvjysw4iyc_2.png'
+          url: '/images/images6/vintage_1920s_housewife_vintage_2000s_clothes_full_body_bustyleft_shoulder_steampunk_armor_posingst_u265vqhpdklvjysw4iyc_2.png',
+          description: "#Vintage #Steampunk",
+          number: "12:04:2025",
+          paragraphLines: [
+            "1950s vintage aesthetic meets 2050s future,",
+            "steampunk armor blends with retro domesticity.",
+          ],
+          prompt:
+            "1950s vintage housewife with vintage clothes inside house, fluffy pet on lap, transitioning to 2050s housewife with steampunk armor, busty full body posing.",
+          caption: "Time-traveling domestic aesthetic",
         }
       ]
     },
@@ -416,7 +812,7 @@ const NewGallery = () => {
                     className={`slide-image ${index === 0 ? 'selected' : ''}`}
                     style={{ backgroundImage: `url(${slide.url})`}}
                   >
-                    <div className="view-centered-button">View</div>
+                    <div className="slide-details-container">View</div>
                   </div>
                 ))}
 
