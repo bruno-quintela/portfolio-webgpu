@@ -1,12 +1,11 @@
 "use client";
 import "./newGallery.css";
-import { useEffect } from "react";
-import { startNewGallery } from "./newGalleryLogic";
+import { useGallery } from "./hooks/useGallery";
 import galleryData from "@/data/galleryData.json";
 
 const NewGallery = () => {
-
-  useEffect(() => startNewGallery(galleryData), []);
+  // Use the comprehensive gallery hook
+  useGallery(galleryData);
 
   return (
     <main
@@ -53,27 +52,7 @@ const NewGallery = () => {
         </svg>
       </div>
 
-      {/* <!-- Fixed corner and center text --> */}
-      {/* <aside className="corner-text corner-text-top-left" aria-hidden="true">
-    <div>ANCIENT</div>
-    <div>ONES</div>
-    <div>COSMIC</div>
-    <div>HORROR</div>
-  </aside> */}
-
-      {/* <aside className="corner-text corner-text-top-right" aria-hidden="true">
-    <div>Audio</div>
-    <div>Settings</div>
-  </aside> */}
-
       <aside className="corner-text corner-text-bottom-left" aria-hidden="true">
-        {/* <div className="" id="debugLine5">
-          STATE: VOID
-        </div>
-        <div className="" id="debugLine6">
-          ENERGY: DORMANT
-        </div> */}
-
         <div id="debugLine1">FPS: 120</div>
         <div id="debugLine2">Draw calls: 4/sec</div>
         <div id="debugLine3">Polygons: 98200</div>
@@ -98,11 +77,6 @@ const NewGallery = () => {
         <div className="counter-total ml-1">&nbsp;/&nbsp;05</div>
       </aside>
 
-      {/* <aside className="corner-text corner-text-bottom-right" aria-hidden="true">
-    <div>NEXT</div>
-    <div>PREVIOUS</div>
-  </aside> */}
-
       <nav
         className="corner-text corner-text-shortcuts"
         aria-label="Keyboard shortcuts"
@@ -120,17 +94,6 @@ const NewGallery = () => {
         {
           galleryData.map((gallery, index) => <div key={index}>{gallery.title}</div>)
         }
-        {/* <div>R&rsquo;LYEH</div>
-        <div>FHTAGN</div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div>CTHULHU</div>
-        <div></div>
-        <div>THE</div>
-        <div>SLEEPER</div>
-        <div>STIRS</div> */}
       </aside>
 
       <section className="slides" data-featured-image>
@@ -157,13 +120,6 @@ const NewGallery = () => {
             </div>
           </div>
         ))}
-        {/* <div className="featured-image-wrapper" data-featured-wrapper>
-          <img
-            className="featured-image"
-            src="https://assets.codepen.io/7558/horror-01.jpg"
-            alt="Awakening Abyss - Eldritch horror scene with cosmic entity emerging from dark abyss"
-          />
-        </div> */}
       </section>
 
       <header className="slide-text" data-slide-text>
@@ -173,9 +129,6 @@ const NewGallery = () => {
         <div className="slide-description" data-slide-description>
           <p>Eldritch Emergence</p>
         </div>
-        {/* <div className="slide-number text-zinc-400" data-slide-number>
-          <span>02:04:2025</span>
-        </div> */}
       </header>
 
       <div className="slide-paragraph" data-slide-paragraph>
