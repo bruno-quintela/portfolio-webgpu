@@ -598,6 +598,8 @@ export function startNewGallery(galleryData: any) {
         startTime: Date.now(),
         // Track currently selected/expanded gallery image texture
         selectedGalleryTexture: null,
+        // Track selected image index for each gallery
+        gallerySelectedIndices: [] as number[],
       };
 
       // Tweakpane state
@@ -2384,6 +2386,11 @@ export function startNewGallery(galleryData: any) {
           const allImagesInContainer = [...parentContainer.querySelectorAll(".slide-image")];
           const clickedIndex = allImagesInContainer.indexOf(slideImage as HTMLElement);
           const isCurrentlySelected = slideImage.classList.contains("selected");
+          
+          // Find the index of the gallery (slide) this image belongs to
+          const slideElement = parentContainer.closest('.slide');
+          const allSlides = [...document.querySelectorAll('.slide')];
+          const galleryIndex = slideElement ? allSlides.indexOf(slideElement as HTMLElement) : -1;
 
           if (isCurrentlySelected) {
             // Collapse this image and reset all others
@@ -2392,6 +2399,11 @@ export function startNewGallery(galleryData: any) {
             });
             //state.selectedSlideIndex = null;
             state.selectedGalleryTexture = null;
+            
+            // Reset selected index for this gallery
+            if (galleryIndex !== -1 && state.gallerySelectedIndices) {
+              state.gallerySelectedIndices[galleryIndex] = -1;
+            }
           } else {
             // Expand this image and collapse all others
             allImagesInContainer.forEach((img) => {
@@ -2405,6 +2417,11 @@ export function startNewGallery(galleryData: any) {
             });
             state.selectedSlideIndex = clickedIndex;
             console.log("slide image clicked", clickedIndex);
+            
+            // Store selected index for this gallery
+            if (galleryIndex !== -1 && state.gallerySelectedIndices) {
+              state.gallerySelectedIndices[galleryIndex] = clickedIndex;
+            }
           }
 
           // Store the selected gallery image texture
@@ -2533,7 +2550,26 @@ export function startNewGallery(galleryData: any) {
         // Get the first image from next slide's gallery as the target
         //const nextGalleryData = galleryData[nextSlideIndex];
 
-        let nextTexture = state.isViewingGallery ? await loadImageTexture(galleryData[state.selectedGalleryIndex].slides[nextSlideIndex].url) : state.slideTextures[nextSlideIndex];
+        let nextTexture;
+        
+        if (state.isViewingGallery) {
+          nextTexture = await loadImageTexture(galleryData[state.selectedGalleryIndex].slides[nextSlideIndex].url);
+        } else {
+          // Check if the next gallery has a selected image
+          const selectedImageIndex = state.gallerySelectedIndices ? state.gallerySelectedIndices[nextSlideIndex] : -1;
+          
+          if (selectedImageIndex !== -1) {
+            try {
+              const imageUrl = galleryData[nextSlideIndex].slides[selectedImageIndex].url;
+              nextTexture = await loadImageTexture(imageUrl);
+            } catch (error) {
+              console.warn("Failed to load selected gallery image, falling back to cover", error);
+              nextTexture = state.slideTextures[nextSlideIndex];
+            }
+          } else {
+            nextTexture = state.slideTextures[nextSlideIndex];
+          }
+        }
         
         // Try to find a selected image in the next slide's gallery
         // if (nextGalleryData && nextGalleryData.slides && nextGalleryData.slides.length > 0) {
@@ -3066,6 +3102,9 @@ export function startNewGallery(galleryData: any) {
             console.warn(`Failed to load image ${i}:`, error);
           }
         }
+
+        // Initialize selected indices for each gallery
+        state.gallerySelectedIndices = new Array(galleryData.length).fill(-1);
 
         if (state.slideTextures.length >= 2) {
           state.shaderMaterial.uniforms.uTexture1.value =
