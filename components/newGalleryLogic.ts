@@ -3221,7 +3221,7 @@ export function startNewGallery(galleryData: any) {
         document.addEventListener("keydown", onKeyDown);
         window.addEventListener("resize", onResize);
 
-        const viewButtons = document.querySelectorAll(".view-centered-button");
+        const viewButtons = document.querySelectorAll(".slide-details-container");
         viewButtons.forEach((button) => {
             button.addEventListener("click", (event) => {
                 const htmlButton = button as HTMLElement;
