@@ -12,9 +12,13 @@ export function useLoadingScreen(options: LoadingScreenOptions = {}) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const animationIdRef = useRef<number | null>(null);
   const startTimeRef = useRef<number | null>(null);
+  const hasInitializedRef = useRef(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (hasInitializedRef.current) return; // Prevent re-initialization
+    
+    hasInitializedRef.current = true;
 
     // Create overlay
     const overlay = document.createElement("div");
@@ -161,7 +165,7 @@ export function useLoadingScreen(options: LoadingScreenOptions = {}) {
       }
       overlayRef.current?.remove();
     };
-  }, [duration, onComplete]);
+  }, []); // Empty deps - only run once on mount
 
   return { isLoading };
 }

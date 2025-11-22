@@ -1,9 +1,12 @@
 /**
- * Main comprehensive hook for gallery that orchestrates all modular components
- * This hook manages WebGL, animations, controls, and state
+ * Main Gallery Hook (Hybrid Approach)
+ * Uses modular hooks for simple features (loading, background)
+ * Uses monolithic logic for complex features (transitions, clicks, etc)
  */
 "use client";
 import { useEffect, useRef } from "react";
+import { useLoadingScreen } from "./useLoadingScreen";
+import { useBackgroundEffects } from "./useBackgroundEffects";
 import { startNewGallery } from "../newGalleryLogic";
 
 export interface GalleryData {
@@ -17,13 +20,25 @@ export interface GalleryData {
 }
 
 /**
- * Main gallery hook - uses the complete gallery implementation
- * All event handling, transitions, and interactive features are included
+ * Main gallery hook - hybrid approach
+ * - Modular: Loading screen, background effects (simple, isolated features)
+ * - Monolithic: Gallery logic, transitions, clicks (complex, interconnected features)
  */
 export function useGallery(galleryData: GalleryData[]) {
   const cleanupRef = useRef<Array<() => void>>([]);
   const initializedRef = useRef(false);
 
+  // Use modular hooks for simple features
+  useLoadingScreen({
+    duration: 3000,
+    onComplete: () => {
+      // Gallery loaded
+    },
+  });
+
+  useBackgroundEffects();
+
+  // Use monolithic implementation for complex gallery logic
   useEffect(() => {
     // Prevent double initialization in React Strict Mode
     if (initializedRef.current) return;
@@ -45,7 +60,6 @@ export function useGallery(galleryData: GalleryData[]) {
   }, [galleryData]);
 
   return {
-    // Hook can expose methods here if needed
-    // For example: transitionSlide, setEffect, etc.
+    // Hook API
   };
 }
