@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import GalleryOverlay from "@/components/galleryOverlay";
 //import { Gallery2 } from "@/components/gallery";
 import { GalleryInfinite3 } from "@/components/galleryInfinite3";
-import NewGallery from "@/components/newGallery";
+import NewGallery from "@/components/Gallery/newGallery";
 
 export default function Page() {
   return (
