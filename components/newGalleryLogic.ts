@@ -2,9 +2,6 @@
 import * as THREE from "three";
 import { Pane } from "tweakpane";
 import { gsap } from "gsap";
-//import { ScrambleTextPlugin } from "gsap/ScrambleTextPlugin";
-
-//gsap.registerPlugin(ScrambleTextPlugin);
 
 export function startNewGallery(galleryData: any) {
   if (typeof window === "undefined") return () => {};
