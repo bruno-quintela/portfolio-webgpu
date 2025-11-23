@@ -1,0 +1,11 @@
+export { WebGLCanvas } from "./WebGLCanvas";
+export { GeometricBackground } from "./GeometricBackground";
+export { DebugInfo } from "./DebugInfo";
+export { SlideCounter } from "./SlideCounter";
+export { KeyboardShortcuts } from "./KeyboardShortcuts";
+export { VerticalTitle } from "./VerticalTitle";
+export { SlideText } from "./SlideText";
+export { SlideParagraph } from "./SlideParagraph";
+export { SlideContainer } from "./SlideContainer";
+export { Slide } from "./Slide";
+export { SlideImage } from "./SlideImage";
