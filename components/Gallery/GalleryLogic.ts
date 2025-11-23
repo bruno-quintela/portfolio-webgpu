@@ -6,7 +6,7 @@ import { gsap } from "gsap";
 
 //gsap.registerPlugin(ScrambleTextPlugin);
 
-export function startNewGallery(galleryData: any) {
+export function startNewGallery(galleryData: any, onIndexChange?: (index: number) => void) {
   if (typeof window === "undefined") return () => {};
 
   const preloaderStyle = document.createElement("style");
@@ -2731,6 +2731,7 @@ export function startNewGallery(galleryData: any) {
 
         // update next index
         state.currentImageIndex = nextSlideIndex;
+        if (onIndexChange) onIndexChange(nextSlideIndex);
         gsap
           .timeline({
             defaults: {

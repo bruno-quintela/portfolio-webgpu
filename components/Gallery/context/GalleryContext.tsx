@@ -34,6 +34,7 @@ export interface GalleryActions {
   goToSlide: (index: number) => void;
   selectGalleryImage: (galleryIndex: number, imageIndex: number) => void;
   setEffect: (effect: string) => void;
+  syncCurrentIndex: (index: number) => void;
 }
 
 export interface GalleryContextValue {
