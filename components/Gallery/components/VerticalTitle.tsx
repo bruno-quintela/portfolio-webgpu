@@ -26,7 +26,8 @@ export function VerticalTitle({ galleryData }: VerticalTitleProps) {
     const titleCount = titles.length;
     
     // Calculate spacing to distribute titles evenly across the full height
-    const spacing = containerHeight / (titleCount + 1);
+    // We want max 3 visible titles (Center, Top, Bottom)
+    const spacing = containerHeight / 3;
 
     // Function to calculate the target Y position for a title based on its index
     // and the currently active index, ensuring the active title is centered.
@@ -88,18 +89,16 @@ export function VerticalTitle({ galleryData }: VerticalTitleProps) {
         
         let targetOpacity = 1;
         if (diff === 0) {
-          targetOpacity = 1; // Current title
+          targetOpacity = .75; // Current title
         } else if (diff === 1) {
-          targetOpacity = 0.6; // Adjacent titles
-        } else if (diff === 2) {
-          targetOpacity = 0.3; // Two steps away
+          targetOpacity = 0.75; // Adjacent titles
         } else {
-          targetOpacity = 0.1; // Far away titles
+          targetOpacity = 0.25; // Far away titles (hidden)
         }
 
         gsap.to(title, {
           opacity: targetOpacity,
-          duration: 1.5,
+          duration: .5,
           ease: "power4.inOut",
         });
       });

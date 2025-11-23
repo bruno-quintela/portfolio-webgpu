@@ -451,6 +451,8 @@ z-index: 10; */
 }
 
 .vertical-title-container {
+  z-index: 1;
+  display: block;
   position: relative;
   width: 100%;
   height: 100%;
@@ -461,16 +463,17 @@ z-index: 10; */
 }
 
 .vertical-title-item {
+
   position: absolute;
   top: 50%;
   left: 50%;
   white-space: nowrap;
   transition: opacity 0.3s ease;
   will-change: transform, opacity;
-  font-size: 18px;
-  letter-spacing: 0.2em;
+  /* font-size: 18px;
+  letter-spacing: 0.2em; */
   color: var(--color-text);
-  z-index: 100;
+  z-index: 1;
   pointer-events: none;
   text-transform: uppercase;
   font-weight: 300;
