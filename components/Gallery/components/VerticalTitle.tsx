@@ -31,30 +31,67 @@ export function VerticalTitle({ galleryData }: VerticalTitleProps) {
     // Function to calculate the target Y position for a title based on its index
     // and the currently active index, ensuring the active title is centered.
     const calculateTargetY = (titleIndex: number, activeIndex: number) => {
-      return (titleIndex - activeIndex) * spacing;
+      // Calculate the distance in "indices"
+      let diff = titleIndex - activeIndex;
+      
+      // Adjust for wrapping to find shortest path for the target position calculation
+      // This ensures the target Y is always in the "visible" range relative to center
+      const totalTitles = titleCount;
+      if (diff > totalTitles / 2) {
+        diff -= totalTitles;
+      } else if (diff < -totalTitles / 2) {
+        diff += totalTitles;
+      }
+      
+      return diff * spacing;
     };
 
     // Animate to new positions when currentImageIndex changes
     const animateToIndex = (newIndex: number) => {
+      const totalHeight = titleCount * spacing;
+
       titles.forEach((title, titleIndex) => {
-        const yPosition = calculateTargetY(titleIndex, newIndex);
+        const targetY = calculateTargetY(titleIndex, newIndex);
+        const currentY = gsap.getProperty(title, "y") as number;
         
-        // Animate to new position
+        // Calculate the shortest distance to the target
+        let delta = targetY - currentY;
+        
+        // Wrap delta to be within [-totalHeight/2, totalHeight/2]
+        // This ensures we always animate the shortest distance (e.g. moving up 1 unit instead of down 4)
+        if (delta > totalHeight / 2) {
+          delta -= totalHeight;
+        } else if (delta < -totalHeight / 2) {
+          delta += totalHeight;
+        }
+
+        // The virtual target we animate to (might be outside canonical range)
+        const virtualTargetY = currentY + delta;
+
+        // Animate to virtual position
         gsap.to(title, {
-          y: yPosition,
+          y: virtualTargetY,
           duration: 1.5,
           ease: "power4.inOut",
+          onComplete: () => {
+            // Reset to canonical position after animation to prevent drifting
+            // This is invisible if the virtual target and canonical target are visually consistent (modulo totalHeight)
+            gsap.set(title, { y: targetY });
+          }
         });
 
-        // Calculate opacity based on distance from active title
-        const distanceFromActive = Math.abs(titleIndex - newIndex);
+        // Calculate opacity based on distance from active title (handling wrap)
+        let diff = Math.abs(titleIndex - newIndex);
+        if (diff > titleCount / 2) {
+          diff = titleCount - diff;
+        }
         
         let targetOpacity = 1;
-        if (distanceFromActive === 0) {
+        if (diff === 0) {
           targetOpacity = 1; // Current title
-        } else if (distanceFromActive === 1) {
+        } else if (diff === 1) {
           targetOpacity = 0.6; // Adjacent titles
-        } else if (distanceFromActive === 2) {
+        } else if (diff === 2) {
           targetOpacity = 0.3; // Two steps away
         } else {
           targetOpacity = 0.1; // Far away titles
@@ -67,6 +104,9 @@ export function VerticalTitle({ galleryData }: VerticalTitleProps) {
         });
       });
     };
+
+    // Initialize centering
+    gsap.set(titles, { xPercent: -50, yPercent: -50 });
 
     // Initial setup or update
     animateToIndex(currentImageIndex);
