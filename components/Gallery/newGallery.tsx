@@ -1,5 +1,5 @@
 "use client";
-import { memo, useMemo } from "react";
+import { memo, useMemo, useEffect } from "react";
 import "./newGallery.css";
 import { useGallery } from "./hooks/useGallery";
 import { GalleryProvider, useGalleryContext } from "./context/GalleryContext";
@@ -196,7 +196,7 @@ const GalleryContent = () => {
   // Get context registration functions
   const { registerStateGetter, registerActions } = useGalleryContext();
   
-  // Initialize gallery with custom hook
+  // Initialize gallery with custom hook - registration is handled internally
   useGallery({
     galleryData: galleries,
     onRegisterState: registerStateGetter,

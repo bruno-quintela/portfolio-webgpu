@@ -1227,10 +1227,49 @@ export function startNewGallery(galleryData: any, options: StartGalleryOptions =
         return effectMap[effectName] || 0;
       }
 
-      // Setup Tweakpane
+      // Setup Tweakpane controls
       function setupPane() {
-        pane = new Pane({
-          title: "Glitch Slider Controls",
+        pane = new Pane({ title: "Gallery Controls" });
+
+        // Register actions with context after functions are defined
+        onRegisterActions?.({
+          goToSlide: (index: number) => {
+            if (state.isTransitioning || index < 0 || index >= galleryData.length) return;
+            const direction = index > state.currentImageIndex ? "down" : "up";
+            state.currentImageIndex = index - 1; // Set to index - 1 so transition brings us to index
+            transitionSlide(direction);
+          },
+          nextSlide: () => {
+            if (!state.isTransitioning) {
+              transitionSlide("down");
+            }
+          },
+          previousSlide: () => {
+            if (!state.isTransitioning) {
+              transitionSlide("up");
+            }
+          },
+          expandGallery: (galleryIndex: number) => {
+            if (state.isTransitioning || galleryIndex < 0 || galleryIndex >= galleryData.length) return;
+            state.selectedGalleryIndex = galleryIndex;
+            state.currentImageIndex = galleryIndex;
+            toggleViewGallery();
+          },
+          collapseGallery: () => {
+            if (state.selectedGalleryIndex !== null && !state.isTransitioning) {
+              toggleSlideGallery();
+              state.selectedGalleryIndex = null;
+            }
+          },
+          setEffect: (effectName: string) => {
+            config.currentEffect = effectName;
+            updateShaderUniforms();
+          },
+          togglePane: () => {
+            if (pane) {
+              (pane as any).hidden = !(pane as any).hidden;
+            }
+          },
         });
 
         // General Settings
