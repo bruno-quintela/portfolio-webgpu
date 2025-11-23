@@ -2,9 +2,17 @@
 import * as THREE from "three";
 import { Pane } from "tweakpane";
 import { gsap } from "gsap";
+import type { GalleryState, GalleryActions } from "./context/GalleryContext";
 
-export function startNewGallery(galleryData: any) {
+interface StartGalleryOptions {
+  onRegisterState?: (getter: () => GalleryState) => void;
+  onRegisterActions?: (actions: GalleryActions) => void;
+}
+
+export function startNewGallery(galleryData: any, options: StartGalleryOptions = {}) {
   if (typeof window === "undefined") return () => {};
+
+  const { onRegisterState, onRegisterActions } = options;
 
   const preloaderStyle = document.createElement("style");
   preloaderStyle.textContent = `
@@ -598,6 +606,16 @@ export function startNewGallery(galleryData: any) {
         // Track selected image index for each gallery
         gallerySelectedIndices: [] as number[],
       };
+
+      // Register state getter with context
+      onRegisterState?.(() => ({
+        currentSlideIndex: state.currentImageIndex,
+        isTransitioning: state.isTransitioning,
+        isGalleryExpanded: state.selectedGalleryIndex !== null,
+        selectedGalleryIndex: state.selectedGalleryIndex,
+        currentEffect: config.currentEffect,
+        isPaneVisible: !!pane && !(pane as any).hidden,
+      }));
 
       // Tweakpane state
       let pane: any = null;

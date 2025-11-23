@@ -2,6 +2,7 @@
 import { memo, useMemo } from "react";
 import "./newGallery.css";
 import { useGallery } from "./hooks/useGallery";
+import { GalleryProvider, useGalleryContext } from "./context/GalleryContext";
 import galleryData from "@/data/galleryData.json";
 
 // Types
@@ -187,13 +188,20 @@ const VerticalTitles = memo(({ galleries }: { galleries: Gallery[] }) => (
 ));
 VerticalTitles.displayName = "VerticalTitles";
 
-// Main Component
-const NewGallery = () => {
+// Main Component (Internal)
+const GalleryContent = () => {
   // Memoize gallery data to prevent unnecessary re-renders
   const galleries = useMemo(() => galleryData as Gallery[], []);
   
+  // Get context registration functions
+  const { registerStateGetter, registerActions } = useGalleryContext();
+  
   // Initialize gallery with custom hook
-  useGallery(galleries);
+  useGallery({
+    galleryData: galleries,
+    onRegisterState: registerStateGetter,
+    onRegisterActions: registerActions,
+  });
 
   return (
     <main
@@ -217,7 +225,7 @@ const NewGallery = () => {
       <section className="slides" data-featured-image>
         {galleries.map((gallery, index) => (
           <Slide
-            key={index}
+            key={gallery.cover}
             gallery={gallery}
             index={index}
             isActive={index === 0}
@@ -230,5 +238,15 @@ const NewGallery = () => {
     </main>
   );
 };
+GalleryContent.displayName = "GalleryContent";
 
-export default memo(NewGallery);
+// Main Component (Wrapper with Provider)
+const NewGallery = () => {
+  return (
+    <GalleryProvider>
+      <GalleryContent />
+    </GalleryProvider>
+  );
+};
+
+export default NewGallery;
