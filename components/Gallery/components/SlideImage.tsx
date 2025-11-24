@@ -14,8 +14,6 @@ export function SlideImage({ url, index, isSelected, onClick }: SlideImageProps)
       className={`slide-image ${index === 0 && !isSelected ? 'selected' : ''} ${isSelected ? 'selected' : ''}`}
       style={{ backgroundImage: `url(${url})` }}
       onClick={onClick}
-    >
-      <div className="slide-details-container">View</div>
-    </div>
+    ></div>
   );
 }

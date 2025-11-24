@@ -1,6 +1,7 @@
 "use client";
 import { SlideImage } from "./SlideImage";
 import { GalleryData } from "../context/GalleryContext";
+import { SlideDetails } from "./SlideDetails";
 
 interface SlideProps {
   gallery: GalleryData;
@@ -19,13 +20,19 @@ export function Slide({ gallery, index, isCurrent, onImageClick, selectedImageIn
       ></div>
       <div className="slide-images-container">
         {gallery.slides?.map((slide, slideIndex) => (
-          <SlideImage
-            key={slideIndex}
-            url={slide.url}
-            index={slideIndex}
-            isSelected={selectedImageIndex === slideIndex}
-            onClick={() => onImageClick?.(slideIndex)}
-          />
+          <>
+            <SlideImage
+              url={slide.url}
+              index={slideIndex}
+              isSelected={selectedImageIndex === slideIndex}
+              onClick={() => onImageClick?.(slideIndex)}
+            />
+            <SlideDetails
+              index={slideIndex}
+              isSelected={selectedImageIndex === slideIndex}
+              onClick={() => onImageClick?.(slideIndex)}
+            />
+          </>
         ))}
       </div>
     </div>
