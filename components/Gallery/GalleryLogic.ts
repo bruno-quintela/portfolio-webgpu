@@ -2375,17 +2375,17 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
       const slides = [...document.querySelectorAll(".slide")];
 
       // Add click handlers to individual slide images first
-      const slideImages = [...document.querySelectorAll(".slide-image")];
-      slideImages.forEach((slideImage, index) => {
-        slideImage.addEventListener("click", async (e) => {
+      const slideWrappers = [...document.querySelectorAll(".slide-image-wrapper")];
+      slideWrappers.forEach((wrapper, index) => {
+        wrapper.addEventListener("click", async (e) => {
           e.stopPropagation(); // Prevent triggering the parent slide click
 
-          const parentContainer = slideImage.parentElement;
+          const parentContainer = wrapper.parentElement;
           if (!parentContainer) return;
 
-          const allImagesInContainer = [...parentContainer.querySelectorAll(".slide-image")];
-          const clickedIndex = allImagesInContainer.indexOf(slideImage as HTMLElement);
-          const isCurrentlySelected = slideImage.classList.contains("selected");
+          const allWrappersInContainer = [...parentContainer.querySelectorAll(".slide-image-wrapper")];
+          const clickedIndex = allWrappersInContainer.indexOf(wrapper as HTMLElement);
+          const isCurrentlySelected = wrapper.classList.contains("selected");
           
           // Find the index of the gallery (slide) this image belongs to
           const slideElement = parentContainer.closest('.slide');
@@ -2394,8 +2394,8 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
 
           if (isCurrentlySelected) {
             // Collapse this image and reset all others
-            allImagesInContainer.forEach((img) => {
-              img.classList.remove("selected", "collapsed");
+            allWrappersInContainer.forEach((w) => {
+              w.classList.remove("selected", "collapsed");
             });
             //state.selectedSlideIndex = null;
             state.selectedGalleryTexture = null;
@@ -2406,13 +2406,13 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             }
           } else {
             // Expand this image and collapse all others
-            allImagesInContainer.forEach((img) => {
-              if (img === slideImage) {
-                img.classList.add("selected");
-                img.classList.remove("collapsed");
+            allWrappersInContainer.forEach((w) => {
+              if (w === wrapper) {
+                w.classList.add("selected");
+                w.classList.remove("collapsed");
               } else {
-                img.classList.add("collapsed");
-                img.classList.remove("selected");
+                w.classList.add("collapsed");
+                w.classList.remove("selected");
               }
             });
             state.selectedSlideIndex = clickedIndex;
@@ -2428,8 +2428,10 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
           if (state.texturesLoaded && state.shaderMaterial && !isCurrentlySelected) {
             try {
               // Get the image URL from the clicked slide image
-              const imgElement = slideImage as HTMLElement;
-              const bgImage = imgElement.style.backgroundImage;
+              const slideImage = wrapper.querySelector('.slide-image') as HTMLElement;
+              if (!slideImage) return;
+
+              const bgImage = slideImage.style.backgroundImage;
               if (bgImage) {
                 // Extract URL from background-image: url("...")
                 const urlMatch = bgImage.match(/url\(["']?(.+?)["']?\)/);
