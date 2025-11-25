@@ -33,6 +33,7 @@ export function Slide({ gallery, index, isCurrent, onImageClick, selectedImageIn
             <SlideDetails
               index={slideIndex}
               isSelected={selectedImageIndex === slideIndex}
+              slide={slide}
             />
           </div>
         ))}

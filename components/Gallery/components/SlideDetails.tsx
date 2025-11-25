@@ -1,13 +1,25 @@
 "use client";
-import { Download, Info } from "lucide-react";
+import { Eye, Info } from "lucide-react";
 
 interface SlideDetailsProps {
   index: number;
   isSelected: boolean;
+  slide?: {
+    title?: string;
+    description?: string;
+    number?: string;
+    url?: string;
+    [key: string]: any;
+  };
   onClick?: () => void;
 }
 
-export function SlideDetails({ index, isSelected, onClick }: SlideDetailsProps) {
+export function SlideDetails({
+  index,
+  isSelected,
+  slide,
+  onClick
+}: SlideDetailsProps) {
   const handleLoad = () => {
     console.log(`Load clicked for slide ${index}`);
     // Add your load logic here
@@ -24,16 +36,21 @@ export function SlideDetails({ index, isSelected, onClick }: SlideDetailsProps) 
       className={`slide-details-container ${index === 0 && !isSelected ? 'selected' : ''} ${isSelected ? 'selected' : ''}`}
     >
       <div className="top">
-        <button className="slide-details-btn" onClick={handleShowMore} aria-label="Show More">
-          <Info size={16} />
-        </button>
+        <div className="slide-details-info">
+          <span className="slide-details-title">{slide?.title || ""}</span>
+          <span className="slide-details-number">{slide?.number || ""}</span>
+        </div>
+
       </div>
       <div className="bottom">
+        <div className="slide-details-info">
+          <span className="slide-details-description">{slide?.caption || ""}</span>
+        </div>
         <button className="slide-details-btn" onClick={handleShowMore} aria-label="Show More">
           <Info size={16} />
         </button>
         <button className="slide-details-btn" onClick={handleLoad} aria-label="Load">
-          <Download size={16} />
+          <Eye size={16} />
         </button>
       </div>
     </div>
