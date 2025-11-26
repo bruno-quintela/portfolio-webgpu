@@ -45,6 +45,8 @@ export function SlideDetails({
       <div className="bottom">
         <div className="slide-details-info">
           <span className="slide-details-description">{slide?.caption || ""}</span>
+          {/* <span className="slide-details-description">{slide?.paragraphLines[0] || ""}</span>
+          <span className="slide-details-description">{slide?.paragraphLines[1] || ""}</span> */}
         </div>
         <button className="slide-details-btn" onClick={handleShowMore} aria-label="Show More">
           <Info size={16} />

@@ -2454,9 +2454,8 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
                   state.selectedGalleryTexture = texture;
                   
                   // Update textures immediately
-                  state.shaderMaterial.uniforms.uTexture1.value = state.shaderMaterial.uniforms.uTexture2.value;
+                  // Keep uTexture1 as the current displayed texture, only update uTexture2 with the new texture
                   state.shaderMaterial.uniforms.uTexture2.value = texture;
-                  state.shaderMaterial.uniforms.uTexture1Size.value = state.shaderMaterial.uniforms.uTexture2Size.value;
                   state.shaderMaterial.uniforms.uTexture2Size.value = texture.userData.size;
                   
                   // Animate the transition
