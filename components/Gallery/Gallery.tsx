@@ -13,6 +13,7 @@ import {
   KeyboardShortcuts,
   VerticalTitle,
   SlideText,
+  SlideTitleCenter,
   SlideParagraph,
   SlideContainer,
 } from "./components";
@@ -43,6 +44,7 @@ const GalleryContent = () => {
       <VerticalTitle galleryData={galleryData} />
       <SlideContainer galleryData={galleryData} />
       <SlideText />
+      <SlideTitleCenter />
       <SlideParagraph />
     </main>
   );

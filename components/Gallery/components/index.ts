@@ -9,3 +9,5 @@ export { SlideParagraph } from "./SlideParagraph";
 export { SlideContainer } from "./SlideContainer";
 export { Slide } from "./Slide";
 export { SlideImage } from "./SlideImage";
+export { SlideTitleCenter } from "./SlideTitleCenter";
+
