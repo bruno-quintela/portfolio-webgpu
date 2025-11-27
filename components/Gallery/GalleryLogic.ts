@@ -1732,15 +1732,19 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
         gsap.set(newNumber, { y: transitionDirection === "down" ? 20 : -20 });
 
         const newCounter = document.createElement("span");
-        newCounter.textContent = galleryData[slideIndex]?.number || '0001101';
+        newCounter.textContent = galleryData[slideIndex]?.number;
         gsap.set(newCounter, { y: transitionDirection === "down" ? 20 : -20 });
 
         const newTitle = document.createElement("h1");
-        newTitle.textContent = galleryData[slideIndex]?.title || '1110001101';
+        newTitle.textContent = galleryData[slideIndex]?.title;
         gsap.set(newTitle, { y: transitionDirection === "down" ? 60 : -60 });
 
-        const newDescription = document.createElement("p") || '1110001101';
-        newDescription.textContent = galleryData[slideIndex]?.description || '1110001101';
+        const newCenterTitle = document.createElement("h1");
+        newCenterTitle.textContent = galleryData[slideIndex]?.title;
+        gsap.set(newCenterTitle, { y: transitionDirection === "down" ? 60 : -60 });
+
+        const newDescription = document.createElement("p");
+        newDescription.textContent = galleryData[slideIndex]?.description;
         gsap.set(newDescription, {
           y: transitionDirection === "down" ? 24 : -24,
         });
@@ -1760,6 +1764,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
           newNumber,
           newCounter,
           newTitle,
+          newCenterTitle,
           newDescription,
           newParagraphLines,
         };
@@ -2614,6 +2619,9 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
         const titleContainer = (slider as HTMLElement).querySelector(
           "[data-slide-title]"
         ) as HTMLElement;
+        const titleCenterContainer = (slider as HTMLElement).querySelector(
+          "[data-slide-title-center]"
+        ) as HTMLElement;
         const descriptionContainer = (slider as HTMLElement).querySelector(
           "[data-slide-description]"
         ) as HTMLElement;
@@ -2627,6 +2635,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
         const currentNumber = numberContainer.querySelector("span");
         const currentCounter = counterContainer.querySelector("span");
         const currentTitle = titleContainer.querySelector("h1");
+        const currentCenterTitle = titleCenterContainer.querySelector("h1");
         const currentDescription = descriptionContainer.querySelector("p");
         const currentParagraphLine1 =
           paragraphLine1Container.querySelector("span");
@@ -2641,6 +2650,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
           newNumber,
           newCounter,
           newTitle,
+          newCenterTitle,
           newDescription,
           newParagraphLines,
         } = createTextElements(nextSlideIndex, transitionDirection);
@@ -2649,6 +2659,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
         numberContainer.appendChild(newNumber);
         counterContainer.appendChild(newCounter);
         titleContainer.appendChild(newTitle);
+        titleCenterContainer.appendChild(newCenterTitle);
         descriptionContainer.appendChild(newDescription);
         paragraphLine1Container.appendChild(newParagraphLines[0]);
         paragraphLine2Container.appendChild(newParagraphLines[1]);
@@ -2669,6 +2680,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
               currentNumber,
               currentCounter,
               currentTitle,
+              currentCenterTitle,
               currentDescription,
               currentParagraphLine1,
               currentParagraphLine2,
@@ -2885,6 +2897,26 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
               }),
           },
           0.3
+        );
+
+        //center title
+        transitionTimeline.to(
+          currentCenterTitle,
+          {
+            y: transitionDirection === "down" ? -60 : 60,
+            duration: config.transitionDuration,
+            ease: "cubic-bezier(0.77,0,0.18,1)",
+          },
+          0.02
+        );
+        transitionTimeline.to(
+          newCenterTitle,
+          {
+            y: 0,
+            duration: config.transitionDuration,
+            ease: "cubic-bezier(0.77,0,0.18,1)",
+          },
+          0.02
         );
 
         //tags

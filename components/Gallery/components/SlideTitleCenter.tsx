@@ -3,7 +3,7 @@
 export function SlideTitleCenter() {
   return (
     <section className="slide-title-center" data-slide-text>
-      <div className="slide-title" data-slide-title>
+      <div className="slide-title" data-slide-title-center>
         <h1>Awakening Abyss</h1>
       </div>
       {/* <div className="slide-description" data-slide-description>
