@@ -45,12 +45,12 @@ const Header: React.FC = () => {
       const startClickSound = document.getElementById("startClickSound");
       const preloaderSound = document.getElementById("preloaderSound");
       const backgroundMusic = document.getElementById("backgroundMusic");
-    
-      if (startClickSound) startClickSound.play().catch((e) => {});
+
+      if (startClickSound) startClickSound.play().catch((e) => { });
       //document.querySelector(".audio-enable").style.display = "none";
       //document.getElementById("preloader").style.display = "flex";
-      if (preloaderSound) preloaderSound.play().catch((e) => {});
-    
+      if (preloaderSound) preloaderSound.play().catch((e) => { });
+
       setTimeout(() => {
         if (backgroundMusic) {
           backgroundMusic.volume = 0.25;
@@ -59,9 +59,9 @@ const Header: React.FC = () => {
           });
         }
       }, 500);
-      
+
     };
-    
+
     function setupScrollSounds() {
       let scrollTimeout = 1000;
       const scrollSound1 = document.getElementById("scrollSound1");
@@ -74,7 +74,7 @@ const Header: React.FC = () => {
         else if (scrollY < sectionHeight * 2) return 2;
         else return 3;
       }
-    
+
       function stopAllScrollSounds() {
         [scrollSound1, scrollSound2, scrollSound3].forEach((sound) => {
           if (sound && !sound.paused) {
@@ -84,11 +84,11 @@ const Header: React.FC = () => {
         });
       }
       let currentSection = 2;
-      
+
       window.addEventListener("wheel", () => {
         let isScrolling = true;
         // const newSection = getCurrentSection();
-        
+
         // if (newSection !== currentSection) {
         //   stopAllScrollSounds();
         //   currentSection = newSection;
@@ -105,12 +105,12 @@ const Header: React.FC = () => {
         scrollTimeout = setTimeout(() => {
           stopAllScrollSounds();
           isScrolling = false;
-        },900);
+        }, 900);
       });
     }
 
     function setupNavigationSounds() {
-      
+
       document.querySelectorAll("#main-nav a").forEach((navItem) => {
         const hoverSound = document.getElementById("hoverSound");
         navItem.addEventListener("mouseenter", () => {
@@ -119,7 +119,7 @@ const Header: React.FC = () => {
           if (hoverSound) {
             hoverSound.currentTime = 0;
             hoverSound.volume = 0.3;
-            hoverSound.play().catch((e) => {});
+            hoverSound.play().catch((e) => { });
           }
         });
         navItem.addEventListener("mouseleave", () => {
@@ -146,32 +146,32 @@ const Header: React.FC = () => {
   return (
     <header className="fixed top-0 w-full h-auto z-50 bg-black">
       <audio id="startClickSound" preload="auto">
-            <source src="https://assets.codepen.io/7558/preloader-2s-001.mp3" type="audio/mpeg" />
-        </audio>
+        <source src="https://assets.codepen.io/7558/preloader-2s-001.mp3" type="audio/mpeg" />
+      </audio>
 
-        <audio id="preloaderSound" preload="auto">
-            <source src="https://assets.codepen.io/7558/preloader-5s-001.mp3" type="audio/mpeg" />
-        </audio>
+      <audio id="preloaderSound" preload="auto">
+        <source src="https://assets.codepen.io/7558/preloader-5s-001.mp3" type="audio/mpeg" />
+      </audio>
 
-        <audio id="scrollSound1" loop preload="auto">
-            <source src="https://assets.codepen.io/7558/glitch-fx-001.mp3" type="audio/mpeg" />
-        </audio>
+      <audio id="scrollSound1" loop preload="auto">
+        <source src="https://assets.codepen.io/7558/glitch-fx-001.mp3" type="audio/mpeg" />
+      </audio>
 
-        <audio id="scrollSound2" loop preload="auto">
-            <source src="https://assets.codepen.io/7558/glitch-fx-001.mp3" type="audio/mpeg" />
-        </audio>
+      <audio id="scrollSound2" loop preload="auto">
+        <source src="https://assets.codepen.io/7558/glitch-fx-001.mp3" type="audio/mpeg" />
+      </audio>
 
-        <audio id="scrollSound3" loop preload="auto">
-            <source src="https://assets.codepen.io/7558/glitch-fx-001.mp3" type="audio/mpeg" />
-        </audio>
+      <audio id="scrollSound3" loop preload="auto">
+        <source src="https://assets.codepen.io/7558/glitch-fx-001.mp3" type="audio/mpeg" />
+      </audio>
 
-        <audio id="hoverSound" preload="auto">
-            <source src="https://assets.codepen.io/7558/preloader-2s-001.mp3" type="audio/mpeg" />
-        </audio>
+      <audio id="hoverSound" preload="auto">
+        <source src="https://assets.codepen.io/7558/preloader-2s-001.mp3" type="audio/mpeg" />
+      </audio>
 
-        <audio id="backgroundMusic" loop preload="auto">
-            <source src="https://assets.codepen.io/7558/lxstnght-night-angel.mp3" type="audio/mpeg" />
-        </audio>
+      <audio id="backgroundMusic" loop preload="auto">
+        <source src="https://assets.codepen.io/7558/lxstnght-night-angel.mp3" type="audio/mpeg" />
+      </audio>
 
       <div className=" grid grid-cols-4 items-center gap-8 px-8 py-4 backdrop-blur-sm hover:bg-black/100 z-50 transition-all duration-300">
         {/* Left Side */}
@@ -219,10 +219,10 @@ const Header: React.FC = () => {
           </div>
         </h1>
         <div className="flex items-center justify-end gap-4">
-          
+
           {/* <div className="text-sm text-zinc-400">Since 2012</div> */}
           <div className="flex items-center gap-0 text-sm text-zinc-400">
-            
+
             {/* <button className="bg-white/10 rounded-2xl w-full px-1 py-1 text-xs border border-zinc-700 hover:border-zinc-400 text-zinc-400 hover:text-white transition-all ease-in-out duration-200 cursor-pointer">
               <Info size={16} color="#bbb" className="" />
             </button> */}
@@ -241,7 +241,7 @@ const Header: React.FC = () => {
         </span> */}
       </div>
       {/* NAVIGATION Content */}
-      
+
       {/* <div className=" grid grid-cols-4 gap-8 px-8 py-8 pb-8 items-start  hover:bg-black/100 z-50 transition-all duration-300">
 
 

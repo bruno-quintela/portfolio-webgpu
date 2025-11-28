@@ -111,9 +111,8 @@ const generateGridTiles = () => {
           (halfSizeY - row) * TILE_SPACE_Y,
           0,
         ],
-        image: `https://picsum.photos/${IMAGE_RES}?random=${
-          row * GRID_SIZE_X + col + 1
-        }`,
+        image: `https://picsum.photos/${IMAGE_RES}?random=${row * GRID_SIZE_X + col + 1
+          }`,
       });
     }
   }
@@ -227,64 +226,64 @@ function GridTiles({
     >
       {isSubgrid
         ? // For subgrid, use GRID_TILES but position them horizontally
-          GRID_TILES.map((tile, tileIndex) => {
-            // Only use a subset of tiles for the subgrid (up to SUBGRID_SIZE)
-            if (tileIndex >= SUBGRID_SIZE) return null;
+        GRID_TILES.map((tile, tileIndex) => {
+          // Only use a subset of tiles for the subgrid (up to SUBGRID_SIZE)
+          if (tileIndex >= SUBGRID_SIZE) return null;
 
-            // Calculate horizontal position
-            const position = new THREE.Vector3(
-              (tileIndex - Math.floor(SUBGRID_SIZE / 2)) * TILE_SPACE_X,
-              0,
-              0
-            );
+          // Calculate horizontal position
+          const position = new THREE.Vector3(
+            (tileIndex - Math.floor(SUBGRID_SIZE / 2)) * TILE_SPACE_X,
+            0,
+            0
+          );
 
-            return (
-              <Image
-                key={`subgrid-tile-${groupIndex}-${tileIndex}`}
-                position={position}
-                userData={{
-                  row: 0, // All subgrid tiles are in a single row
-                  col: tileIndex,
-                  isHovered: false,
-                  isSelected: false,
-                }}
-                rotation={[0, 0, 0]}
-                url={tile.image} // Use the image from GRID_TILES
-                transparent
-                scale={[TILE_WIDTH, TILE_HEIGHT, 1]}
-                grayscale={1.0}
-                zoom={1.0}
-                radius={0.05}
-              />
-            );
-          })
+          return (
+            <Image
+              key={`subgrid-tile-${groupIndex}-${tileIndex}`}
+              position={position}
+              userData={{
+                row: 0, // All subgrid tiles are in a single row
+                col: tileIndex,
+                isHovered: false,
+                isSelected: false,
+              }}
+              rotation={[0, 0, 0]}
+              url={tile.image} // Use the image from GRID_TILES
+              transparent
+              scale={[TILE_WIDTH, TILE_HEIGHT, 1]}
+              grayscale={1.0}
+              zoom={1.0}
+              radius={0.05}
+            />
+          );
+        })
         : // For main grid, use the tiles as provided
-          tiles.map((tile, tileIndex) => {
-            // Check if this tile is in the top or bottom row
-            const isTopOrBottomRow = tile.row === 0 || tile.row === 2;
+        tiles.map((tile, tileIndex) => {
+          // Check if this tile is in the top or bottom row
+          const isTopOrBottomRow = tile.row === 0 || tile.row === 2;
 
-            return (
-              <Image
-                key={`grid-tile-${groupIndex}-${tileIndex}`}
-                position={new THREE.Vector3(...tile.pos)}
-                userData={{
-                  row: tile.row,
-                  col: tile.col,
-                  isHovered: false,
-                  isSelected: false,
-                  isTopOrBottomRow: isTopOrBottomRow, // Add flag for top/bottom row
-                }}
-                rotation={[0, 0, 0]}
-                url={tile.image}
-                transparent
-                scale={[TILE_WIDTH, TILE_HEIGHT, 1]}
-                grayscale={isTopOrBottomRow ? 1.0 : 0.17} // Always grey for top/bottom rows
-                zoom={isTopOrBottomRow ? 1.0 : 0.7}
-                radius={isTopOrBottomRow ? 0.05 : 0.7}
-                color={isTopOrBottomRow ? "#333" : "#777"} // Darker color for top/bottom rows
-              />
-            );
-          })}
+          return (
+            <Image
+              key={`grid-tile-${groupIndex}-${tileIndex}`}
+              position={new THREE.Vector3(...tile.pos)}
+              userData={{
+                row: tile.row,
+                col: tile.col,
+                isHovered: false,
+                isSelected: false,
+                isTopOrBottomRow: isTopOrBottomRow, // Add flag for top/bottom row
+              }}
+              rotation={[0, 0, 0]}
+              url={tile.image}
+              transparent
+              scale={[TILE_WIDTH, TILE_HEIGHT, 1]}
+              grayscale={isTopOrBottomRow ? 1.0 : 0.17} // Always grey for top/bottom rows
+              zoom={isTopOrBottomRow ? 1.0 : 0.7}
+              radius={isTopOrBottomRow ? 0.05 : 0.7}
+              color={isTopOrBottomRow ? "#333" : "#777"} // Darker color for top/bottom rows
+            />
+          );
+        })}
     </group>
   ));
 }
@@ -978,7 +977,7 @@ function Scene() {
           mesh === mainGridSelectionRef.current ||
           (mesh.animationStartTime !== undefined &&
             currentTime >=
-              mesh.animationStartTime + (mesh.animationDelay || 0));
+            mesh.animationStartTime + (mesh.animationDelay || 0));
 
         if (shouldAnimate) {
           mesh.targetScale = { x: 1, y: 1, z: 1 };
@@ -995,9 +994,9 @@ function Scene() {
         const shouldAnimate =
           mesh.animationStartTime !== undefined &&
           currentTime >=
-            mesh.animationStartTime +
-              (mesh.animationDelay || 0) +
-              SUBGRID_ANIMATION_DELAY;
+          mesh.animationStartTime +
+          (mesh.animationDelay || 0) +
+          SUBGRID_ANIMATION_DELAY;
 
         if (shouldAnimate) {
           // If this is the selected subgrid tile, scale it up
@@ -1371,12 +1370,12 @@ function Scene() {
     const strengthX = Math.abs(
       ((scrollRef.current.current.x - scrollRef.current.last.x) /
         screenRef.current.width) *
-        5 // Reduced from 10 to 5
+      5 // Reduced from 10 to 5
     );
     const strengthY = Math.abs(
       ((scrollRef.current.current.y - scrollRef.current.last.y) /
         screenRef.current.width) *
-        5 // Reduced from 10 to 5
+      5 // Reduced from 10 to 5
     );
 
     // Store the strength values in the ref
@@ -1706,7 +1705,7 @@ export const Gallery2 = () => {
         onCreated={({ gl }) => gl.setClearColor(0x000000, 1)}
       >
         <Scene />
-        {process.env.NODE_ENV !== "development" && <Perf position="top-left"/>}
+        {process.env.NODE_ENV !== "development" && <Perf position="top-left" />}
       </Canvas>
     </div>
   );

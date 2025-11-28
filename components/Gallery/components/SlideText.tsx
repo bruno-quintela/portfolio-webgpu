@@ -7,7 +7,7 @@ export function SlideText() {
         <h1>Awakening Abyss</h1>
       </div>
       <div className="slide-description" data-slide-description>
-        <p>Eldritch Emergence</p>
+        <p>#Eldritch #Emergence</p>
       </div>
     </section>
   );

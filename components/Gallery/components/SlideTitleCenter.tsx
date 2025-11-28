@@ -6,9 +6,9 @@ export function SlideTitleCenter() {
       <div className="slide-title" data-slide-title-center>
         <h1>Awakening Abyss</h1>
       </div>
-      {/* <div className="slide-description" data-slide-description>
-        <p>Eldritch Emergence</p>
-      </div> */}
+      <div className="slide-description" data-slide-description>
+        <p>#Eldritch #Emergence</p>
+      </div>
     </section>
   );
 }

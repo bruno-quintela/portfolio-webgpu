@@ -21,9 +21,9 @@ export default function GalleryOverlay() {
   return (
     <div className="absolute top-0 w-full h-full pointer-events-auto border-y-4 border-black z-2 bg-transparent overflow-y-auto">
       <div className="flex flex-col h-full justify-between bg-transparent">
-        
+
         {/* NAVIGATION Content */}
-       
+
         {/* Main Content */}
         <div className="grid grid-cols-2  pt-[100px] gap-8 items-center px-8 bg-white rounded-b-2xl">
           {/* About Section */}
@@ -48,9 +48,9 @@ export default function GalleryOverlay() {
         </div>
         {/* CHILDREN */}
         <div className="flex w-full h-[900px] shrink-0 px-0 py-0 bg-transparent">
-        
+
         </div>
-        
+
         {/*  Content */}
         <div>
           <div className="grid grid-cols-2 gap-8 px-8 py-8 pb-0 bg-white">
@@ -69,15 +69,15 @@ export default function GalleryOverlay() {
               </div>
             </div>
           </div>
-          
+
         </div>
         {/* MORE CONTENT */}
-        
-        
+
+
         <div className="w-full h-auto px-8 py-8 bg-white">
-          
+
         </div>
-   
+
         {/* Footer */}
         <div className="bg-white px-8">
           <div className="grid grid-cols-4 gap-8 py-16 bg-white border-t border-neutral-200">
@@ -171,10 +171,10 @@ export default function GalleryOverlay() {
           </div>
         </div>
         <div className="grid grid-cols-4 gap-8 px-8 py-4 items-center bg-white border-t border-neutral-200">
-            
+
         </div>
       </div>
-      
+
     </div>
   );
 }
