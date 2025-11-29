@@ -2925,18 +2925,18 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
           {
             y: transitionDirection === "down" ? -24 : 24,
             duration: config.transitionDuration,
-            ease: "cubic-bezier(0.77,0,0.18,1)",
+            ease: "power2.inOut",
           },
-          0.04
+          0
         );
         transitionTimeline.to(
           newDescription,
           {
             y: 0,
             duration: config.transitionDuration,
-            ease: "cubic-bezier(0.77,0,0.18,1)",
+            ease: "power2.inOut",
           },
-          0.04
+          0
         );
         transitionTimeline.to(
           {},
