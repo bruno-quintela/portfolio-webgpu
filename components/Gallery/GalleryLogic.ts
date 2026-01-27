@@ -2613,8 +2613,8 @@ export function startNewGallery(
         }
 
         // update next index
-        state.currentImageIndex = nextSlideIndex;
-        if (onIndexChange) onIndexChange(nextSlideIndex);
+        // state.currentImageIndex = nextSlideIndex;
+        // if (onIndexChange) onIndexChange(nextSlideIndex);
         gsap
           .timeline({
             defaults: {
@@ -2626,6 +2626,10 @@ export function startNewGallery(
               upcomingSlide.classList.add("slide--current");
             },
             onComplete: () => {
+              // Update state after transition to keep React in sync without breaking animation
+              state.currentImageIndex = nextSlideIndex;
+              if (onIndexChange) onIndexChange(nextSlideIndex);
+
               // Remove class from the previous slide to unmark it as current
               currentSlide.classList.remove("slide--current");
               // Reset animation flag
@@ -2836,6 +2840,30 @@ export function startNewGallery(
           },
           0.4,
         );
+
+        // vertical title manual animation
+        const verticalTitleContainer = document.querySelector(
+          ".vertical-title-container",
+        );
+        const verticalTitles = document.querySelectorAll(
+          ".vertical-title-item",
+        );
+        if (verticalTitleContainer && verticalTitles.length > 0) {
+          const spacing = verticalTitleContainer.clientHeight / 3;
+          const moveY = transitionDirection === "down" ? -spacing : spacing;
+
+          verticalTitles.forEach((title) => {
+            transitionTimeline.to(
+              title,
+              {
+                y: `+=${moveY}`,
+                duration: 1.5,
+                ease: "power4.inOut",
+              },
+              0,
+            );
+          });
+        }
 
         // paragraph lines
         transitionTimeline.to(
