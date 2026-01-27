@@ -11,7 +11,7 @@ interface SlideProps {
   selectedImageIndex?: number;
 }
 
-export function Slide({ gallery, index, isCurrent, onImageClick, selectedImageIndex }: SlideProps) {
+export function Slide({ gallery, index, isCurrent, onImageClick, selectedImageIndex = 0 }: SlideProps) {
   return (
     <div key={index} className={`slide ${isCurrent ? 'slide--current' : ''}`}>
       <div
@@ -19,24 +19,28 @@ export function Slide({ gallery, index, isCurrent, onImageClick, selectedImageIn
         style={{ backgroundImage: `url(${gallery.cover})` }}
       ></div>
       <div className="slide-images-container">
-        {gallery.slides?.map((slide, slideIndex) => (
-          <div
-            className={`slide-image-wrapper ${selectedImageIndex === slideIndex || (slideIndex === 0 && selectedImageIndex === undefined) ? 'selected' : ''}`}
-            key={slideIndex}
-            onClick={() => onImageClick?.(slideIndex)}
-          >
-            <SlideImage
-              url={slide.url}
-              index={slideIndex}
-              isSelected={selectedImageIndex === slideIndex}
-            />
-            <SlideDetails
-              index={slideIndex}
-              isSelected={selectedImageIndex === slideIndex}
-              slide={slide}
-            />
-          </div>
-        ))}
+        {gallery.slides?.map((slide, slideIndex) => {
+          const isSelected = selectedImageIndex === slideIndex;
+
+          return (
+            <div
+              className={`slide-image-wrapper ${isSelected ? 'selected' : ''}`}
+              key={slideIndex}
+              onClick={() => onImageClick?.(slideIndex)}
+            >
+              <SlideImage
+                url={slide.url}
+                index={slideIndex}
+                isSelected={isSelected}
+              />
+              <SlideDetails
+                index={slideIndex}
+                isSelected={isSelected}
+                slide={slide}
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );

@@ -33,7 +33,7 @@ export function SlideDetails({
   return (
     <div
       key={index}
-      className={`slide-details-container ${index === 0 && !isSelected ? 'selected' : ''} ${isSelected ? 'selected' : ''}`}
+      className={`slide-details-container ${isSelected ? 'selected' : ''}`}
     >
       <div className="top">
         <div className="slide-details-info">

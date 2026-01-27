@@ -23,9 +23,15 @@ const GalleryContent = () => {
   const { galleryData } = state;
 
   useEffect(() => {
-    const cleanup = startNewGallery(galleryData, (index) => {
-      actions.syncCurrentIndex(index);
-    });
+    const cleanup = startNewGallery(
+      galleryData,
+      (index) => {
+        actions.syncCurrentIndex(index);
+      },
+      (galleryIndex, imageIndex) => {
+        actions.selectGalleryImage(galleryIndex, imageIndex);
+      }
+    );
     return cleanup;
   }, [galleryData, actions]);
 

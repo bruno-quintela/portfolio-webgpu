@@ -11,7 +11,7 @@ export function SlideImage({ url, index, isSelected, onClick }: SlideImageProps)
   return (
     <div
       key={index}
-      className={`slide-image ${index === 0 && !isSelected ? 'selected' : ''} ${isSelected ? 'selected' : ''}`}
+      className={`slide-image ${isSelected ? 'selected' : ''}`}
       style={{ backgroundImage: `url(${url})` }}
       onClick={onClick}
     ></div>

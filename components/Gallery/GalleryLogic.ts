@@ -6,7 +6,11 @@ import { gsap } from "gsap";
 
 //gsap.registerPlugin(ScrambleTextPlugin);
 
-export function startNewGallery(galleryData: any, onIndexChange?: (index: number) => void) {
+export function startNewGallery(
+  galleryData: any,
+  onIndexChange?: (index: number) => void,
+  onImageSelect?: (galleryIndex: number, imageIndex: number) => void,
+) {
   if (typeof window === "undefined") return () => {};
 
   const preloaderStyle = document.createElement("style");
@@ -32,7 +36,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
     for (let i = 0; i <= 40; i++) {
       const vLine = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "line"
+        "line",
       );
       vLine.setAttribute("class", "grid-line");
       vLine.setAttribute("x1", i * gridSpacing);
@@ -43,7 +47,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
       if (i <= 22) {
         const hLine = document.createElementNS(
           "http://www.w3.org/2000/svg",
-          "line"
+          "line",
         );
         hLine.setAttribute("class", "grid-line");
         hLine.setAttribute("x1", 0);
@@ -82,7 +86,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
     element: Element | null,
     finalText: string,
     duration = 1,
-    options: { chars?: string; speed?: number; revealDelay?: number } = {}
+    options: { chars?: string; speed?: number; revealDelay?: number } = {},
   ) {
     if (!element) return;
     const el = element as HTMLElement;
@@ -100,7 +104,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
       // reveal progress after delay
       const revealT = Math.max(
         0,
-        (t * duration - revealDelay) / Math.max(0.0001, duration - revealDelay)
+        (t * duration - revealDelay) / Math.max(0.0001, duration - revealDelay),
       );
       const revealedCount = Math.floor(revealT * total);
       let out = "";
@@ -314,7 +318,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
           // Fade in slider content after it's ready
           setTimeout(() => {
             const sliders = document.querySelectorAll(
-              "[data-image-slider-init]"
+              "[data-image-slider-init]",
             );
             sliders.forEach((slider) => {
               (slider as HTMLElement).classList.add("loaded");
@@ -334,7 +338,6 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
 
     const sliders = document.querySelectorAll("[data-image-slider-init]");
     sliders.forEach((slider) => {
-
       // Enhanced configuration with all settings including Analog Decay
       const config: any = {
         //totalImages: galleryData.length,
@@ -1304,7 +1307,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
 
         setTimeout(() => {
           const paneElement = document.querySelector(
-            ".tp-dfwv"
+            ".tp-dfwv",
           ) as HTMLElement | null;
           if (paneElement) {
             paneElement.style.position = "fixed";
@@ -1449,7 +1452,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
         effectFolders.staticSweep.addBinding(
           config,
           "sweepChromaticAberration",
-          { label: "Chromatic Aberration", min: 0.1, max: 3.0, step: 0.1 }
+          { label: "Chromatic Aberration", min: 0.1, max: 3.0, step: 0.1 },
         );
         effectFolders.staticSweep.addBinding(config, "sweepEdgeGlow", {
           label: "Edge Glow",
@@ -1562,11 +1565,11 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
         updateEffectFolderVisibility(newEffect);
 
         const presetsFolder = pane.children.find(
-          (child: any) => child.title === "Effect Presets"
+          (child: any) => child.title === "Effect Presets",
         );
         if (presetsFolder) {
           const oldBinding = presetsFolder.children.find(
-            (child: any) => child.key === "currentEffectPreset"
+            (child: any) => child.key === "currentEffectPreset",
           );
           if (oldBinding) presetsFolder.remove(oldBinding);
           presetsFolder.addBinding(config, "currentEffectPreset", {
@@ -1689,7 +1692,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
               (texture as any).userData = {
                 size: new THREE.Vector2(
                   (texture.image as any).width,
-                  (texture.image as any).height
+                  (texture.image as any).height,
                 ),
               };
               resolve(texture);
@@ -1698,7 +1701,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             (error) => {
               clearTimeout(timeout);
               reject(error);
-            }
+            },
           );
         });
       }
@@ -1725,7 +1728,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
 
       function createTextElements(
         slideIndex: number,
-        transitionDirection: "up" | "down"
+        transitionDirection: "up" | "down",
       ) {
         const newNumber = document.createElement("span");
         newNumber.textContent = "0" + slideIndex;
@@ -1741,7 +1744,9 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
 
         const newCenterTitle = document.createElement("h1");
         newCenterTitle.textContent = galleryData[slideIndex]?.title;
-        gsap.set(newCenterTitle, { y: transitionDirection === "down" ? 60 : -60 });
+        gsap.set(newCenterTitle, {
+          y: transitionDirection === "down" ? 60 : -60,
+        });
 
         const newDescription = document.createElement("p");
         newDescription.textContent = galleryData[slideIndex]?.description;
@@ -1757,7 +1762,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
               y: transitionDirection === "down" ? 35 : -35,
             });
             return lineSpan;
-          }
+          },
         );
 
         return {
@@ -1770,20 +1775,20 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
         };
       }
 
-      slider.addEventListener("wheel", handleWheel);
-      slider.addEventListener("touchstart", handleTouchStart, { passive: true });
-      slider.addEventListener("touchmove", handleTouchMove, { passive: true });
-
-      function getNextImageIndex(direction: "up" | "down", isViewingGallery: boolean) {
-        if(isViewingGallery) {
+      function getNextImageIndex(
+        direction: "up" | "down",
+        isViewingGallery: boolean,
+      ) {
+        if (isViewingGallery) {
           if (direction === "down") {
-            return state.selectedSlideIndex === galleryData[state.selectedGalleryIndex].slides.length - 1
+            return state.selectedSlideIndex ===
+              galleryData[state.selectedGalleryIndex].slides.length - 1
               ? 0
-              : (state.selectedSlideIndex++) + 1;
+              : state.selectedSlideIndex++ + 1;
           } else {
             return state.selectedSlideIndex === 0
               ? galleryData[state.selectedGalleryIndex].slides.length - 1
-              : (state.selectedSlideIndex--) -1;
+              : state.selectedSlideIndex-- - 1;
           }
         } else {
           if (direction === "down") {
@@ -1796,211 +1801,6 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
               : state.currentImageIndex - 1;
           }
         }
-      }
-
-      function handleWheel(event: WheelEvent) {
-        const currentTime = Date.now();
-        if (
-          !state.scrollingEnabled ||
-          currentTime - state.lastScrollTimestamp < config.scrollThrottleDelay
-        ) {
-          return;
-        }
-
-        if (Math.abs(event.deltaY) > 20) {
-          const direction = event.deltaY > 0 ? "down" : "up";
-          transitionSlide(direction);
-          state.lastScrollTimestamp = currentTime;
-        }
-      }
-
-      function handleTouchStart(event: TouchEvent) {
-        if (!state.scrollingEnabled) return;
-        state.isTouchActive = true;
-        state.touchStartPosition = event.touches[0].clientY;
-      }
-
-      function handleTouchMove(event: TouchEvent) {
-        if (!state.scrollingEnabled || !state.isTouchActive) return;
-
-        const currentTime = Date.now();
-        if (currentTime - state.lastScrollTimestamp < config.scrollThrottleDelay) {
-          return;
-        }
-
-        const touchEndPosition = event.touches[0].clientY;
-        const touchDelta = state.touchStartPosition - touchEndPosition;
-
-        if (Math.abs(touchDelta) > config.touchThreshold) {
-          const direction = touchDelta > 0 ? "down" : "up";
-          transitionSlide(direction);
-          state.lastScrollTimestamp = currentTime;
-          state.isTouchActive = false;
-        }
-      }
-
-      function animateTextTransition(
-        timeline: gsap.core.Timeline,
-        direction: "up" | "down",
-        oldElements: any,
-        newElements: any
-      ) {
-        const { oldNumber, oldCounter, oldTitle, oldDescription, oldParagraphLines } = oldElements;
-        const { newNumber, newCounter, newTitle, newDescription, newParagraphLines } = newElements;
-
-        const yOffset = direction === "down" ? -20 : 20;
-        const yOffsetTitle = direction === "down" ? -60 : 60;
-        const yOffsetDesc = direction === "down" ? -24 : 24;
-        const yOffsetPara = direction === "down" ? -35 : 35;
-
-        timeline
-          .to(
-            [oldNumber, oldCounter],
-            { y: yOffset, autoAlpha: 0, duration: 0.4, ease: "power1.in" },
-            0
-          )
-          .to(
-            [newNumber, newCounter],
-            { y: 0, autoAlpha: 1, duration: 0.4, ease: "power1.out" },
-            "<0.2"
-          )
-          .to(
-            oldTitle,
-            { y: yOffsetTitle, autoAlpha: 0, duration: 0.6, ease: "power2.in" },
-            0
-          )
-          .to(
-            newTitle,
-            { y: 0, autoAlpha: 1, duration: 0.6, ease: "power2.out" },
-            "<0.2"
-          )
-          .to(
-            oldDescription,
-            {
-              y: yOffsetDesc,
-              autoAlpha: 0,
-              duration: 0.5,
-              ease: "power1.in",
-            },
-            0
-          )
-          .to(
-            newDescription,
-            { y: 0, autoAlpha: 1, duration: 0.5, ease: "power1.out" },
-            "<0.2"
-          )
-          .to(
-            oldParagraphLines,
-            {
-              y: yOffsetPara,
-              autoAlpha: 0,
-              duration: 0.4,
-              stagger: 0.05,
-              ease: "power1.in",
-            },
-            0
-          )
-          .to(
-            newParagraphLines,
-            {
-              y: 0,
-              autoAlpha: 1,
-              duration: 0.4,
-              stagger: 0.05,
-              ease: "power1.out",
-            },
-            "<0.2"
-          );
-      }
-
-      function transitionSlide(direction: "up" | "down") {
-        if (state.isTransitioning) return;
-        state.isTransitioning = true;
-
-        const isViewingGallery = state.selectedGalleryIndex !== null;
-        const nextImageIndex = getNextImageIndex(direction, isViewingGallery);
-
-        const oldNumber = document.querySelector('[data-slide-number=""]');
-        const oldCounter = document.querySelector('[data-slide-counter=""]');
-        const oldTitle = document.querySelector('[data-slide-title=""]');
-        const oldDescription = document.querySelector(
-          '[data-slide-description=""]'
-        );
-        const oldParagraph = document.querySelector(
-          '[data-slide-paragraph=""]'
-        );
-        const oldParagraphLines = oldParagraph
-          ? Array.from(oldParagraph.children)
-          : [];
-
-        const {
-          newNumber,
-          newCounter,
-          newTitle,
-          newDescription,
-          newParagraphLines,
-        } = createTextElements(nextImageIndex, direction);
-
-        if (oldNumber) oldNumber.parentElement?.appendChild(newNumber);
-        if (oldCounter) oldCounter.parentElement?.appendChild(newCounter);
-        if (oldTitle) oldTitle.parentElement?.appendChild(newTitle);
-        if (oldDescription)
-          oldDescription.parentElement?.appendChild(newDescription);
-        if (oldParagraph) {
-          newParagraphLines.forEach((line) => oldParagraph.appendChild(line));
-        }
-
-        const timeline = gsap.timeline({
-          onComplete: () => {
-            oldNumber?.remove();
-            oldCounter?.remove();
-            oldTitle?.remove();
-            oldDescription?.remove();
-            oldParagraphLines.forEach((line) => line.remove());
-
-            newNumber.setAttribute("data-slide-number", "");
-            newCounter.setAttribute("data-slide-counter", "");
-            newTitle.setAttribute("data-slide-title", "");
-            newDescription.setAttribute("data-slide-description", "");
-            newParagraphLines.forEach((line) =>
-              line.setAttribute("data-slide-paragraph-line", "")
-            );
-
-            if(isViewingGallery) {
-              state.selectedSlideIndex = nextImageIndex;
-            } else {
-              state.currentImageIndex = nextImageIndex;
-            }
-            state.isTransitioning = false;
-          },
-        });
-
-        timeline
-          .to(state.shaderMaterial.uniforms.uProgress, {
-            value: 1,
-            duration: config.transitionDuration,
-            ease: "power2.inOut",
-            onStart: () => {
-              const nextTexture = isViewingGallery ? state.slideTextures[state.selectedGalleryIndex][nextImageIndex] : state.slideTextures[nextImageIndex];
-              state.shaderMaterial.uniforms.uTexture2.value = nextTexture;
-              state.shaderMaterial.uniforms.uTexture2Size.value =
-                nextTexture.userData.size;
-            },
-            onComplete: () => {
-              const currentTexture = isViewingGallery ? state.slideTextures[state.selectedGalleryIndex][nextImageIndex] : state.slideTextures[nextImageIndex];
-              state.shaderMaterial.uniforms.uTexture1.value = currentTexture;
-              state.shaderMaterial.uniforms.uTexture1Size.value =
-                currentTexture.userData.size;
-              state.shaderMaterial.uniforms.uProgress.value = 0;
-            },
-          });
-
-        animateTextTransition(
-          timeline,
-          direction,
-          { oldNumber, oldCounter, oldTitle, oldDescription, oldParagraphLines },
-          { newNumber, newCounter, newTitle, newDescription, newParagraphLines }
-        );
       }
 
       function toggleSlideGallery() {
@@ -2016,274 +1816,89 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
         const nextSlideIndex = state.currentImageIndex + 1;
         // Get the current and upcoming slides and their inner elements
         const currentSlide = slides[state.currentImageIndex];
-        const currentSlideImage = slides[state.currentImageIndex].getElementsByClassName('slide__img');
-        const currentSlideGallery = slides[state.currentImageIndex].getElementsByClassName('slide-images-container')
+        const currentSlideImage =
+          slides[state.currentImageIndex].getElementsByClassName("slide__img");
+        const currentSlideGallery = slides[
+          state.currentImageIndex
+        ].getElementsByClassName("slide-images-container");
         const upcomingSlide = slides[nextSlideIndex];
 
-
         // Check if slide is already clicked
-        const isAlreadyClicked = currentSlide.classList.contains("slide--clicked");
+        const isAlreadyClicked =
+          currentSlide.classList.contains("slide--clicked");
 
         if (!isAlreadyClicked) {
           state.selectedGalleryIndex = state.currentImageIndex;
           gsap
-          .timeline({
-            defaults: {
-              duration: 1.25,
-              ease: "power4.inOut",
-            },
-            onStart: () => {
-              // Toggle class
-              if (isAlreadyClicked) {
-                currentSlide.classList.remove("slide--clicked");
-              } else {
-                currentSlide.classList.add("slide--clicked");
-              }
+            .timeline({
+              defaults: {
+                duration: 1.25,
+                ease: "power4.inOut",
+              },
+              onStart: () => {
+                // Toggle class
+                if (isAlreadyClicked) {
+                  currentSlide.classList.remove("slide--clicked");
+                } else {
+                  currentSlide.classList.add("slide--clicked");
+                }
 
-              if (upcomingSlide) {
-                gsap.set(upcomingSlide, { zIndex: 99 });
-              }
-            },
-            onComplete: () => {
-              // Remove class from the previous slide to unmark it as current
-              //upcomingSlide.classList.remove("slide--clicked");
-              if (upcomingSlide) {
-                gsap.set(upcomingSlide, { zIndex: 1 });
-              }
-            },
-          })
-          // Defining animation steps
-          .addLabel("start", 0)
-          .to(
-            currentSlide,
-            {
-              duration: 0.4,
-              ease: "sine",
-              scaleY: 1.,
-              scaleX: 1,
-              autoAlpha: 1,
-            },
-            "start"
-          )
-          .to(
-            currentSlideImage,
-             {
-               autoAlpha: .5,
-             },
-             "start"
-          )
-          .to(
-            slidesContainer,
-            { 
-              width: "100%",
-            },
-            "start+=0.05"
-          )
-          .to(
-            currentSlideImage,
-             {
-               scaleY: 1,
-               yPercent: -100,
-               autoAlpha: 1,
-             },
-             "start+=1"
-          )
-          .to(
-            currentSlideGallery,
-            {
-              yPercent: -100,
-              autoAlpha: 1,
-            },
-            "start+=1.2"
-         )
-          // .fromTo(
-          //   upcomingSlide,
-          //   {
-          //     autoAlpha: 1,
-          //     scale: 1,
-          //     yPercent: direction * 100,
-          //   },
-          //   {
-          //     yPercent: 0,
-          //   },
-          //   "start+=0.1"
-          // )
-          // .fromTo(
-          //   upcomingInner,
-          //   {
-          //     yPercent: -direction * 50,
-          //   },
-          //   {
-          //     yPercent: 0,
-          //   },
-          //   "start+=0.1"
-          // );
-        } else {
-         //state.selectedSlideIndex = null;
-          gsap
-          .timeline({
-            defaults: {
-              duration: 1.25,
-              ease: "power4.inOut",
-            },
-            onStart: () => {
-              // Toggle class
-              if (isAlreadyClicked) {
-                currentSlide.classList.remove("slide--clicked");
-              } else {
-                currentSlide.classList.add("slide--clicked");
-              }
-
-              if (upcomingSlide) {
-                gsap.set(upcomingSlide, { zIndex: 99 });
-              }
-            },
-            onComplete: () => {
-              // Remove class from the previous slide to unmark it as current
-              //upcomingSlide.classList.remove("slide--clicked");
-              if (upcomingSlide) {
-                gsap.set(upcomingSlide, { zIndex: 1 });
-              }
-            },
-          })
-          // Defining animation steps
-          .addLabel("start", 0)
-          .to(
-            currentSlideGallery,
-            {
-              yPercent: 0,
-              autoAlpha: 1,
-            },
-            "start"
-         )
-          .to(
-            currentSlideImage,
-             {
-               scaleY: 1,
-               yPercent: 0,
-               autoAlpha: 1,
-             },
-             "start+=0.2"
-          )
-          .to(
-            currentSlide,
-            {
-              duration: 0.4,
-              ease: "sine",
-              scale: 1,
-              autoAlpha: 1,
-            },
-            "start+=1.2"
-          )
-          .to(
-            slidesContainer,
-            {
-              width: "60%",
-              scale: 1,
-            },
-            "start+=1.6"
-          )
-          
-        }
-        
-      }
-
-      function toggleViewGallery() {
-        state.isViewingGallery = true;
-        console.log('toggle view gallery', state.isViewingGallery)
-        /***** SLIDES ****** */
-        const slidesContainer = document.querySelectorAll(".slides");
-        const slides = [...document.querySelectorAll(".slide")];
-        // const slidesInner = slides.map((item) =>
-        //   item.querySelector(".slide__img")
-        // );
-        //const direction = 1;
-        const nextSlideIndex = state.nextSlideIndex + 1;
-        // Get the current and upcoming slides and their inner elements
-        const currentSlide = slides[state.currentImageIndex];
-        const currentSlideImage = slides[state.currentImageIndex].getElementsByClassName('slide__img');
-        const currentSlideGallery = slides[state.currentImageIndex].getElementsByClassName('slide-images-container')
-        const upcomingSlide = slides[nextSlideIndex];
-        //const upcomingInner = slidesInner[nextIndex];
-        console.log(state.currentImageIndex)
-        console.log(nextSlideIndex)
-
-        // Check if slide is already clicked
-        const isAlreadyClicked = currentSlide.classList.contains("slide--clicked");
-
-        if (!isAlreadyClicked) {
-          
-          state.selectedGalleryIndex = state.currentImageIndex;
-          gsap
-          .timeline({
-            defaults: {
-              duration: 1.25,
-              ease: "power4.inOut",
-            },
-            onStart: () => {
-              // Toggle class
-              if (isAlreadyClicked) {
-                currentSlide.classList.remove("slide--clicked");
-              } else {
-                currentSlide.classList.add("slide--clicked");
-              }
-
-              if (upcomingSlide) {
-                gsap.set(upcomingSlide, { zIndex: 99 });
-              }
-            },
-            onComplete: () => {
-              // Remove class from the previous slide to unmark it as current
-              //upcomingSlide.classList.remove("slide--clicked");
-              if (upcomingSlide) {
-                gsap.set(upcomingSlide, { zIndex: 1 });
-              }
-            },
-          })
-          // Defining animation steps
-          .addLabel("start", 0)
-          .to(
-            currentSlide,
-            {
-              duration: 0.4,
-              ease: "sine",
-              scaleY: 1.,
-              scaleX: 1,
-              autoAlpha: 1,
-            },
-            "start"
-          )
-          .to(
-            currentSlideImage,
-             {
-               autoAlpha: .5,
-             },
-             "start"
-          )
-          .to(
-            slidesContainer,
-            { 
-              width: "100%",
-            },
-            "start+=0.05"
-          )
-          .to(
-            currentSlideImage,
-             {
-               scaleY: 1,
-               yPercent: -100,
-               autoAlpha: 1,
-             },
-             "start+=1"
-          )
-          .to(
-            currentSlideGallery,
-            {
-              yPercent: -100,
-              autoAlpha: 1,
-            },
-            "start+=1.2"
-         )
+                if (upcomingSlide) {
+                  gsap.set(upcomingSlide, { zIndex: 99 });
+                }
+              },
+              onComplete: () => {
+                // Remove class from the previous slide to unmark it as current
+                //upcomingSlide.classList.remove("slide--clicked");
+                if (upcomingSlide) {
+                  gsap.set(upcomingSlide, { zIndex: 1 });
+                }
+              },
+            })
+            // Defining animation steps
+            .addLabel("start", 0)
+            .to(
+              currentSlide,
+              {
+                duration: 0.4,
+                ease: "sine",
+                scaleY: 1,
+                scaleX: 1,
+                autoAlpha: 1,
+              },
+              "start",
+            )
+            .to(
+              currentSlideImage,
+              {
+                autoAlpha: 0.5,
+              },
+              "start",
+            )
+            .to(
+              slidesContainer,
+              {
+                width: "100%",
+              },
+              "start+=0.05",
+            )
+            .to(
+              currentSlideImage,
+              {
+                scaleY: 1,
+                yPercent: -100,
+                autoAlpha: 1,
+              },
+              "start+=1",
+            )
+            .to(
+              currentSlideGallery,
+              {
+                yPercent: -100,
+                autoAlpha: 1,
+              },
+              "start+=1.2",
+            );
           // .fromTo(
           //   upcomingSlide,
           //   {
@@ -2309,78 +1924,267 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
         } else {
           //state.selectedSlideIndex = null;
           gsap
-          .timeline({
-            defaults: {
-              duration: 1.25,
-              ease: "power4.inOut",
-            },
-            onStart: () => {
-              // Toggle class
-              if (isAlreadyClicked) {
-                currentSlide.classList.remove("slide--clicked");
-              } else {
-                currentSlide.classList.add("slide--clicked");
-              }
+            .timeline({
+              defaults: {
+                duration: 1.25,
+                ease: "power4.inOut",
+              },
+              onStart: () => {
+                // Toggle class
+                if (isAlreadyClicked) {
+                  currentSlide.classList.remove("slide--clicked");
+                } else {
+                  currentSlide.classList.add("slide--clicked");
+                }
 
-              if (upcomingSlide) {
-                gsap.set(upcomingSlide, { zIndex: 99 });
-              }
-            },
-            onComplete: () => {
-              // Remove class from the previous slide to unmark it as current
-              //upcomingSlide.classList.remove("slide--clicked");
-              if (upcomingSlide) {
-                gsap.set(upcomingSlide, { zIndex: 1 });
-              }
-            },
-          })
-          // Defining animation steps
-          .addLabel("start", 0)
-          .to(
-            currentSlideGallery,
-            {
-              yPercent: 0,
-              autoAlpha: 1,
-            },
-            "start"
-         )
-          .to(
-            currentSlideImage,
-             {
-               scaleY: 1,
-               yPercent: 0,
-               autoAlpha: 1,
-             },
-             "start+=0.2"
-          )
-          .to(
-            currentSlide,
-            {
-              duration: 0.4,
-              ease: "sine",
-              scale: 1,
-              autoAlpha: 1,
-            },
-            "start+=1.2"
-          )
-          .to(
-            slidesContainer,
-            {
-              width: "100%",
-              scale: 1,
-            },
-            "start+=1.6"
-          )
-          
+                if (upcomingSlide) {
+                  gsap.set(upcomingSlide, { zIndex: 99 });
+                }
+              },
+              onComplete: () => {
+                // Remove class from the previous slide to unmark it as current
+                //upcomingSlide.classList.remove("slide--clicked");
+                if (upcomingSlide) {
+                  gsap.set(upcomingSlide, { zIndex: 1 });
+                }
+              },
+            })
+            // Defining animation steps
+            .addLabel("start", 0)
+            .to(
+              currentSlideGallery,
+              {
+                yPercent: 0,
+                autoAlpha: 1,
+              },
+              "start",
+            )
+            .to(
+              currentSlideImage,
+              {
+                scaleY: 1,
+                yPercent: 0,
+                autoAlpha: 1,
+              },
+              "start+=0.2",
+            )
+            .to(
+              currentSlide,
+              {
+                duration: 0.4,
+                ease: "sine",
+                scale: 1,
+                autoAlpha: 1,
+              },
+              "start+=1.2",
+            )
+            .to(
+              slidesContainer,
+              {
+                width: "60%",
+                scale: 1,
+              },
+              "start+=1.6",
+            );
         }
-        
+      }
+
+      function toggleViewGallery() {
+        state.isViewingGallery = true;
+        console.log("toggle view gallery", state.isViewingGallery);
+        /***** SLIDES ****** */
+        const slidesContainer = document.querySelectorAll(".slides");
+        const slides = [...document.querySelectorAll(".slide")];
+        // const slidesInner = slides.map((item) =>
+        //   item.querySelector(".slide__img")
+        // );
+        //const direction = 1;
+        const nextSlideIndex = state.nextSlideIndex + 1;
+        // Get the current and upcoming slides and their inner elements
+        const currentSlide = slides[state.currentImageIndex];
+        const currentSlideImage =
+          slides[state.currentImageIndex].getElementsByClassName("slide__img");
+        const currentSlideGallery = slides[
+          state.currentImageIndex
+        ].getElementsByClassName("slide-images-container");
+        const upcomingSlide = slides[nextSlideIndex];
+        //const upcomingInner = slidesInner[nextIndex];
+        console.log(state.currentImageIndex);
+        console.log(nextSlideIndex);
+
+        // Check if slide is already clicked
+        const isAlreadyClicked =
+          currentSlide.classList.contains("slide--clicked");
+
+        if (!isAlreadyClicked) {
+          state.selectedGalleryIndex = state.currentImageIndex;
+          gsap
+            .timeline({
+              defaults: {
+                duration: 1.25,
+                ease: "power4.inOut",
+              },
+              onStart: () => {
+                // Toggle class
+                if (isAlreadyClicked) {
+                  currentSlide.classList.remove("slide--clicked");
+                } else {
+                  currentSlide.classList.add("slide--clicked");
+                }
+
+                if (upcomingSlide) {
+                  gsap.set(upcomingSlide, { zIndex: 99 });
+                }
+              },
+              onComplete: () => {
+                // Remove class from the previous slide to unmark it as current
+                //upcomingSlide.classList.remove("slide--clicked");
+                if (upcomingSlide) {
+                  gsap.set(upcomingSlide, { zIndex: 1 });
+                }
+              },
+            })
+            // Defining animation steps
+            .addLabel("start", 0)
+            .to(
+              currentSlide,
+              {
+                duration: 0.4,
+                ease: "sine",
+                scaleY: 1,
+                scaleX: 1,
+                autoAlpha: 1,
+              },
+              "start",
+            )
+            .to(
+              currentSlideImage,
+              {
+                autoAlpha: 0.5,
+              },
+              "start",
+            )
+            .to(
+              slidesContainer,
+              {
+                width: "100%",
+              },
+              "start+=0.05",
+            )
+            .to(
+              currentSlideImage,
+              {
+                scaleY: 1,
+                yPercent: -100,
+                autoAlpha: 1,
+              },
+              "start+=1",
+            )
+            .to(
+              currentSlideGallery,
+              {
+                yPercent: -100,
+                autoAlpha: 1,
+              },
+              "start+=1.2",
+            );
+          // .fromTo(
+          //   upcomingSlide,
+          //   {
+          //     autoAlpha: 1,
+          //     scale: 1,
+          //     yPercent: direction * 100,
+          //   },
+          //   {
+          //     yPercent: 0,
+          //   },
+          //   "start+=0.1"
+          // )
+          // .fromTo(
+          //   upcomingInner,
+          //   {
+          //     yPercent: -direction * 50,
+          //   },
+          //   {
+          //     yPercent: 0,
+          //   },
+          //   "start+=0.1"
+          // );
+        } else {
+          //state.selectedSlideIndex = null;
+          gsap
+            .timeline({
+              defaults: {
+                duration: 1.25,
+                ease: "power4.inOut",
+              },
+              onStart: () => {
+                // Toggle class
+                if (isAlreadyClicked) {
+                  currentSlide.classList.remove("slide--clicked");
+                } else {
+                  currentSlide.classList.add("slide--clicked");
+                }
+
+                if (upcomingSlide) {
+                  gsap.set(upcomingSlide, { zIndex: 99 });
+                }
+              },
+              onComplete: () => {
+                // Remove class from the previous slide to unmark it as current
+                //upcomingSlide.classList.remove("slide--clicked");
+                if (upcomingSlide) {
+                  gsap.set(upcomingSlide, { zIndex: 1 });
+                }
+              },
+            })
+            // Defining animation steps
+            .addLabel("start", 0)
+            .to(
+              currentSlideGallery,
+              {
+                yPercent: 0,
+                autoAlpha: 1,
+              },
+              "start",
+            )
+            .to(
+              currentSlideImage,
+              {
+                scaleY: 1,
+                yPercent: 0,
+                autoAlpha: 1,
+              },
+              "start+=0.2",
+            )
+            .to(
+              currentSlide,
+              {
+                duration: 0.4,
+                ease: "sine",
+                scale: 1,
+                autoAlpha: 1,
+              },
+              "start+=1.2",
+            )
+            .to(
+              slidesContainer,
+              {
+                width: "100%",
+                scale: 1,
+              },
+              "start+=1.6",
+            );
+        }
       }
 
       const slidesContainer = document.querySelector(".slides");
       const slides = [...document.querySelectorAll(".slide")];
 
       // Add click handlers to individual slide images first
-      const slideWrappers = [...document.querySelectorAll(".slide-image-wrapper")];
+      const slideWrappers = [
+        ...document.querySelectorAll(".slide-image-wrapper"),
+      ];
       slideWrappers.forEach((wrapper, index) => {
         wrapper.addEventListener("click", async (e) => {
           e.stopPropagation(); // Prevent triggering the parent slide click
@@ -2388,14 +2192,20 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
           const parentContainer = wrapper.parentElement;
           if (!parentContainer) return;
 
-          const allWrappersInContainer = [...parentContainer.querySelectorAll(".slide-image-wrapper")];
-          const clickedIndex = allWrappersInContainer.indexOf(wrapper as HTMLElement);
+          const allWrappersInContainer = [
+            ...parentContainer.querySelectorAll(".slide-image-wrapper"),
+          ];
+          const clickedIndex = allWrappersInContainer.indexOf(
+            wrapper as HTMLElement,
+          );
           const isCurrentlySelected = wrapper.classList.contains("selected");
-          
+
           // Find the index of the gallery (slide) this image belongs to
-          const slideElement = parentContainer.closest('.slide');
-          const allSlides = [...document.querySelectorAll('.slide')];
-          const galleryIndex = slideElement ? allSlides.indexOf(slideElement as HTMLElement) : -1;
+          const slideElement = parentContainer.closest(".slide");
+          const allSlides = [...document.querySelectorAll(".slide")];
+          const galleryIndex = slideElement
+            ? allSlides.indexOf(slideElement as HTMLElement)
+            : -1;
 
           if (isCurrentlySelected) {
             // Collapse this image and reset all others
@@ -2404,10 +2214,15 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             });
             //state.selectedSlideIndex = null;
             state.selectedGalleryTexture = null;
-            
-            // Reset selected index for this gallery
+
+            // Reset selected index for this gallery to first image (0)
             if (galleryIndex !== -1 && state.gallerySelectedIndices) {
-              state.gallerySelectedIndices[galleryIndex] = -1;
+              state.gallerySelectedIndices[galleryIndex] = 0;
+
+              // Notify provider about the reset to first image
+              if (onImageSelect) {
+                onImageSelect(galleryIndex, 0);
+              }
             }
           } else {
             // Expand this image and collapse all others
@@ -2420,20 +2235,43 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
                 w.classList.remove("selected");
               }
             });
+            // Deselect all images in the gallery
+            allWrappersInContainer.forEach((w) =>
+              w.classList.remove("selected", "collapsed"),
+            );
+            // Select the clicked image
+            wrapper.classList.add("selected");
+            wrapper.classList.remove("collapsed"); // Ensure it's not collapsed
+
             state.selectedSlideIndex = clickedIndex;
             console.log("slide image clicked", clickedIndex);
-            
+
             // Store selected index for this gallery
             if (galleryIndex !== -1 && state.gallerySelectedIndices) {
               state.gallerySelectedIndices[galleryIndex] = clickedIndex;
+
+              // Notify provider about the selection
+              if (onImageSelect) {
+                onImageSelect(galleryIndex, clickedIndex);
+                console.log("🔔 Notifying provider:", {
+                  galleryIndex,
+                  clickedIndex,
+                });
+              }
             }
           }
 
           // Store the selected gallery image texture
-          if (state.texturesLoaded && state.shaderMaterial && !isCurrentlySelected) {
+          if (
+            state.texturesLoaded &&
+            state.shaderMaterial &&
+            !isCurrentlySelected
+          ) {
             try {
               // Get the image URL from the clicked slide image
-              const slideImage = wrapper.querySelector('.slide-image') as HTMLElement;
+              const slideImage = wrapper.querySelector(
+                ".slide-image",
+              ) as HTMLElement;
               if (!slideImage) return;
 
               const bgImage = slideImage.style.backgroundImage;
@@ -2442,27 +2280,30 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
                 const urlMatch = bgImage.match(/url\(["']?(.+?)["']?\)/);
                 if (urlMatch && urlMatch[1]) {
                   const imageUrl = urlMatch[1];
-                  
+
                   // Update the slide's background image to show this selected image
-                  const currentSlide = parentContainer.closest('.slide');
+                  const currentSlide = parentContainer.closest(".slide");
                   if (currentSlide) {
-                    const slideImg = currentSlide.querySelector('.slide__img') as HTMLElement;
+                    const slideImg = currentSlide.querySelector(
+                      ".slide__img",
+                    ) as HTMLElement;
                     if (slideImg) {
                       slideImg.style.backgroundImage = `url(${imageUrl})`;
                     }
                   }
-                  
+
                   // Load the new texture
                   const texture: any = await loadImageTexture(imageUrl);
-                  
+
                   // Store it as the selected gallery texture
                   state.selectedGalleryTexture = texture;
-                  
+
                   // Update textures immediately
                   // Keep uTexture1 as the current displayed texture, only update uTexture2 with the new texture
                   state.shaderMaterial.uniforms.uTexture2.value = texture;
-                  state.shaderMaterial.uniforms.uTexture2Size.value = texture.userData.size;
-                  
+                  state.shaderMaterial.uniforms.uTexture2Size.value =
+                    texture.userData.size;
+
                   // Animate the transition
                   gsap.to(state.shaderMaterial.uniforms.uProgress, {
                     value: 1,
@@ -2476,14 +2317,14 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
                       //     toggleSlideGallery();
                       //   }
                       // },600)
-                      
                     },
                     onComplete: () => {
                       // Reset progress after transition
                       state.shaderMaterial.uniforms.uProgress.value = 0;
                       state.shaderMaterial.uniforms.uTexture1.value = texture;
-                      state.shaderMaterial.uniforms.uTexture1Size.value = texture.userData.size;
-                    }
+                      state.shaderMaterial.uniforms.uTexture1Size.value =
+                        texture.userData.size;
+                    },
                   });
                 }
               }
@@ -2492,12 +2333,16 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             }
           } else if (isCurrentlySelected) {
             // When deselecting, restore the original slide image and clear the selected texture
-            const currentSlide = parentContainer.closest('.slide');
+            const currentSlide = parentContainer.closest(".slide");
             if (currentSlide) {
-              const slideImg = currentSlide.querySelector('.slide__img') as HTMLElement;
+              const slideImg = currentSlide.querySelector(
+                ".slide__img",
+              ) as HTMLElement;
               if (slideImg && state.slideTextures[state.currentImageIndex]) {
                 // Restore to original slide URL
-                slideImg.style.backgroundImage = `url(${galleryData[state.currentImageIndex].cover})`;
+                slideImg.style.backgroundImage = `url(${
+                  galleryData[state.currentImageIndex].cover
+                })`;
               }
             }
             state.selectedGalleryTexture = null;
@@ -2521,20 +2366,28 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
       // Add click handler to document - clicking outside slidesContainer closes the gallery
       const handleOutsideClick = (e: MouseEvent) => {
         const target = e.target as HTMLElement;
-        const currentSlide = document.querySelectorAll(".slide")[state.currentImageIndex];
+        const currentSlide =
+          document.querySelectorAll(".slide")[state.currentImageIndex];
 
         // Check if gallery is open (slide has 'slide--clicked' class)
-        const isGalleryOpen = currentSlide?.classList.contains("slide--clicked");
+        const isGalleryOpen =
+          currentSlide?.classList.contains("slide--clicked");
 
         // Only close if gallery is open AND click is outside slidesContainer
-        if (isGalleryOpen && slidesContainer && !slidesContainer.contains(target)) {
+        if (
+          isGalleryOpen &&
+          slidesContainer &&
+          !slidesContainer.contains(target)
+        ) {
           toggleSlideGallery();
         }
       };
 
       document.addEventListener("click", handleOutsideClick);
 
-      async function executeSlideTransition(transitionDirection: "up" | "down") {
+      async function executeSlideTransition(
+        transitionDirection: "up" | "down",
+      ) {
         if (
           state.isTransitioning ||
           !state.scrollingEnabled ||
@@ -2545,38 +2398,51 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
         state.isTransitioning = true;
         state.scrollingEnabled = false;
 
-        console.log('is viewing gallery', state.isViewingGallery);
+        console.log("is viewing gallery", state.isViewingGallery);
 
-        const nextSlideIndex = getNextImageIndex(transitionDirection, state.isViewingGallery);
-        console.log('nextSlideIndex ',nextSlideIndex)
+        const nextSlideIndex = getNextImageIndex(
+          transitionDirection,
+          state.isViewingGallery,
+        );
+        console.log("nextSlideIndex ", nextSlideIndex);
         // Always use the selected gallery texture if one is selected, otherwise use current slide texture
-        const currentTexture = state.selectedGalleryTexture || state.slideTextures[state.currentImageIndex];
-        
+        const currentTexture =
+          state.selectedGalleryTexture ||
+          state.slideTextures[state.currentImageIndex];
+
         // For next texture, also check if the next slide has a selected gallery image
         // Get the first image from next slide's gallery as the target
         //const nextGalleryData = galleryData[nextSlideIndex];
 
         let nextTexture;
-        
+
         if (state.isViewingGallery) {
-          nextTexture = await loadImageTexture(galleryData[state.selectedGalleryIndex].slides[nextSlideIndex].url);
+          nextTexture = await loadImageTexture(
+            galleryData[state.selectedGalleryIndex].slides[nextSlideIndex].url,
+          );
         } else {
           // Check if the next gallery has a selected image
-          const selectedImageIndex = state.gallerySelectedIndices ? state.gallerySelectedIndices[nextSlideIndex] : -1;
-          
-          if (selectedImageIndex !== -1) {
+          const selectedImageIndex = state.gallerySelectedIndices
+            ? state.gallerySelectedIndices[nextSlideIndex]
+            : undefined;
+
+          if (selectedImageIndex !== undefined && selectedImageIndex >= 0) {
             try {
-              const imageUrl = galleryData[nextSlideIndex].slides[selectedImageIndex].url;
+              const imageUrl =
+                galleryData[nextSlideIndex].slides[selectedImageIndex].url;
               nextTexture = await loadImageTexture(imageUrl);
             } catch (error) {
-              console.warn("Failed to load selected gallery image, falling back to cover", error);
+              console.warn(
+                "Failed to load selected gallery image, falling back to cover",
+                error,
+              );
               nextTexture = state.slideTextures[nextSlideIndex];
             }
           } else {
             nextTexture = state.slideTextures[nextSlideIndex];
           }
         }
-        
+
         // Try to find a selected image in the next slide's gallery
         // if (nextGalleryData && nextGalleryData.slides && nextGalleryData.slides.length > 0) {
         //   const nextSlideElement = document.querySelectorAll('.slide')[nextSlideIndex];
@@ -2600,7 +2466,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
         //     }
         //   }
         // }
-        
+
         if (!currentTexture || !nextTexture) return;
 
         // const featuredImageContainer = (slider as HTMLElement).querySelector(
@@ -2611,25 +2477,25 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
         // ) as HTMLElement;
 
         const numberContainer = (slider as HTMLElement).querySelector(
-          "[data-slide-number]"
+          "[data-slide-number]",
         ) as HTMLElement;
         const counterContainer = (slider as HTMLElement).querySelector(
-          "[data-slide-counter]"
+          "[data-slide-counter]",
         ) as HTMLElement;
         const titleContainer = (slider as HTMLElement).querySelector(
-          "[data-slide-title]"
+          "[data-slide-title]",
         ) as HTMLElement;
         const titleCenterContainer = (slider as HTMLElement).querySelector(
-          "[data-slide-title-center]"
+          "[data-slide-title-center]",
         ) as HTMLElement;
         const descriptionContainer = (slider as HTMLElement).querySelector(
-          "[data-slide-description]"
+          "[data-slide-description]",
         ) as HTMLElement;
         const paragraphLine1Container = (slider as HTMLElement).querySelector(
-          "[data-paragraph-line-1]"
+          "[data-paragraph-line-1]",
         ) as HTMLElement;
         const paragraphLine2Container = (slider as HTMLElement).querySelector(
-          "[data-paragraph-line-2]"
+          "[data-paragraph-line-2]",
         ) as HTMLElement;
 
         const currentNumber = numberContainer.querySelector("span");
@@ -2692,11 +2558,11 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             state.shaderMaterial.uniforms.uTexture1.value = nextTexture;
             state.shaderMaterial.uniforms.uTexture1Size.value =
               nextTexture.userData.size;
-            
+
             // Update the selected gallery texture to the new slide texture
             // so the next transition starts from this new image
             state.selectedGalleryTexture = nextTexture;
-            
+
             state.isTransitioning = false;
             setTimeout(() => {
               state.scrollingEnabled = true;
@@ -2719,7 +2585,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             duration: config.transitionDuration,
             ease: "cubic-bezier(0.77,0,0.18,1)",
           },
-          0
+          0,
         );
         // transitionTimeline.to(newFeaturedWrapper, { clipPath: featuredClipPath, duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0);
         // transitionTimeline.to((currentFeaturedWrapper.querySelector("img") as any), { y: transitionDirection === "down" ? "50%" : "-50%", duration: config.transitionDuration, ease: "cubic-bezier(0.77,0,0.18,1)" }, 0);
@@ -2729,7 +2595,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
         /***** SLIDES ****** */
         const slides = [...document.querySelectorAll(".slide")];
         const slidesInner = slides.map((item) =>
-          item.querySelector(".slide__img")
+          item.querySelector(".slide__img"),
         );
         const direction = transitionDirection === "down" ? -1 : 1;
         // Get the current and upcoming slides and their inner elements
@@ -2739,7 +2605,11 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
         const upcomingInner = slidesInner[nextSlideIndex];
 
         if (state.isViewingGallery) {
-          upcomingInner.style.backgroundImage = `url(${galleryData[state.selectedGalleryIndex].slides[state.selectedSlideIndex].url})`;
+          upcomingInner.style.backgroundImage = `url(${
+            galleryData[state.selectedGalleryIndex].slides[
+              state.selectedSlideIndex
+            ].url
+          })`;
         }
 
         // update next index
@@ -2769,14 +2639,14 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             {
               yPercent: direction * 100,
             },
-            "start"
+            "start",
           )
           .to(
             currentInner,
             {
               yPercent: -direction * 30,
             },
-            "start"
+            "start",
           )
           .fromTo(
             upcomingSlide,
@@ -2786,7 +2656,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             {
               yPercent: 0,
             },
-            "start"
+            "start",
           )
           .fromTo(
             upcomingInner,
@@ -2797,7 +2667,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             {
               yPercent: 0,
             },
-            "start"
+            "start",
           );
 
         // date
@@ -2808,7 +2678,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             duration: config.transitionDuration,
             ease: "cubic-bezier(0.77,0,0.18,1)",
           },
-          0
+          0,
         );
         transitionTimeline.to(
           newNumber,
@@ -2817,20 +2687,25 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             duration: config.transitionDuration,
             ease: "cubic-bezier(0.77,0,0.18,1)",
           },
-          0
+          0,
         );
         transitionTimeline.to(
           {},
           {
             duration: 0.8,
             onStart: () =>
-              scrambleText(newNumber, "0" + (nextSlideIndex + 1).toString(), 0.8, {
-                chars: "∅øΩ§∆◊¶†‡0123456789",
-                revealDelay: 0.3,
-                speed: 0.4,
-              }),
+              scrambleText(
+                newNumber,
+                "0" + (nextSlideIndex + 1).toString(),
+                0.8,
+                {
+                  chars: "∅øΩ§∆◊¶†‡0123456789",
+                  revealDelay: 0.3,
+                  speed: 0.4,
+                },
+              ),
           },
-          0.2
+          0.2,
         );
 
         // total counter
@@ -2841,7 +2716,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             duration: config.transitionDuration,
             ease: "cubic-bezier(0.77,0,0.18,1)",
           },
-          0
+          0,
         );
         transitionTimeline.to(
           newCounter,
@@ -2850,20 +2725,25 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             duration: config.transitionDuration,
             ease: "cubic-bezier(0.77,0,0.18,1)",
           },
-          0
+          0,
         );
         transitionTimeline.to(
           {},
           {
             duration: 0.8,
             onStart: () =>
-              scrambleText(newCounter, galleryData[nextSlideIndex].number, 1.8, {
-                chars: "∅øΩ§∆◊¶†‡0123456789",
-                revealDelay: 0.3,
-                speed: 0.4,
-              }),
+              scrambleText(
+                newCounter,
+                galleryData[nextSlideIndex].number,
+                1.8,
+                {
+                  chars: "∅øΩ§∆◊¶†‡0123456789",
+                  revealDelay: 0.3,
+                  speed: 0.4,
+                },
+              ),
           },
-          0.2
+          0.2,
         );
 
         //title
@@ -2874,7 +2754,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             duration: config.transitionDuration,
             ease: "cubic-bezier(0.77,0,0.18,1)",
           },
-          0.02
+          0.02,
         );
         transitionTimeline.to(
           newTitle,
@@ -2883,7 +2763,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             duration: config.transitionDuration,
             ease: "cubic-bezier(0.77,0,0.18,1)",
           },
-          0.02
+          0.02,
         );
         transitionTimeline.to(
           {},
@@ -2896,7 +2776,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
                 speed: 0.3,
               }),
           },
-          0.3
+          0.3,
         );
 
         //center title
@@ -2907,7 +2787,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             duration: config.transitionDuration,
             ease: "power2.inOut",
           },
-          0
+          0,
         );
         transitionTimeline.to(
           newCenterTitle,
@@ -2916,7 +2796,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             duration: config.transitionDuration,
             ease: "power2.inOut",
           },
-          0
+          0,
         );
 
         //tags
@@ -2927,7 +2807,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             duration: config.transitionDuration,
             ease: "power2.inOut",
           },
-          0
+          0,
         );
         transitionTimeline.to(
           newDescription,
@@ -2936,7 +2816,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             duration: config.transitionDuration,
             ease: "power2.inOut",
           },
-          0
+          0,
         );
         transitionTimeline.to(
           {},
@@ -2951,10 +2831,10 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
                   chars: "!<>-_\\/[]{}—=+*^?#abcdefghijklmnopqrstuvwxyz",
                   revealDelay: 0.5,
                   speed: 0.35,
-                }
+                },
               ),
           },
-          0.4
+          0.4,
         );
 
         // paragraph lines
@@ -2965,7 +2845,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             duration: config.transitionDuration,
             ease: "cubic-bezier(0.77,0,0.18,1)",
           },
-          0.06
+          0.06,
         );
         transitionTimeline.to(
           newParagraphLines[0],
@@ -2974,7 +2854,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             duration: config.transitionDuration,
             ease: "cubic-bezier(0.77,0,0.18,1)",
           },
-          0.06
+          0.06,
         );
         transitionTimeline.to(
           {},
@@ -2989,10 +2869,10 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
                   chars: "01!<>-_\\/[]{}—=+*^?#________",
                   revealDelay: 0.6,
                   speed: 0.25,
-                }
+                },
               ),
           },
-          0.5
+          0.5,
         );
 
         transitionTimeline.to(
@@ -3002,7 +2882,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             duration: config.transitionDuration,
             ease: "cubic-bezier(0.77,0,0.18,1)",
           },
-          0.08
+          0.08,
         );
         transitionTimeline.to(
           newParagraphLines[1],
@@ -3011,7 +2891,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             duration: config.transitionDuration,
             ease: "cubic-bezier(0.77,0,0.18,1)",
           },
-          0.08
+          0.08,
         );
         transitionTimeline.to(
           {},
@@ -3026,10 +2906,10 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
                   chars: "01!<>-_\\/[]{}—=+*^?#________",
                   revealDelay: 0.7,
                   speed: 0.25,
-                }
+                },
               ),
           },
-          0.6
+          0.6,
         );
       }
 
@@ -3047,7 +2927,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
 
       async function initializeRenderer() {
         const canvas = (slider as HTMLElement).querySelector(
-          "[data-webgl-canvas]"
+          "[data-webgl-canvas]",
         ) as HTMLCanvasElement | null;
         if (!canvas) return;
 
@@ -3137,8 +3017,8 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
           }
         }
 
-        // Initialize selected indices for each gallery
-        state.gallerySelectedIndices = new Array(galleryData.length).fill(-1);
+        // Initialize selected indices for each gallery to first image (0)
+        state.gallerySelectedIndices = new Array(galleryData.length).fill(0);
 
         if (state.slideTextures.length >= 2) {
           state.shaderMaterial.uniforms.uTexture1.value =
@@ -3197,7 +3077,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
           switch (e.code) {
             case "KeyH": {
               const paneElement = document.querySelector(
-                ".tp-dfwv"
+                ".tp-dfwv",
               ) as HTMLElement | null;
               if (paneElement) {
                 const isHidden = paneElement.style.visibility === "hidden";
@@ -3242,7 +3122,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             case "NumpadAdd":
               config.globalIntensity = Math.min(
                 2.0,
-                config.globalIntensity + 0.1
+                config.globalIntensity + 0.1,
               );
               updateShaderUniforms();
               if (pane) pane.refresh();
@@ -3251,7 +3131,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             case "NumpadSubtract":
               config.globalIntensity = Math.max(
                 0.1,
-                config.globalIntensity - 0.1
+                config.globalIntensity - 0.1,
               );
               updateShaderUniforms();
               if (pane) pane.refresh();
@@ -3259,7 +3139,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             case "BracketRight":
               config.speedMultiplier = Math.min(
                 3.0,
-                config.speedMultiplier + 0.1
+                config.speedMultiplier + 0.1,
               );
               updateShaderUniforms();
               if (pane) pane.refresh();
@@ -3267,7 +3147,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             case "BracketLeft":
               config.speedMultiplier = Math.max(
                 0.1,
-                config.speedMultiplier - 0.1
+                config.speedMultiplier - 0.1,
               );
               updateShaderUniforms();
               if (pane) pane.refresh();
@@ -3282,7 +3162,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
             state.renderer.setSize(window.innerWidth, window.innerHeight);
             state.shaderMaterial.uniforms.uResolution.value.set(
               window.innerWidth,
-              window.innerHeight
+              window.innerHeight,
             );
           }
         };
@@ -3294,15 +3174,20 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
         document.addEventListener("keydown", onKeyDown);
         window.addEventListener("resize", onResize);
 
-        const viewButtons = document.querySelectorAll(".slide-details-container");
+        const viewButtons = document.querySelectorAll(
+          ".slide-details-container",
+        );
         viewButtons.forEach((button) => {
-            button.addEventListener("click", (event) => {
-                const htmlButton = button as HTMLElement;
-                if (htmlButton.parentElement && htmlButton.parentElement.classList.contains('selected')) {
-                    event.stopPropagation();
-                    toggleViewGallery();
-                }
-            });
+          button.addEventListener("click", (event) => {
+            const htmlButton = button as HTMLElement;
+            if (
+              htmlButton.parentElement &&
+              htmlButton.parentElement.classList.contains("selected")
+            ) {
+              event.stopPropagation();
+              toggleViewGallery();
+            }
+          });
         });
 
         cleanupFns.push(() => {
@@ -3317,7 +3202,7 @@ export function startNewGallery(galleryData: any, onIndexChange?: (index: number
 
       function cyclePresets() {
         const currentPresets = Object.keys(
-          effectPresets[config.currentEffect] || {}
+          effectPresets[config.currentEffect] || {},
         );
         if (currentPresets.length === 0) return;
         const currentIndex = currentPresets.indexOf(config.currentEffectPreset);

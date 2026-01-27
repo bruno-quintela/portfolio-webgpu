@@ -7,7 +7,7 @@ export interface GalleryData {
   number?: string;
   description?: string;
   paragraphLines?: string[];
-  slides?: Array<{ url: string; [key: string]: any }>;
+  slides?: Array<{ url: string;[key: string]: any }>;
   [key: string]: any;
 }
 
@@ -16,6 +16,7 @@ export interface GalleryState {
   currentGalleryImageIndex: number;
   selectedGalleryIndex: number | null;
   selectedSlideIndex: number;
+  selectedImageIndices: Record<number, number>;
   isTransitioning: boolean;
   scrollingEnabled: boolean;
   galleryData: GalleryData[];

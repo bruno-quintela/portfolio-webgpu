@@ -9,11 +9,18 @@ interface GalleryProviderProps {
 }
 
 export function GalleryProvider({ children, galleryData }: GalleryProviderProps) {
+  // Initialize selectedImageIndices with first image (index 0) for all galleries
+  const initialSelectedImageIndices = galleryData.reduce((acc, _, index) => {
+    acc[index] = 0; // Default to first image for each gallery
+    return acc;
+  }, {} as Record<number, number>);
+
   const stateRef = useRef<GalleryState>({
     currentImageIndex: 0,
     currentGalleryImageIndex: 0,
     selectedGalleryIndex: null,
     selectedSlideIndex: 0,
+    selectedImageIndices: initialSelectedImageIndices,
     isTransitioning: false,
     scrollingEnabled: true,
     galleryData,
@@ -61,9 +68,14 @@ export function GalleryProvider({ children, galleryData }: GalleryProviderProps)
     },
 
     selectGalleryImage: (galleryIndex: number, imageIndex: number) => {
+      const state = getState();
       setState({
         selectedGalleryIndex: galleryIndex,
         currentGalleryImageIndex: imageIndex,
+        selectedImageIndices: {
+          ...state.selectedImageIndices,
+          [galleryIndex]: imageIndex,
+        },
       });
     },
 
